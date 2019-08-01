@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 
 function Footer() {
   return (
-    <footer>
+    <Container>
       <Navbar sticky="bottom" bg="light" expand="lg">
         <Container>
           <Nav className="m-auto">
@@ -14,7 +14,7 @@ function Footer() {
           </Nav>
         </Container>
       </Navbar>
-    </footer>
+    </Container>
   );
 }
 

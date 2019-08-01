@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import Table from "react-bootstrap/Table";
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
+import Section from "./Section";
 
 const ACCESS_TOKEN = "2ec6cc8beeb8df73d1232a5961087ada";
 
@@ -20,64 +21,30 @@ function Instrument({ match }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function renderInstrument() {
-    let currentSection = "";
-    return (
-      instrument.displays &&
-      instrument.displays.map((display, index) => {
-        const { id, position, title, section_title, question_range } = display;
-        if (currentSection !== section_title) {
-          currentSection = section_title;
-          return (
-            <React.Fragment key={`${index}_${id}`}>
-              <tr key={section_title}>
-                <td colSpan="12" className="text-center">
-                  <h5>{section_title}</h5>
-                </td>
-              </tr>
-              <tr key={id}>
-                <th>{position}</th>
-                <td>
-                  <Link to={`/instruments/${instrumentId}/displays/${id}`}>
-                    {title}
-                  </Link>
-                </td>
-                <td>{question_range}</td>
-              </tr>
-            </React.Fragment>
-          );
-        } else {
-          currentSection = section_title;
-          return (
-            <tr key={id}>
-              <th>{position}</th>
-              <td>
-                <Link to={`/instruments/${instrumentId}/displays/${id}`}>
-                  {title}
-                </Link>
-              </td>
-              <td>{question_range}</td>
-            </tr>
-          );
-        }
-      })
-    );
-  }
-
   return (
     <div>
       <h1 className="text-center">{instrument.title}</h1>
-      <h4 className="text-center">Sections</h4>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Title</th>
-            <th>Question Range</th>
-          </tr>
-        </thead>
-        <tbody>{renderInstrument()}</tbody>
-      </Table>
+      <Accordion>
+        {instrument.sections &&
+          instrument.sections.map((section, index) => {
+            return (
+              <Card key={section.id}>
+                <Accordion.Toggle
+                  as={Card.Header}
+                  eventKey={`${index}`}
+                  className="text-center"
+                >
+                  <h3>{section.title}</h3>
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey={`${index}`}>
+                  <Card.Body>
+                    <Section section={section} displays={instrument.displays} />
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            );
+          })}
+      </Accordion>
     </div>
   );
 }

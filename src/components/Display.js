@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
-import { GoChevronRight, GoChevronLeft } from "react-icons/go";
 
 const ACCESS_TOKEN = "2ec6cc8beeb8df73d1232a5961087ada";
 
-const Display = ({ match }) => {
-  const instrumentId = match.params.instrument_id;
-  const id = match.params.id;
+const Display = props => {
+  const instrumentId = props.display.instrument_id;
+  const id = props.display.id;
   const [display, setDisplay] = useState({});
 
   useEffect(() => {
@@ -42,11 +37,20 @@ const Display = ({ match }) => {
             <th>{number_in_instrument}</th>
             <td>{identifier}</td>
             <td>{type}</td>
-            <td dangerouslySetInnerHTML={{ __html: text }} />
+            <td
+              dangerouslySetInnerHTML={{
+                __html: text
+              }}
+            />
             <td>
               {options &&
-                options.map(option => {
-                  return <li key={option.id}> {option.text} </li>;
+                options.map((option, index) => {
+                  return (
+                    <span key={option.id}>
+                      {" "}
+                      <b>{index + 1})</b> {option.text}{" "}
+                    </span>
+                  );
                 })}
             </td>
           </tr>
@@ -56,45 +60,18 @@ const Display = ({ match }) => {
   }
 
   return (
-    <Container>
-      <h1 className="text-center">{display.title}</h1>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Identifier</th>
-            <th>Type</th>
-            <th>Text</th>
-            <th>Options</th>
-          </tr>
-        </thead>
-        <tbody>{renderDisplay()}</tbody>
-      </Table>
-      <Row>
-        <Col>
-          <Button
-            onClick={() => console.log("Previous")}
-            variant="primary"
-            size="lg"
-            className="float-left"
-          >
-            <GoChevronLeft />
-            Previous
-          </Button>
-        </Col>
-        <Col xs={8} />
-        <Col>
-          <Button
-            onClick={() => console.log("Next")}
-            variant="primary"
-            size="lg"
-            className="float-right"
-          >
-            Next <GoChevronRight />
-          </Button>
-        </Col>
-      </Row>
-    </Container>
+    <Table hover size="sm" responsive>
+      <thead>
+        <tr>
+          <th>Position</th>
+          <th>Identifier</th>
+          <th>Type</th>
+          <th>Text</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>{renderDisplay()}</tbody>
+    </Table>
   );
 };
 
