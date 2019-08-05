@@ -1,9 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
-
-const ACCESS_TOKEN = "2ec6cc8beeb8df73d1232a5961087ada";
 
 class Home extends React.Component {
   state = {
@@ -11,13 +9,22 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
+    const email = localStorage.getItem("userEmail");
+    const token = localStorage.getItem("authenticationToken");
     axios
       .get(
-        `http://localhost:3000/api/v4/projects/1/instruments?access_token=${ACCESS_TOKEN}`
+        `http://localhost:3000/api/v4/instruments?user_email=${email}&authentication_token=${token}`
       )
       .then(res => {
         const instruments = res.data;
         this.setState({ instruments });
+      })
+      .catch(error => {
+        // console.log(error.response.status);
+        if (error.response.status === 401) {
+          console.log("401");
+          // <Redirect to="/login" />;
+        }
       });
   }
 
@@ -27,6 +34,7 @@ class Home extends React.Component {
         id,
         title,
         project,
+        project_id,
         published,
         current_version_number,
         question_count
@@ -34,7 +42,9 @@ class Home extends React.Component {
       return (
         <tr key={id}>
           <th>
-            <Link to={`/instruments/${id}`}>{title}</Link>
+            <Link to={`/projects/${project_id}/instruments/${id}`}>
+              {title}
+            </Link>
           </th>
           <td>{project}</td>
           <td>{published.toString()}</td>

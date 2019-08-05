@@ -4,16 +4,17 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Section from "./Section";
 
-const ACCESS_TOKEN = "2ec6cc8beeb8df73d1232a5961087ada";
-
 function Instrument({ match }) {
+  const projectId = match.params.project_id;
   const instrumentId = match.params.id;
   const [instrument, setInstrument] = useState({});
 
   useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    const token = localStorage.getItem("authenticationToken");
     const fetchInstrument = async () => {
       const result = await axios(
-        `http://localhost:3000/api/v4/projects/1/instruments/${instrumentId}?access_token=${ACCESS_TOKEN}`
+        `http://localhost:3000/api/v4/projects/${projectId}/instruments/${instrumentId}?user_email=${email}&authentication_token=${token}`
       );
       setInstrument(result.data);
     };
@@ -38,7 +39,11 @@ function Instrument({ match }) {
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey={`${index}`}>
                   <Card.Body>
-                    <Section section={section} displays={instrument.displays} />
+                    <Section
+                      projectId={projectId}
+                      section={section}
+                      displays={instrument.displays}
+                    />
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>

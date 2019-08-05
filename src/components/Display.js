@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
 
-const ACCESS_TOKEN = "2ec6cc8beeb8df73d1232a5961087ada";
-
 const Display = props => {
+  const projectId = props.projectId;
   const instrumentId = props.display.instrument_id;
   const id = props.display.id;
   const [display, setDisplay] = useState({});
 
   useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    const token = localStorage.getItem("authenticationToken");
+
     const fetchDisplay = async () => {
       const result = await axios(
-        `http://localhost:3000/api/v4/projects/1/instruments/${instrumentId}/displays/${id}?access_token=${ACCESS_TOKEN}`
+        `http://localhost:3000/api/v4/projects/${projectId}/instruments/${instrumentId}/displays/${id}?user_email=${email}&authentication_token=${token}`
       );
       setDisplay(result.data);
     };

@@ -26,7 +26,7 @@ const Section = props => {
             </Accordion.Toggle>
             <Accordion.Collapse eventKey={`${index}`}>
               <Card.Body>
-                <Display display={display} />
+                <Display projectId={props.projectId} display={display} />
               </Card.Body>
             </Accordion.Collapse>
           </Card>
