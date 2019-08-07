@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import { login } from "../utils/API";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -7,18 +7,7 @@ import Container from "react-bootstrap/Container";
 class Login extends React.Component {
   handleLogin = e => {
     e.preventDefault();
-    const user = {
-      email: this.email.value,
-      password: this.password.value
-    };
-    localStorage.setItem("userEmail", user.email);
-    axios.post("http://localhost:3000/api/v4/sessions", { user }).then(res => {
-      localStorage.setItem(
-        "authenticationToken",
-        res.data.authentication_token
-      );
-      this.props.history.push("/");
-    });
+    login({ email: this.email.value, password: this.password.value });
   };
 
   render() {

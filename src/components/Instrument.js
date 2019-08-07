@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Section from "./Section";
+import { getInstrument } from "../utils/API";
 
 function Instrument({ match }) {
   const projectId = match.params.project_id;
@@ -10,12 +10,8 @@ function Instrument({ match }) {
   const [instrument, setInstrument] = useState({});
 
   useEffect(() => {
-    const email = localStorage.getItem("userEmail");
-    const token = localStorage.getItem("authenticationToken");
     const fetchInstrument = async () => {
-      const result = await axios(
-        `http://localhost:3000/api/v4/projects/${projectId}/instruments/${instrumentId}?user_email=${email}&authentication_token=${token}`
-      );
+      const result = await getInstrument(projectId, instrumentId);
       setInstrument(result.data);
     };
     fetchInstrument();

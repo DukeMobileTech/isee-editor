@@ -1,24 +1,17 @@
 import React from "react";
-import axios from "axios";
 import { withRouter } from "react-router-dom";
 
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import { logout } from "../utils/API";
 
 const Header = props => {
   const handleSignout = e => {
     e.preventDefault();
-    const token = localStorage.getItem("authenticationToken");
-    axios
-      .delete(
-        `http://localhost:3000/api/v4/sessions?authentication_token=${token}`
-      )
-      .then(res => {
-        sessionStorage.removeItem("userEmail");
-        sessionStorage.removeItem("authenticationToken");
-        props.history.push("/login");
-      });
+    logout().then(() => {
+      props.history.push("/login");
+    });
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Table from "react-bootstrap/Table";
+import { getDisplay } from "../utils/API";
 
 const Display = props => {
   const projectId = props.projectId;
@@ -9,13 +9,8 @@ const Display = props => {
   const [display, setDisplay] = useState({});
 
   useEffect(() => {
-    const email = localStorage.getItem("userEmail");
-    const token = localStorage.getItem("authenticationToken");
-
     const fetchDisplay = async () => {
-      const result = await axios(
-        `http://localhost:3000/api/v4/projects/${projectId}/instruments/${instrumentId}/displays/${id}?user_email=${email}&authentication_token=${token}`
-      );
+      const result = await getDisplay(projectId, instrumentId, id);
       setDisplay(result.data);
     };
     fetchDisplay();
