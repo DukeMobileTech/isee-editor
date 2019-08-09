@@ -6,11 +6,11 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { logout } from "../utils/API";
 
-const Header = props => {
+const Header = () => {
   const handleSignout = e => {
     e.preventDefault();
     logout().then(() => {
-      props.history.push("/login");
+      window.location.reload();
     });
   };
 

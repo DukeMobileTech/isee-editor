@@ -30,7 +30,7 @@ const Home = () => {
   };
 
   const renderInstruments = () => {
-    return instruments.map((instrument, index) => {
+    return instruments.map(instrument => {
       const {
         id,
         title,

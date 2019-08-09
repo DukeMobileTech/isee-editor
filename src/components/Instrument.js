@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Section from "./Section";
@@ -8,18 +9,20 @@ function Instrument({ match }) {
   const projectId = match.params.project_id;
   const instrumentId = match.params.id;
   const [instrument, setInstrument] = useState({});
+  const [sectionCount, setSectionCount] = useState(0);
 
   useEffect(() => {
     const fetchInstrument = async () => {
       const result = await getInstrument(projectId, instrumentId);
       setInstrument(result.data);
+      setSectionCount(result.data.sections.length);
     };
     fetchInstrument();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div>
+    <React.Fragment>
       <h1 className="text-center">{instrument.title}</h1>
       <Accordion>
         {instrument.sections &&
@@ -38,6 +41,7 @@ function Instrument({ match }) {
                     <Section
                       projectId={projectId}
                       section={section}
+                      sectionCount={sectionCount}
                       displays={instrument.displays}
                     />
                   </Card.Body>
@@ -46,7 +50,17 @@ function Instrument({ match }) {
             );
           })}
       </Accordion>
-    </div>
+
+      <Link
+        className="btn btn-primary mt-1 float-right"
+        to={{
+          pathname: `/projects/${projectId}/instruments/${instrumentId}/sections/new`,
+          state: { sectionCount: sectionCount }
+        }}
+      >
+        New Section
+      </Link>
+    </React.Fragment>
   );
 }
 

@@ -3,13 +3,13 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import Error from "./Error";
 import Instrument from "./Instrument";
-import Login from "./Login";
 import Header from "./Header";
 import Container from "react-bootstrap/Container";
 import Footer from "./Footer";
 import "../App.css";
 import Display from "./Display";
 import InstrumentForm from "./InstrumentForm";
+import SectionForm from "./SectionForm";
 
 const AppRoutes = () => {
   return (
@@ -17,7 +17,6 @@ const AppRoutes = () => {
       <Header />
       <Container id="content">
         <Switch>
-          <Route path="/login" component={Login} />
           <Route path="/" component={Home} exact />
           <Route path="/instruments/new" component={InstrumentForm} exact />
           <Route
@@ -28,6 +27,16 @@ const AppRoutes = () => {
           <Route
             path="/projects/:project_id/instruments/:id"
             component={Instrument}
+            exact
+          />
+          <Route
+            path="/projects/:project_id/instruments/:instrument_id/sections/new"
+            component={SectionForm}
+            exact
+          />
+          <Route
+            path="/projects/:project_id/instruments/:instrument_id/sections/:id/edit"
+            component={SectionForm}
             exact
           />
           <Route

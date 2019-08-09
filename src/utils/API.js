@@ -1,5 +1,10 @@
 import axios from "axios";
 
+const deleteUserInfo = () => {
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("authenticationToken");
+};
+
 const instance = axios.create({
   baseURL: "http://localhost:3000/api/v4/",
   responseType: "json"
@@ -23,12 +28,16 @@ instance.interceptors.response.use(
   },
   function(error) {
     if (error.response.status === 401) {
-      window.location = "/login";
+      deleteUserInfo();
+      window.location = "/";
     }
     return Promise.reject(error);
   }
 );
 
+/*
+Project
+*/
 export const getProjects = () => {
   return instance.get("/projects");
 };
@@ -37,14 +46,12 @@ export const getInstruments = () => {
   return instance.get("/instruments");
 };
 
+/*
+Instrument
+*/
+
 export const getInstrument = (projectId, id) => {
   return instance.get(`/projects/${projectId}/instruments/${id}`);
-};
-
-export const getDisplay = (projectId, instrumentId, id) => {
-  return instance.get(
-    `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
-  );
 };
 
 export const createInstrument = (projectId, instrument) => {
@@ -57,6 +64,38 @@ export const updateInstrument = (projectId, id, instrument) => {
 
 export const deleteInstrument = (projectId, id) => {
   return instance.delete(`/projects/${projectId}/instruments/${id}`);
+};
+
+/*
+Section
+*/
+export const createSection = (projectId, instrumentId, section) => {
+  return instance.post(
+    `/projects/${projectId}/instruments/${instrumentId}/sections`,
+    section
+  );
+};
+
+export const updateSection = (projectId, instrumentId, id, section) => {
+  return instance.put(
+    `/projects/${projectId}/instruments/${instrumentId}/sections/${id}`,
+    section
+  );
+};
+
+export const deleteSection = (projectId, instrumentId, id) => {
+  return instance.delete(
+    `/projects/${projectId}/instruments/${instrumentId}/sections/${id}`
+  );
+};
+
+/*
+Display
+*/
+export const getDisplay = (projectId, instrumentId, id) => {
+  return instance.get(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
+  );
 };
 
 // Instance without interceptors
@@ -85,7 +124,6 @@ export const logout = () => {
   return authInstance
     .delete(`/logout?authentication_token=${token}`)
     .then(() => {
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("authenticationToken");
+      deleteUserInfo();
     });
 };
