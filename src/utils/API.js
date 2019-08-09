@@ -29,6 +29,10 @@ instance.interceptors.response.use(
   }
 );
 
+export const getProjects = () => {
+  return instance.get("/projects");
+};
+
 export const getInstruments = () => {
   return instance.get("/instruments");
 };
@@ -41,6 +45,18 @@ export const getDisplay = (projectId, instrumentId, id) => {
   return instance.get(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
   );
+};
+
+export const createInstrument = (projectId, instrument) => {
+  return instance.post(`/projects/${projectId}/instruments`, instrument);
+};
+
+export const updateInstrument = (projectId, id, instrument) => {
+  return instance.put(`/projects/${projectId}/instruments/${id}`, instrument);
+};
+
+export const deleteInstrument = (projectId, id) => {
+  return instance.delete(`/projects/${projectId}/instruments/${id}`);
 };
 
 // Instance without interceptors

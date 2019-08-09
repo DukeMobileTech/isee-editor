@@ -9,6 +9,7 @@ import Container from "react-bootstrap/Container";
 import Footer from "./Footer";
 import "../App.css";
 import Display from "./Display";
+import InstrumentForm from "./InstrumentForm";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +19,12 @@ const AppRoutes = () => {
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/" component={Home} exact />
+          <Route path="/instruments/new" component={InstrumentForm} exact />
+          <Route
+            path="/projects/:project_id/instruments/:id/edit"
+            component={InstrumentForm}
+            exact
+          />
           <Route
             path="/projects/:project_id/instruments/:id"
             component={Instrument}
