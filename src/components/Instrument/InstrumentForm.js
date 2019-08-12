@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
-import { ProjectContext } from "../context/ProjectContext";
-import { LanguageContext } from "../context/LanguageContext";
+import { ProjectContext } from "../../context/ProjectContext";
+import { LanguageContext } from "../../context/LanguageContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import * as Yup from "yup";
-import { createInstrument, updateInstrument } from "../utils/API";
+import { createInstrument, updateInstrument } from "../../utils/API";
 
 const InstrumentSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),

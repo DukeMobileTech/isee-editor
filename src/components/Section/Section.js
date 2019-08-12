@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
-import Display from "./Display";
+import Display from "../Display";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 

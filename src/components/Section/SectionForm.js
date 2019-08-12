@@ -1,23 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import * as Yup from "yup";
-import { createSection, updateSection } from "../utils/API";
+import { createSection, updateSection } from "../../utils/API";
+
+const SectionSchema = Yup.object().shape({
+  title: Yup.string().required("Title is required"),
+  position: Yup.number()
+    .min(1, "Number must be greater than 0")
+    // .max(maxCount, "Number cannot exceed the current number of sections")
+    .required("Postion is required")
+});
 
 const SectionForm = props => {
-  const projectId = useState(props.match.params.project_id);
-  const instrumentId = useState(props.match.params.instrument_id);
-  const section = useState(
-    props.location.state ? props.location.state.section : null
-  );
-  const maxCount = useState(
-    props.location.state.sectionCount
-      ? props.location.state.sectionCount + 1
-      : 1
-  );
+  const projectId = props.match.params.project_id;
+  const instrumentId = props.match.params.instrument_id;
+  const section = props.location.state ? props.location.state.section : null;
+  const maxCount = props.location.state.sectionCount
+    ? props.location.state.sectionCount + 1
+    : 1;
 
   const redirectToInstrument = () => {
     props.history.push(`/projects/${projectId}/instruments/${instrumentId}`);
@@ -31,13 +35,7 @@ const SectionForm = props => {
         instrument_id: (section && section.instrument_id) || instrumentId,
         position: (section && section.position) || maxCount
       }}
-      validationSchema={Yup.object().shape({
-        title: Yup.string().required("Title is required"),
-        position: Yup.number()
-          .min(1, "Number must be greater than 0")
-          .max(maxCount, "Number cannot exceed the current number of sections")
-          .required("Postion is required")
-      })}
+      validationSchema={SectionSchema}
       onSubmit={(values, { setErrors }) => {
         const section = {
           title: values.title,

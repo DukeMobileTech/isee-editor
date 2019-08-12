@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
-import Section from "./Section";
-import { getInstrument } from "../utils/API";
+import Section from "../Section/Section";
+import { getInstrument } from "../../utils/API";
 
 function Instrument({ match }) {
   const projectId = match.params.project_id;
