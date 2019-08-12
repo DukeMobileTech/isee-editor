@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Display from "../Display";
@@ -12,15 +11,6 @@ const Section = props => {
 
   return (
     <React.Fragment>
-      <Link
-        className="btn btn-primary mb-1 "
-        to={{
-          pathname: `/projects/${props.projectId}/instruments/${section.instrument_id}/sections/${section.id}/edit`,
-          state: { section, sectionCount: props.sectionCount }
-        }}
-      >
-        Edit Section
-      </Link>
       <Accordion key={`${section.id}_${section.title}`}>
         {displays.map((display, index) => {
           return (

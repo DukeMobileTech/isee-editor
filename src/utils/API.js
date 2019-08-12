@@ -66,6 +66,13 @@ export const deleteInstrument = (projectId, id) => {
   return instance.delete(`/projects/${projectId}/instruments/${id}`);
 };
 
+export const reorderSections = (projectId, id, sections) => {
+  return instance.post(
+    `/projects/${projectId}/instruments/${id}/reorder_sections`,
+    sections
+  );
+};
+
 /*
 Section
 */
