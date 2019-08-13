@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Section from "../Section/Section";
-import { getInstrument, reorderSections, deleteSection } from "../../utils/API";
+import { getInstrument, deleteSection, updateSection } from "../../utils/API";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -39,6 +39,7 @@ const Instrument = ({ match }) => {
   const instrumentId = match.params.id;
   const [instrument, setInstrument] = useState({});
   const [sections, setSections] = useState([]);
+  let currentIndex = null;
 
   useEffect(() => {
     const fetchInstrument = async () => {
@@ -57,21 +58,23 @@ const Instrument = ({ match }) => {
     ) {
       return;
     }
-
+    let movedSection = sections[result.source.index];
+    movedSection.position = result.destination.index + 1;
     const reorderedSections = reorder(
       sections,
       result.source.index,
       result.destination.index
     );
-
     setSections(reorderedSections);
-
-    let order = [];
-    for (const [index, section] of reorderedSections.entries()) {
-      order.push({ id: section.id, position: index + 1 });
-      section.position = index + 1;
-    }
-    reorderSections(projectId, instrumentId, { order: order });
+    updateSection(projectId, instrumentId, movedSection.id, movedSection)
+      .then(response => {
+        if (response.status === 204) {
+          window.location.reload();
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const handleSectionDelete = section => {
@@ -104,6 +107,7 @@ const Instrument = ({ match }) => {
                         key={section.id}
                         draggableId={section.id}
                         index={index}
+                        isDragDisabled={index === currentIndex}
                       >
                         {(provided, snapshot) => (
                           <div

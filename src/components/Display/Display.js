@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
-import { getDisplay } from "../utils/API";
+import { getDisplay } from "../../utils/API";
 
 const Display = props => {
   const projectId = props.projectId;

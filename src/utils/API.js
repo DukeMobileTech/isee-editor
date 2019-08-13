@@ -66,13 +66,6 @@ export const deleteInstrument = (projectId, id) => {
   return instance.delete(`/projects/${projectId}/instruments/${id}`);
 };
 
-export const reorderSections = (projectId, id, sections) => {
-  return instance.post(
-    `/projects/${projectId}/instruments/${id}/reorder_sections`,
-    sections
-  );
-};
-
 /*
 Section
 */
@@ -101,6 +94,26 @@ Display
 */
 export const getDisplay = (projectId, instrumentId, id) => {
   return instance.get(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
+  );
+};
+
+export const createDisplay = (projectId, instrumentId, display) => {
+  return instance.post(
+    `/projects/${projectId}/instruments/${instrumentId}/displays`,
+    display
+  );
+};
+
+export const updateDisplay = (projectId, instrumentId, id, display) => {
+  return instance.put(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`,
+    display
+  );
+};
+
+export const deleteDisplay = (projectId, instrumentId, id) => {
+  return instance.delete(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
   );
 };

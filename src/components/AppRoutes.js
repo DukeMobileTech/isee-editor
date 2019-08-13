@@ -7,9 +7,9 @@ import Header from "./Header";
 import Container from "react-bootstrap/Container";
 import Footer from "./Footer";
 import "../App.css";
-import Display from "./Display";
 import InstrumentForm from "./Instrument/InstrumentForm";
 import SectionForm from "./Section/SectionForm";
+import DisplayForm from "./Display/DisplayForm";
 
 const AppRoutes = () => {
   return (
@@ -40,8 +40,13 @@ const AppRoutes = () => {
             exact
           />
           <Route
-            path="/projects/:project_id/instruments/:instrument_id/displays/:id"
-            component={Display}
+            path="/projects/:project_id/instruments/:instrument_id/displays/new"
+            component={DisplayForm}
+            exact
+          />
+          <Route
+            path="/projects/:project_id/instruments/:instrument_id/displays/:id/edit"
+            component={DisplayForm}
             exact
           />
           <Route component={Error} />
