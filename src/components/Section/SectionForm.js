@@ -1,11 +1,16 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
+import { Formik, Form, Field } from "formik";
+import { Form as AntForm } from "antd";
 import * as Yup from "yup";
 import { createSection, updateSection } from "../../utils/API";
+import { CenteredH4 } from "../../utils/Styles";
+import {
+  AlertErrorMessage,
+  LeftCancelButton,
+  RightSubmitButton
+} from "../../utils/Utils";
+
+const FormItem = AntForm.Item;
 
 const SectionSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -16,16 +21,10 @@ const SectionSchema = Yup.object().shape({
 });
 
 const SectionForm = props => {
-  const projectId = props.match.params.project_id;
-  const instrumentId = props.match.params.instrument_id;
-  const section = props.location.state ? props.location.state.section : null;
-  const maxCount = props.location.state.sectionCount
-    ? props.location.state.sectionCount + 1
-    : 1;
-
-  const redirectToInstrument = () => {
-    props.history.push(`/projects/${projectId}/instruments/${instrumentId}`);
-  };
+  const projectId = props.instrument.project_id;
+  const instrumentId = props.instrument.id;
+  const section = props.section;
+  const maxCount = props.sectionCount ? props.sectionCount + 1 : 1;
 
   return (
     <Formik
@@ -46,8 +45,7 @@ const SectionForm = props => {
           updateSection(projectId, values.instrument_id, values.id, section)
             .then(response => {
               if (response.status === 204) {
-                // Successful update
-                redirectToInstrument();
+                props.fetchUpdatedSections();
               }
             })
             .catch(error => {
@@ -61,7 +59,7 @@ const SectionForm = props => {
           createSection(projectId, values.instrument_id, section)
             .then(response => {
               if (response.status === 201) {
-                redirectToInstrument();
+                props.fetchUpdatedSections();
               }
             })
             .catch(error => {
@@ -74,52 +72,28 @@ const SectionForm = props => {
         }
       }}
       render={({ values }) => (
-        <Form>
-          <h4 className="text-center">
-            {values.title ? values.title : "New Section"}
-          </h4>
-          <Row className="form-group">
-            <Col sm="2">
-              <label htmlFor="position">Position</label>
-            </Col>
-            <Col sm="7">
-              <Field
-                className="form-control"
-                name="position"
-                placeholder="Enter position"
-                type="number"
-              />
-            </Col>
-            <Col sm="3">
-              <ErrorMessage
-                name="position"
-                render={msg => <Alert variant="danger">{msg}</Alert>}
-              />
-            </Col>
-          </Row>
-          <Row className="form-group">
-            <Col sm="2">
-              <label htmlFor="title">Title</label>
-            </Col>
-            <Col sm="7">
-              <Field
-                className="form-control"
-                name="title"
-                placeholder="Enter title"
-                type="text"
-              />
-            </Col>
-            <Col sm="3">
-              <ErrorMessage
-                name="title"
-                render={msg => <Alert variant="danger">{msg}</Alert>}
-              />
-            </Col>
-          </Row>
-
-          <Button className="float-right" type="submit">
-            Save
-          </Button>
+        <Form className="ant-form ant-form-horizontal">
+          <CenteredH4>{values.title ? values.title : "New Section"}</CenteredH4>
+          <FormItem>
+            <Field
+              className="ant-input"
+              name="position"
+              placeholder="Enter position"
+              type="number"
+            />
+            <AlertErrorMessage name="position" type="error" />
+          </FormItem>
+          <FormItem>
+            <Field
+              className="ant-input"
+              name="title"
+              placeholder="Enter title"
+              type="text"
+            />
+            <AlertErrorMessage name="title" type="error" />
+          </FormItem>
+          <LeftCancelButton handleClick={props.handleCancel} />
+          <RightSubmitButton />
         </Form>
       )}
     />

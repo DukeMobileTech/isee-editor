@@ -1,14 +1,15 @@
 import React from "react";
 import { login } from "../utils/API";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Alert from "react-bootstrap/Alert";
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import LoginHeader from "./LoginHeader";
-import Footer from "./Footer";
+import { Formik, Form, Field } from "formik";
+import AppFooter from "./AppFooter";
+import AppHeader from "./AppHeader";
+import { Layout, Form as AntForm } from "antd";
+import { MainContent, CenteredH2 } from "../utils/Styles";
+import { AlertErrorMessage, CenteredSubmitButton } from "../utils/Utils";
+
+const { Content } = Layout;
+const FormItem = AntForm.Item;
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -40,54 +41,32 @@ const Login = () => {
       }}
       render={() => (
         <Form>
-          <LoginHeader />
-          <Container id="content">
-            <h2 className="text-center">Sign in</h2>
-            <Row className="form-group">
-              <Col sm="2">
-                <label htmlFor="email">Email address</label>
-              </Col>
-              <Col sm="7">
+          <AppHeader />
+          <Content style={{ padding: "0 50px" }}>
+            <MainContent>
+              <CenteredH2>Sign in</CenteredH2>
+              <FormItem>
                 <Field
-                  className="form-control"
+                  className="ant-input"
                   name="email"
                   placeholder="Enter email"
                   type="email"
                 />
-              </Col>
-              <Col sm="3">
-                <ErrorMessage
-                  name="email"
-                  render={msg => <Alert variant="danger">{msg}</Alert>}
-                />
-              </Col>
-            </Row>
-            <Row className="form-group">
-              <Col sm="2">
-                <label htmlFor="password">Password</label>
-              </Col>
-              <Col sm="7">
+                <AlertErrorMessage name="email" type="error" />
+              </FormItem>
+              <FormItem>
                 <Field
-                  className="form-control"
+                  className="ant-input"
                   name="password"
                   type="password"
                   placeholder="Enter password"
                 />
-              </Col>
-              <Col sm="3">
-                <ErrorMessage
-                  name="password"
-                  render={msg => <Alert variant="danger">{msg}</Alert>}
-                />
-              </Col>
-            </Row>
-            <div className="text-center">
-              <Button className="btn btn-primary" type="submit">
-                Save
-              </Button>
-            </div>
-          </Container>
-          <Footer />
+                <AlertErrorMessage name="password" type="error" />
+              </FormItem>
+              <CenteredSubmitButton text="Log in" />
+            </MainContent>
+          </Content>
+          <AppFooter />
         </Form>
       )}
     />

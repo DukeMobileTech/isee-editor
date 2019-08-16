@@ -1,74 +1,85 @@
-import React, { useState, useEffect } from "react";
-import Table from "react-bootstrap/Table";
-import { getDisplay } from "../../utils/API";
+import React, { useState } from "react";
+import { Row, Col, Table, List } from "antd";
+import { CenteredH3 } from "../../utils/Styles";
+import { RightAddButton } from "../../utils/Utils";
+import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
+
+const { Column } = Table;
 
 const Display = props => {
-  const projectId = props.projectId;
-  const instrumentId = props.display.instrument_id;
-  const id = props.display.id;
-  const [display, setDisplay] = useState({});
+  const display = props.display;
+  const [showForm, setShowForm] = useState(false);
+  const [instrumentQuestion, setInstrumentQuestion] = useState(null);
 
-  useEffect(() => {
-    const fetchDisplay = async () => {
-      const result = await getDisplay(projectId, instrumentId, id);
-      setDisplay(result.data);
-    };
-    fetchDisplay();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleNewInstrumentQuestion = () => {
+    console.log("add new question");
+    setShowForm(true);
+    setInstrumentQuestion(null);
+  };
 
-  function renderDisplay() {
+  const DisplayView = () => {
+    if (showForm) {
+      return <NewInstrumentQuestion instrumentQuestion={instrumentQuestion} />;
+    } else {
+      return <InstrumentQuestionList />;
+    }
+  };
+
+  const InstrumentQuestionList = () => {
     return (
-      display.instrument_questions &&
-      display.instrument_questions.map(instrumentQuestion => {
-        const {
-          id,
-          number_in_instrument,
-          identifier,
-          type,
-          text,
-          options
-        } = instrumentQuestion;
-        return (
-          <tr key={id}>
-            <th>{number_in_instrument}</th>
-            <td>{identifier}</td>
-            <td>{type}</td>
-            <td
-              dangerouslySetInnerHTML={{
-                __html: text
-              }}
-            />
-            <td>
-              {options &&
-                options.map((option, index) => {
-                  return (
-                    <span key={option.id}>
-                      {" "}
-                      <b>{index + 1})</b> {option.text}{" "}
-                    </span>
-                  );
-                })}
-            </td>
-          </tr>
-        );
-      })
+      <React.Fragment>
+        <Table dataSource={display.instrument_questions} rowKey={iq => iq.id}>
+          <Column title="Position" dataIndex="number_in_instrument" />
+          <Column title="Identifier" dataIndex="identifier" />
+          <Column title="Question Type" dataIndex="type" />
+          <Column
+            title="Question Text"
+            dataIndex="text"
+            render={(text, iq) => (
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: iq.text
+                }}
+              />
+            )}
+          />
+          <Column
+            title="Question Choices"
+            dataIndex="options"
+            render={(text, iq) =>
+              iq.options && (
+                <List
+                  bordered
+                  dataSource={iq.options}
+                  renderItem={(option, index) => (
+                    <List.Item>{`${index + 1}) ${option.text}`}</List.Item>
+                  )}
+                />
+              )
+            }
+          />
+        </Table>
+        <div style={{ marginTop: 10 }}>
+          <RightAddButton handleClick={handleNewInstrumentQuestion} />
+        </div>
+      </React.Fragment>
     );
-  }
+  };
 
   return (
-    <Table hover size="sm" responsive>
-      <thead>
-        <tr>
-          <th>Position</th>
-          <th>Identifier</th>
-          <th>Type</th>
-          <th>Text</th>
-          <th>Options</th>
-        </tr>
-      </thead>
-      <tbody>{renderDisplay()}</tbody>
-    </Table>
+    <React.Fragment>
+      <CenteredH3>
+        <Row>
+          <Col span={2}>
+            <b>{display.position}</b>
+          </Col>
+          <Col span={12} offset={10}>
+            <b>{display.title}</b>
+          </Col>
+        </Row>
+      </CenteredH3>
+      <DisplayView />
+    </React.Fragment>
   );
 };
 

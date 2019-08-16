@@ -1,13 +1,18 @@
 import React, { useContext } from "react";
 import { ProjectContext } from "../../context/ProjectContext";
 import { LanguageContext } from "../../context/LanguageContext";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { createInstrument, updateInstrument } from "../../utils/API";
+import { Form as AntForm } from "antd";
+import { CenteredH4 } from "../../utils/Styles";
+import {
+  AlertErrorMessage,
+  RightSubmitButton,
+  LeftCancelButton
+} from "../../utils/Utils";
+
+const FormItem = AntForm.Item;
 
 const InstrumentSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -18,13 +23,7 @@ const InstrumentSchema = Yup.object().shape({
 const InstrumentForm = props => {
   const projects = useContext(ProjectContext);
   const languages = useContext(LanguageContext);
-  const instrument = props.location.state
-    ? props.location.state.instrument
-    : null;
-
-  const redirectToInstrument = (projectId, id) => {
-    props.history.push(`/projects/${projectId}/instruments/${id}`);
-  };
+  const instrument = props.instrument ? props.instrument : null;
 
   return (
     <Formik
@@ -47,8 +46,7 @@ const InstrumentForm = props => {
           updateInstrument(values.project_id, values.id, instrument)
             .then(response => {
               if (response.status === 204) {
-                // Successful update
-                redirectToInstrument(values.project_id, values.id);
+                props.fetchInstruments();
               }
             })
             .catch(error => {
@@ -58,7 +56,7 @@ const InstrumentForm = props => {
           createInstrument(values.project_id, instrument)
             .then(response => {
               if (response.status === 201) {
-                redirectToInstrument(values.project_id, response.data.id);
+                props.fetchInstruments();
               }
             })
             .catch(error => {
@@ -68,105 +66,60 @@ const InstrumentForm = props => {
       }}
       render={({ errors, values, touched }) => (
         <Form>
-          <h4 className="text-center">
+          <CenteredH4>
             {values.title ? values.title : "New Instrument"}
-          </h4>
-          <Row className="form-group">
-            <Col sm="2">
-              <label htmlFor="title">Title</label>
-            </Col>
-            <Col sm="7">
+          </CenteredH4>
+          <FormItem>
+            <Field
+              className="ant-input"
+              name="title"
+              placeholder="Enter title"
+              type="text"
+            />
+            <AlertErrorMessage name="title" type="error" />
+          </FormItem>
+          <FormItem>
+            <Field className="ant-input" name="language" component="select">
+              <option></option>
+              {languages.map(language => {
+                return (
+                  <option
+                    key={language.code}
+                    name="language"
+                    value={language.code}
+                  >
+                    {language.name}
+                  </option>
+                );
+              })}
+            </Field>
+            <AlertErrorMessage name="language" type="error" />
+          </FormItem>
+          <FormItem>
+            <Field className="ant-input" name="project_id" component="select">
+              <option></option>
+              {projects.map(project => {
+                return (
+                  <option key={project.id} name="project_id" value={project.id}>
+                    {project.name}
+                  </option>
+                );
+              })}
+            </Field>
+            <AlertErrorMessage name="project_id" type="error" />
+          </FormItem>
+          <FormItem>
+            <label>
               <Field
-                className="form-control"
-                name="title"
-                placeholder="Enter title"
-                type="text"
-              />
-            </Col>
-            <Col sm="3">
-              <ErrorMessage
-                name="title"
-                render={msg => <Alert variant="danger">{msg}</Alert>}
-              />
-            </Col>
-          </Row>
-          <Row className="form-group">
-            <Col sm="2">
-              <label htmlFor="language">Language</label>
-            </Col>
-            <Col sm="7">
-              <Field
-                className="form-control"
-                name="language"
-                component="select"
-              >
-                <option></option>
-                {languages.map(language => {
-                  return (
-                    <option
-                      key={language.code}
-                      name="language"
-                      value={language.code}
-                    >
-                      {language.name}
-                    </option>
-                  );
-                })}
-              </Field>
-            </Col>
-            <Col sm="3">
-              <ErrorMessage
-                name="language"
-                render={msg => <Alert variant="danger">{msg}</Alert>}
-              />
-            </Col>
-          </Row>
-          <Row className="form-group">
-            <Col sm="2">
-              <label htmlFor="project_id">Project</label>
-            </Col>
-            <Col sm="7">
-              <Field
-                className="form-control"
-                name="project_id"
-                component="select"
-              >
-                <option></option>
-                {projects.map(project => {
-                  return (
-                    <option
-                      key={project.id}
-                      name="project_id"
-                      value={project.id}
-                    >
-                      {project.name}
-                    </option>
-                  );
-                })}
-              </Field>
-            </Col>
-            <Col sm="3">
-              <ErrorMessage
-                name="project_id"
-                render={msg => <Alert variant="danger">{msg}</Alert>}
-              />
-            </Col>
-          </Row>
-          <Row className="form-group">
-            <Col sm="2">
-              <label htmlFor="published">Published</label>
-            </Col>
-            <Col sm="10">
-              <Field
-                className="form-control"
                 name="published"
                 type="checkbox"
+                checked={values.published}
               />
-            </Col>
-          </Row>
-          <Button className="float-right" type="submit">
-            Save
-          </Button>
+              <span> Published</span>
+            </label>
+          </FormItem>
+          <LeftCancelButton handleClick={props.handleCancel} />
+          <RightSubmitButton />
         </Form>
       )}
     />
