@@ -49,7 +49,6 @@ export const getInstruments = () => {
 /*
 Instrument
 */
-
 export const getInstrument = (projectId, id) => {
   return instance.get(`/projects/${projectId}/instruments/${id}`);
 };
@@ -127,6 +126,23 @@ export const updateDisplay = (projectId, instrumentId, id, display) => {
 export const deleteDisplay = (projectId, instrumentId, id) => {
   return instance.delete(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
+  );
+};
+
+/*
+Question Sets
+*/
+export const getQuestionSets = () => {
+  return instance.get("/question_sets");
+};
+
+/*
+ * Instrument Questions
+ */
+export const createInstrumentQuestion = (projectId, instrumentId, iQ) => {
+  return instance.post(
+    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions`,
+    iQ
   );
 };
 

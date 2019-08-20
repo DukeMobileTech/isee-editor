@@ -3,23 +3,47 @@ import { Row, Col, Table, List } from "antd";
 import { CenteredH3 } from "../../utils/Styles";
 import { RightAddButton } from "../../utils/Utils";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
+import { getDisplay } from "../../utils/API";
 
 const { Column } = Table;
 
+let position = 1;
+const setPosition = display => {
+  if (display.instrument_questions && display.instrument_questions.length > 0) {
+    position = display.instrument_questions.slice(-1)[0].number_in_instrument;
+  }
+};
+
 const Display = props => {
-  const display = props.display;
+  const [display, setDisplay] = useState(props.display);
   const [showForm, setShowForm] = useState(false);
-  const [instrumentQuestion, setInstrumentQuestion] = useState(null);
+  setPosition(props.display);
 
   const handleNewInstrumentQuestion = () => {
-    console.log("add new question");
     setShowForm(true);
-    setInstrumentQuestion(null);
+  };
+
+  const fetchUpdatedDisplay = async () => {
+    setShowForm(false);
+    const results = await getDisplay(
+      props.projectId,
+      display.instrument_id,
+      display.id
+    );
+    setDisplay(results.data);
+    setPosition(results.data);
   };
 
   const DisplayView = () => {
     if (showForm) {
-      return <NewInstrumentQuestion instrumentQuestion={instrumentQuestion} />;
+      return (
+        <NewInstrumentQuestion
+          projectId={props.projectId}
+          display={display}
+          position={position}
+          fetchUpdatedDisplay={fetchUpdatedDisplay}
+        />
+      );
     } else {
       return <InstrumentQuestionList />;
     }

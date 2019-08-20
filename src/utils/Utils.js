@@ -31,6 +31,16 @@ export const RightSubmitButton = () => {
   );
 };
 
+export const RightSaveButton = props => {
+  return (
+    <Col offset={23}>
+      <Button type="primary" onClick={props.handleClick}>
+        <Icon type="save" />
+      </Button>
+    </Col>
+  );
+};
+
 export const LeftCancelButton = props => {
   return (
     <Col span={2}>
