@@ -36,6 +36,7 @@ const InstrumentForm = props => {
       }}
       validationSchema={InstrumentSchema}
       onSubmit={(values, { setErrors }) => {
+        console.log(values);
         const instrument = {
           title: values.title,
           project_id: values.project_id,

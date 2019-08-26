@@ -76,38 +76,36 @@ const InstrumentSections = props => {
 
   const SectionList = () => {
     return (
-      <React.Fragment>
-        <List
-          header={<CenteredH4>Sections</CenteredH4>}
-          footer={<RightAddButton handleClick={handleNewSection} />}
-          bordered
-          dataSource={sections}
-          renderItem={section => (
-            <List.Item>
-              <Col span={2}>{section.position}</Col>
-              <Col span={16}>{section.title}</Col>
-              <Col span={6}>
-                <Button onClick={() => handleOpenSection(section)}>
-                  <Icon type="folder-open" />
-                </Button>
-                <Divider type="vertical" />
-                <EditButton handleClick={() => handleEditSection(section)} />
-                <Divider type="vertical" />
-                <DeleteButton
-                  handleClick={() => {
-                    if (
-                      window.confirm(
-                        `Are you sure you want to delete ${section.title}?`
-                      )
+      <List
+        header={<CenteredH4>Sections</CenteredH4>}
+        footer={<RightAddButton handleClick={handleNewSection} />}
+        bordered
+        dataSource={sections}
+        renderItem={section => (
+          <List.Item>
+            <Col span={2}>{section.position}</Col>
+            <Col span={16}>{section.title}</Col>
+            <Col span={6}>
+              <Button onClick={() => handleOpenSection(section)}>
+                <Icon type="folder-open" />
+              </Button>
+              <Divider type="vertical" />
+              <EditButton handleClick={() => handleEditSection(section)} />
+              <Divider type="vertical" />
+              <DeleteButton
+                handleClick={() => {
+                  if (
+                    window.confirm(
+                      `Are you sure you want to delete ${section.title}?`
                     )
-                      handleDeleteSection(section);
-                  }}
-                />
-              </Col>
-            </List.Item>
-          )}
-        />
-      </React.Fragment>
+                  )
+                    handleDeleteSection(section);
+                }}
+              />
+            </Col>
+          </List.Item>
+        )}
+      />
     );
   };
 

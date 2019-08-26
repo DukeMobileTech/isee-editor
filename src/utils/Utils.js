@@ -23,7 +23,7 @@ export const CenteredSubmitButton = props => {
 
 export const RightSubmitButton = () => {
   return (
-    <Col offset={23}>
+    <Col offset={22}>
       <Button type="primary" htmlType="submit">
         <Icon type="save" />
       </Button>
@@ -33,7 +33,7 @@ export const RightSubmitButton = () => {
 
 export const RightSaveButton = props => {
   return (
-    <Col offset={23}>
+    <Col offset={22}>
       <Button type="primary" onClick={props.handleClick}>
         <Icon type="save" />
       </Button>
@@ -53,7 +53,7 @@ export const LeftCancelButton = props => {
 
 export const RightAddButton = props => {
   return (
-    <Col offset={23}>
+    <Col offset={22}>
       <Button type="primary" onClick={props.handleClick}>
         <Icon type="folder-add" />
       </Button>
@@ -73,6 +73,14 @@ export const DeleteButton = props => {
   return (
     <Button type="danger" onClick={props.handleClick}>
       <Icon type="delete" />
+    </Button>
+  );
+};
+
+export const ViewButton = props => {
+  return (
+    <Button type="primary" onClick={props.handleClick}>
+      <Icon type="folder-open" />
     </Button>
   );
 };
