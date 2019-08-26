@@ -35,6 +35,53 @@ instance.interceptors.response.use(
   }
 );
 
+/**
+ * QuestionSet
+ */
+export const getQuestionSets = () => {
+  return instance.get("/question_sets");
+};
+
+export const createQuestionSet = questionSet => {
+  return instance.post("/question_sets", questionSet);
+};
+
+export const updateQuestionSet = (id, questionSet) => {
+  return instance.put(`/question_sets/${id}`, questionSet);
+};
+
+export const deleteQuestionSet = id => {
+  return instance.delete(`/question_sets/${id}`);
+};
+
+/**
+ * Folder
+ */
+export const getFolders = questionSetId => {
+  return instance.get(`/question_sets/${questionSetId}/folders`);
+};
+
+export const createFolder = (questionSetId, folder) => {
+  return instance.post(`/question_sets/${questionSetId}/folders`, folder);
+};
+
+export const updateFolder = (questionSetId, id, folder) => {
+  return instance.put(`/question_sets/${questionSetId}/folders/${id}`, folder);
+};
+
+export const deleteFolder = (questionSetId, id) => {
+  return instance.delete(`/question_sets/${questionSetId}/folders/${id}`);
+};
+
+/**
+ * Questions
+ */
+export const getQuestions = folder => {
+  return instance.get(
+    `/question_sets/${folder.question_set_id}/folders/${folder.id}/questions`
+  );
+};
+
 /*
 Project
 */
@@ -127,13 +174,6 @@ export const deleteDisplay = (projectId, instrumentId, id) => {
   return instance.delete(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
   );
-};
-
-/*
-QuestionSet
-*/
-export const getQuestionSets = () => {
-  return instance.get("/question_sets");
 };
 
 /*

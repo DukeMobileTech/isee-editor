@@ -35,7 +35,9 @@ const AppHeader = () => {
         <Menu.Item key="1">
           <a href="/">Home</a>
         </Menu.Item>
-        <Menu.Item key="2">Banks</Menu.Item>
+        <Menu.Item key="2">
+          <a href="/banks">Banks</a>
+        </Menu.Item>
         <Menu.Item key="3" style={{ float: "right" }}>
           {localStorage.getItem("userEmail") &&
             localStorage.getItem("authenticationToken") && (

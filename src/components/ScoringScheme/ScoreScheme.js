@@ -1,9 +1,8 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { Layout, Tabs, Icon, Collapse } from "antd";
+import { Collapse } from "antd";
 import { CenteredH1, CenteredH3 } from "../../utils/Styles";
 import { getDomains } from "../../utils/API";
 import Subdomains from "./Subdomains";
-import ScoreUnit from "./ScoreUnits";
 
 const { Panel } = Collapse;
 

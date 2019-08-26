@@ -4,6 +4,7 @@ import Project from "./Project";
 import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
 import ScoreScheme from "./ScoringScheme/ScoreScheme";
+import Bank from "./QuestionSet/Bank";
 
 const Router = () => {
   return (
@@ -20,6 +21,7 @@ const Router = () => {
           component={ScoreScheme}
           exact
         />
+        <Route path="/banks" component={Bank} exact />
         <Route component={Error} />
       </Switch>
     </BrowserRouter>
