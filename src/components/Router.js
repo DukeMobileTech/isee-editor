@@ -4,7 +4,7 @@ import Project from "./Project";
 import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
 import ScoreScheme from "./ScoringScheme/ScoreScheme";
-import Bank from "./QuestionSet/Bank";
+import Bank from "./Bank";
 
 const Router = () => {
   return (

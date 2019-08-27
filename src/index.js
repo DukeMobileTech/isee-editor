@@ -5,11 +5,14 @@ import "./index.css";
 import { App } from "./App";
 import * as serviceWorker from "./serviceWorker";
 import AppProviders from "./context/AppProviders";
+import { IntlProvider } from "react-intl";
 
 ReactDOM.render(
-  <AppProviders>
-    <App />
-  </AppProviders>,
+  <IntlProvider locale="en">
+    <AppProviders>
+      <App />
+    </AppProviders>
+  </IntlProvider>,
   document.getElementById("root")
 );
 

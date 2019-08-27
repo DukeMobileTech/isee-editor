@@ -82,6 +82,52 @@ export const getQuestions = folder => {
   );
 };
 
+/**
+ * OptionSet
+ */
+export const getOptionSets = () => {
+  return instance.get("/option_sets");
+};
+
+export const getOptionSet = id => {
+  return instance.get(`/option_sets/${id}`);
+};
+
+export const createOptionSet = optionSet => {
+  return instance.post("/option_sets", optionSet);
+};
+
+export const updateOptionSet = (id, optionSet) => {
+  return instance.put(`/option_sets/${id}`, optionSet);
+};
+
+export const deleteOptionSet = id => {
+  return instance.delete(`/option_sets/${id}`);
+};
+
+/**
+ * Instruction
+ */
+export const getInstructions = () => {
+  return instance.get("/instructions");
+};
+
+/**
+ * Option
+ */
+export const getOptions = () => {
+  return instance.get("/options");
+};
+
+/**
+ * OptionInOptionSet
+ */
+export const deleteOptionInOptionSet = (optionSetId, id) => {
+  return instance.delete(
+    `/option_sets/${optionSetId}/option_in_option_sets/${id}`
+  );
+};
+
 /*
 Project
 */
