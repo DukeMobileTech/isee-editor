@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
-import { Form as AntForm, Card, Row, Col, Select } from "antd";
+import { Form as AntForm, Card, Row, Col, Select, Button, Icon } from "antd";
 import * as Yup from "yup";
 import {
   AlertErrorMessage,
@@ -13,6 +13,7 @@ import {
   createOptionSet,
   deleteOptionInOptionSet
 } from "../../utils/API";
+import OptionForm from "./OptionForm";
 // import { FormattedMessage } from "react-intl";
 
 const FormItem = AntForm.Item;
@@ -23,17 +24,30 @@ const OptionSetSchema = Yup.object().shape({
 
 const OptionSetForm = props => {
   const optionSet = props.optionSet;
-  const options = props.options;
+  const [options, setOptions] = useState(props.options);
   const instructions = props.instructions;
+  const [showNewOptionForm, setShowNewOptionForm] = useState(false);
 
   const handleDeleteOption = oios => {
-    deleteOptionInOptionSet(optionSet.id, oios.id)
-      .then(res => {
-        props.fetchOptionSet(optionSet.id);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    if (oios.id) {
+      deleteOptionInOptionSet(optionSet.id, oios.id)
+        .then(res => {
+          props.fetchOptionSet(optionSet.id);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
+      console.log("remove recent");
+      //TODO: REMOVE FROM VALUES ARRAY ~ make enableReinitialize work
+      props.fetchOptionSet(optionSet.id);
+    }
+  };
+
+  const onNewOption = option => {
+    console.log("new option", option);
+    setOptions([option, ...options]);
+    //TODO: Automatically add to option
   };
 
   return (
@@ -183,51 +197,67 @@ const OptionSetForm = props => {
                 </Row>
               ))}
             <FormItem>
-              <Select
-                showSearch
-                autoClearSearchValue
-                mode="tags"
-                style={{ width: "100%" }}
-                placeholder="Search/select an option and add to the set"
-                onChange={selectedValues => {
-                  selectedValues.forEach(selectedValue => {
-                    const option = options.find(
-                      option => option.identifier === selectedValue
-                    );
-                    if (option) {
-                      const exists = optionSet.option_in_option_sets.find(
-                        os => os.option_id === option.id
-                      );
-                      if (exists === undefined) {
-                        optionSet.option_in_option_sets.push({
-                          option_id: option.id,
-                          option_set_id: optionSet.id,
-                          number_in_question:
-                            optionSet.option_in_option_sets.length + 1,
-                          special: false,
-                          option: option
-                        });
-                        resetForm({
-                          id: values.id,
-                          title: values.title,
-                          instruction_id: values.instruction_id,
-                          special: values.special,
-                          option_in_option_sets: optionSet.option_in_option_sets
-                        });
-                      }
-                    }
-                  });
-                }}
-              >
-                {options &&
-                  options.map(option => {
-                    return (
-                      <Option key={`${option.identifier}`}>
-                        {option.text}
-                      </Option>
-                    );
-                  })}
-              </Select>
+              <Row>
+                <Col span={6}>Add existing</Col>
+                <Col span={18}>
+                  <Select
+                    showSearch
+                    autoClearSearchValue
+                    mode="tags"
+                    style={{ width: "100%" }}
+                    placeholder="Search/select an option and add to the set"
+                    onChange={selectedValues => {
+                      selectedValues.forEach(selectedValue => {
+                        const option = options.find(
+                          option => option.identifier === selectedValue
+                        );
+                        if (option) {
+                          const exists = optionSet.option_in_option_sets.find(
+                            os => os.option_id === option.id
+                          );
+                          if (exists === undefined) {
+                            optionSet.option_in_option_sets.push({
+                              option_id: option.id,
+                              option_set_id: optionSet.id,
+                              number_in_question:
+                                optionSet.option_in_option_sets.length + 1,
+                              special: false,
+                              option: option
+                            });
+                            resetForm({
+                              id: values.id,
+                              title: values.title,
+                              instruction_id: values.instruction_id,
+                              special: values.special,
+                              option_in_option_sets:
+                                optionSet.option_in_option_sets
+                            });
+                          }
+                        }
+                      });
+                    }}
+                  >
+                    {options &&
+                      options.map(option => {
+                        return (
+                          <Option key={`${option.identifier}`}>
+                            {option.text}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                </Col>
+              </Row>
+            </FormItem>
+            <FormItem>
+              <Button type="primary" onClick={() => setShowNewOptionForm(true)}>
+                <Icon type="plus" /> ADD NEW
+              </Button>
+              <OptionForm
+                showNewOptionForm={showNewOptionForm}
+                onNewOption={onNewOption}
+                setShowNewOptionForm={setShowNewOptionForm}
+              />
             </FormItem>
             <LeftCancelButton handleClick={props.handleCancel} />
             <RightSubmitButton />

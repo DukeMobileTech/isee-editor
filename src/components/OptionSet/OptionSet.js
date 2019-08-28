@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Row, Col, Card, Descriptions, Divider } from "antd";
 import { EditButton, DeleteButton } from "../../utils/Utils";
-import OptionSetForm from "./OptionSetForm";
 import { getOptionSet, deleteOptionSet } from "../../utils/API";
+import EditOptionSet from "./EditOptionSet";
 
 const OptionSet = props => {
   const [optionSet, setOptionSet] = useState(props.optionSet);
@@ -74,7 +74,8 @@ const OptionSet = props => {
   const View = () => {
     if (showForm) {
       return (
-        <OptionSetForm
+        <EditOptionSet
+          visible={true}
           optionSet={optionSet}
           options={props.options}
           instructions={props.instructions}
