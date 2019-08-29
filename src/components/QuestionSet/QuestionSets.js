@@ -84,19 +84,10 @@ const QuestionSets = props => {
     </Fragment>
   );
 
-  function callback(key) {
-    console.log(key);
-  }
-
   const CollapseView = () => {
     return (
       <Fragment>
-        <Collapse
-          accordion
-          defaultActiveKey={["1"]}
-          onChange={callback}
-          expandIconPosition={"left"}
-        >
+        <Collapse accordion expandIconPosition={"left"}>
           {questionSets &&
             questionSets.map(questionSet => {
               return (

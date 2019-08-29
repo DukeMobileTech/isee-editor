@@ -5,7 +5,7 @@ import { RightAddButton } from "../../utils/Utils";
 import OptionSet from "./OptionSet";
 import NewOptionSet from "./NewOptionSet";
 
-const OptionSets = props => {
+const OptionSets = () => {
   const [loading, setLoading] = useState(true);
   const [optionSets, setOptionSets] = useState([]);
   const [options, setOptions] = useState([]);

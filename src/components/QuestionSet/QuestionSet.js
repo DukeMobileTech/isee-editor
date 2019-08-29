@@ -3,7 +3,7 @@ import { Divider, Collapse, Icon } from "antd";
 import { EditButton, DeleteButton, RightAddButton } from "../../utils/Utils";
 import FolderForm from "./FolderForm";
 import { getFolders, deleteFolder } from "../../utils/API";
-import FolderQuestion from "./FolderQuestions";
+import FolderQuestions from "./FolderQuestions";
 
 const { Panel } = Collapse;
 
@@ -85,7 +85,6 @@ const QuestionSet = props => {
       <Fragment>
         <Collapse
           accordion
-          defaultActiveKey={`${folders[0].id}`}
           expandIcon={({ isActive }) => (
             <Icon type="caret-right" rotate={isActive ? 90 : 0} />
           )}
@@ -97,7 +96,7 @@ const QuestionSet = props => {
                 key={`${folder.id}`}
                 extra={genExtra(folder)}
               >
-                <FolderQuestion folder={folder} />
+                <FolderQuestions folder={folder} />
               </Panel>
             );
           })}

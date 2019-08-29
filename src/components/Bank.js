@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Tabs, Icon } from "antd";
 import QuestionSets from "./QuestionSet/QuestionSets";
 import OptionSets from "./OptionSet/OptionSets";
-import Instructions from "./QuestionSet/Instructions";
 import Validations from "./QuestionSet/Validations";
+import Instructions from "./Instruction/Instructions";
 
 const { TabPane } = Tabs;
 
