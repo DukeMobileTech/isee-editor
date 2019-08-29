@@ -28,7 +28,6 @@ const ScoreUnits = props => {
       subdomain.id
     );
     setScoreUnits(result.data);
-    console.log(result.data);
   };
 
   const handleNewScoreUnit = () => {
@@ -110,6 +109,7 @@ const ScoreUnits = props => {
               )}
             />
           </Table>
+          <br />
           <RightAddButton handleClick={handleNewScoreUnit} />
         </Fragment>
       );

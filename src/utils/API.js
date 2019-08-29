@@ -284,39 +284,50 @@ export const getDomains = (projectId, instrumentId, scoreSchemeId) => {
 
 export const getDomain = (projectId, instrumentId, scoreSchemeId, id) => {
   return instance.get(
-    `/projects/${projectId}/instruments/${instrumentId}/score_scheme/${scoreSchemeId}/domains/${id}`
+    `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${scoreSchemeId}/domains/${id}`
   );
 };
 
-export const createDomain = (
-  projectId,
-  instrumentId,
-  scoreSchemeId,
-  id,
-  domain
-) => {
+export const createDomain = (instrument, domain) => {
   return instance.post(
-    `/projects/${projectId}/instruments/${instrumentId}/score_scheme/${scoreSchemeId}/domains/${id}`,
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains`,
     domain
   );
 };
 
-export const updateDomain = (
-  projectId,
-  instrumentId,
-  scoreSchemeId,
-  id,
-  domain
-) => {
+export const updateDomain = (instrument, domain) => {
   return instance.put(
-    `/projects/${projectId}/instruments/${instrumentId}/score_scheme/${scoreSchemeId}/domains/${id}`,
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}`,
     domain
   );
 };
 
-export const deleteDomain = (projectId, instrumentId, scoreSchemeId, id) => {
+export const deleteDomain = (instrument, domain) => {
   return instance.delete(
-    `/projects/${projectId}/instruments/${instrumentId}/score_scheme/${scoreSchemeId}/domains/${id}`
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}`
+  );
+};
+
+/**
+ * Subdomains
+ */
+export const createSubdomain = (instrument, scoreSchemeId, subdomain) => {
+  return instance.post(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains`,
+    subdomain
+  );
+};
+
+export const updateSubdomain = (instrument, scoreSchemeId, subdomain) => {
+  return instance.put(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${subdomain.id}`,
+    subdomain
+  );
+};
+
+export const deleteSubdomain = (instrument, scoreSchemeId, subdomain) => {
+  return instance.delete(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${subdomain.id}`
   );
 };
 
@@ -325,36 +336,36 @@ export const deleteDomain = (projectId, instrumentId, scoreSchemeId, id) => {
  */
 export const getScoreUnits = (instrument, scoreSchemeId, subdomainId) => {
   return instance.get(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/score_units?subdomain_id=${subdomainId}`
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${subdomainId}/score_units`
   );
 };
 
 export const createScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
   return instance.post(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/score_units`,
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units`,
     scoreUnit
   );
 };
 
-export const updateScoreUnit = (instrument, scoreSchemeId, id, scoreUnit) => {
+export const updateScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
   return instance.put(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/score_units/${id}`,
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units/${scoreUnit.id}`,
     scoreUnit
   );
 };
 
-export const deleteScoreUnit = (instrument, scoreSchemeId, id) => {
+export const deleteScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
   return instance.delete(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/score_units/${id}`
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units/${scoreUnit.id}`
   );
 };
 
 /**
  * OptionScore
  */
-export const deleteOptionScore = (instrument, scoreSchemeId, id) => {
+export const deleteOptionScore = (instrument, scoreSchemeId, scoreUnit, id) => {
   return instance.delete(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/option_scores/${id}`
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units/${scoreUnit.id}/option_scores/${id}`
   );
 };
 

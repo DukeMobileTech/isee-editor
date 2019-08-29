@@ -26,12 +26,7 @@ const AppHeader = () => {
   return (
     <Header>
       <Logo>iSEE</Logo>
-      <Menu
-        theme="light"
-        mode="horizontal"
-        defaultSelectedKeys={["1"]}
-        style={{ lineHeight: "64px" }}
-      >
+      <Menu theme="light" mode="horizontal" style={{ lineHeight: "64px" }}>
         <Menu.Item key="1">
           <a href="/">Home</a>
         </Menu.Item>

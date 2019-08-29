@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { ErrorMessage } from "formik";
-import { Alert, Button, Col, Icon } from "antd";
+import { Alert, Button, Col, Icon, Divider } from "antd";
 
 export const AlertErrorMessage = props => {
   return (
@@ -84,3 +84,22 @@ export const ViewButton = props => {
     </Button>
   );
 };
+
+export const genExtra = (obj, func1, func2) => (
+  <Fragment>
+    <EditButton
+      handleClick={event => {
+        event.stopPropagation();
+        func1(obj);
+      }}
+    />
+    <Divider type="vertical" />
+    <DeleteButton
+      handleClick={event => {
+        event.stopPropagation();
+        if (window.confirm(`Are you sure you want to delete ${obj.title}?`))
+          func2(obj);
+      }}
+    />
+  </Fragment>
+);

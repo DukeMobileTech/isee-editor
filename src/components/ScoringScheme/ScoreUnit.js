@@ -13,7 +13,12 @@ const ScoreUnit = props => {
   );
 
   const handleDeleteOptionScore = optionScore => {
-    deleteOptionScore(props.instrument, props.scoreSchemeId, optionScore.id)
+    deleteOptionScore(
+      props.instrument,
+      props.scoreSchemeId,
+      scoreUnit,
+      optionScore.id
+    )
       .then(res => {
         let index = optionScores.indexOf(optionScore);
         optionScores.splice(index, 1);
@@ -64,6 +69,7 @@ const ScoreUnit = props => {
         />
       </Table>
       <LeftCancelButton handleClick={props.handleCancel} />
+      <br />
     </div>
   );
 };
