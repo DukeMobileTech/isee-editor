@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { ErrorMessage } from "formik";
-import { Alert, Button, Col, Icon, Divider } from "antd";
+import { Alert, Button, Col, Icon, Divider, Row } from "antd";
 
 export const AlertErrorMessage = props => {
   return (
@@ -51,11 +51,21 @@ export const LeftCancelButton = props => {
   );
 };
 
-export const RightAddButton = props => {
+export const FolderAddButton = props => {
   return (
     <Col offset={22}>
       <Button type="primary" onClick={props.handleClick}>
         <Icon type="folder-add" />
+      </Button>
+    </Col>
+  );
+};
+
+export const AddButton = props => {
+  return (
+    <Col offset={22}>
+      <Button type="primary" onClick={props.handleClick}>
+        <Icon type="plus" />
       </Button>
     </Col>
   );
@@ -85,21 +95,40 @@ export const ViewButton = props => {
   );
 };
 
-export const genExtra = (obj, func1, func2) => (
+export const EditDeleteBtnGroup = props => (
   <Fragment>
     <EditButton
       handleClick={event => {
         event.stopPropagation();
-        func1(obj);
+        props.handleEdit(props.object);
       }}
     />
     <Divider type="vertical" />
     <DeleteButton
       handleClick={event => {
         event.stopPropagation();
-        if (window.confirm(`Are you sure you want to delete ${obj.title}?`))
-          func2(obj);
+        if (window.confirm(`Are you sure you want to delete ${props.message}?`))
+          props.handleDelete(props.object);
       }}
     />
   </Fragment>
 );
+
+export const DRow = ({ children }) => {
+  return (
+    <Row gutter={8} style={{ marginBottom: 8 }}>
+      {children}
+    </Row>
+  );
+};
+
+export const questionTypesWithOptions = [
+  "SELECT_ONE",
+  "SELECT_MULTIPLE",
+  "SELECT_ONE_WRITE_OTHER",
+  "SELECT_MULTIPLE_WRITE_OTHER",
+  "LIST_OF_TEXT_BOXES",
+  "LIST_OF_INTEGER_BOXES",
+  "LABELED_SLIDER",
+  "DROP_DOWN"
+];

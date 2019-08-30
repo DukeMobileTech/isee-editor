@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col, Table, List } from "antd";
 import { CenteredH3 } from "../../utils/Styles";
-import { RightAddButton } from "../../utils/Utils";
+import { FolderAddButton } from "../../utils/Utils";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
 import { getDisplay } from "../../utils/API";
 
@@ -84,7 +84,7 @@ const Display = props => {
           />
         </Table>
         <div style={{ marginTop: 10 }}>
-          <RightAddButton handleClick={handleNewInstrumentQuestion} />
+          <FolderAddButton handleClick={handleNewInstrumentQuestion} />
         </div>
       </React.Fragment>
     );

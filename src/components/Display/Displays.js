@@ -5,7 +5,7 @@ import DisplayForm from "./DisplayForm";
 import { getSection, deleteDisplay } from "../../utils/API";
 import {
   LeftCancelButton,
-  RightAddButton,
+  FolderAddButton,
   EditButton,
   DeleteButton
 } from "../../utils/Utils";
@@ -71,7 +71,7 @@ const Displays = props => {
     return (
       <Row>
         <LeftCancelButton handleClick={props.handleCancel} />
-        <RightAddButton handleClick={handleNewDisplay} />
+        <FolderAddButton handleClick={handleNewDisplay} />
       </Row>
     );
   };

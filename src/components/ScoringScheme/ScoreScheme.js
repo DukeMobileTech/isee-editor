@@ -3,7 +3,7 @@ import { Collapse, Divider } from "antd";
 import { CenteredH1, CenteredH3 } from "../../utils/Styles";
 import { getDomains, deleteDomain } from "../../utils/API";
 import Subdomains from "./Subdomains";
-import { RightAddButton, EditButton, DeleteButton } from "../../utils/Utils";
+import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
 import Domain from "./Domain/Domain";
 
 const { Panel } = Collapse;
@@ -88,7 +88,7 @@ const ScoreScheme = props => {
             })}
         </Collapse>
         <br />
-        <RightAddButton handleClick={onNewDomain} />
+        <FolderAddButton handleClick={onNewDomain} />
         <Domain
           visible={visible}
           setVisible={setVisible}

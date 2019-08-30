@@ -1,16 +1,29 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Divider, Collapse } from "antd";
-import { deleteQuestionSet, getQuestionSets } from "../../utils/API";
-import { RightAddButton, EditButton, DeleteButton } from "../../utils/Utils";
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, Fragment, useContext } from "react";
+import { Divider, Collapse, Spin } from "antd";
+import {
+  deleteQuestionSet,
+  getQuestionSets,
+  getOptionSets,
+  getInstructions
+} from "../../utils/API";
+import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
 import QuestionSetForm from "./QuestionSetForm";
 import QuestionSet from "./QuestionSet";
+import { OptionSetContext } from "../../context/OptionSetContext";
+import { InstructionContext } from "../../context/InstructionContext";
 
 const { Panel } = Collapse;
 
 const QuestionSets = props => {
+  const [loadingQs, setLoadingQs] = useState(true);
+  const [loadingOs, setLoadingOs] = useState(true);
+  const [loadingIs, setLoadingIs] = useState(true);
   const [questionSets, setQuestionSets] = useState(props.questionSets);
   const [showForm, setShowForm] = useState(false);
   const [questionSet, setQuestionSet] = useState(null);
+  const [optionSets, setOptionSets] = useContext(OptionSetContext);
+  const [instructions, setInstructions] = useContext(InstructionContext);
 
   useEffect(() => {
     fetchQuestionSets();
@@ -20,7 +33,28 @@ const QuestionSets = props => {
     setShowForm(false);
     const results = await getQuestionSets();
     setQuestionSets(results.data);
+    setLoadingQs(false);
   };
+
+  useEffect(() => {
+    const fetchOptionSets = async () => {
+      const results = await getOptionSets();
+      setOptionSets(results.data);
+      setLoadingOs(false);
+    };
+    fetchOptionSets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchInstructions = async () => {
+      const results = await getInstructions();
+      setInstructions(results.data);
+      setLoadingIs(false);
+    };
+    fetchInstructions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDeleteQuestionSet = questionSet => {
     deleteQuestionSet(questionSet.id)
@@ -102,12 +136,16 @@ const QuestionSets = props => {
             })}
         </Collapse>
         <br />
-        <RightAddButton handleClick={handleNewQuestionSet} />
+        <FolderAddButton handleClick={handleNewQuestionSet} />
       </Fragment>
     );
   };
 
-  return <View />;
+  return (
+    <Spin spinning={loadingQs || loadingOs || loadingIs}>
+      <View />
+    </Spin>
+  );
 };
 
 export default QuestionSets;

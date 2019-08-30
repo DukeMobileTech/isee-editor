@@ -82,6 +82,26 @@ export const getQuestions = folder => {
   );
 };
 
+export const createQuestion = question => {
+  return instance.post(
+    `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions`,
+    question
+  );
+};
+
+export const updateQuestion = question => {
+  return instance.put(
+    `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions/${question.id}`,
+    question
+  );
+};
+
+export const deleteQuestion = question => {
+  return instance.delete(
+    `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions/${question.id}`
+  );
+};
+
 /**
  * OptionSet
  */

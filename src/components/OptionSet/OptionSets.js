@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Spin } from "antd";
 import { getOptionSets, getOptions, getInstructions } from "../../utils/API";
-import { RightAddButton } from "../../utils/Utils";
+import { FolderAddButton } from "../../utils/Utils";
 import OptionSet from "./OptionSet";
 import NewOptionSet from "./NewOptionSet";
 
@@ -42,7 +42,7 @@ const OptionSets = () => {
   return (
     <div style={{ background: "#ECECEC", padding: "30px" }}>
       <Spin spinning={loading}>
-        <RightAddButton handleClick={handleNewOptionSet} />
+        <FolderAddButton handleClick={handleNewOptionSet} />
         <br></br>
         <NewOptionSet
           visible={visible}

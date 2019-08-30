@@ -15,7 +15,7 @@ import {
   createInstruction,
   deleteInstruction
 } from "../../utils/API";
-import { RightAddButton } from "../../utils/Utils";
+import { FolderAddButton } from "../../utils/Utils";
 
 const EditableContext = React.createContext();
 
@@ -186,7 +186,7 @@ const EditableTable = props => {
   return (
     <Spin spinning={loading}>
       <EditableContext.Provider value={props.form}>
-        <RightAddButton handleClick={handleAdd} /> <br />
+        <FolderAddButton handleClick={handleAdd} /> <br />
         <Table
           components={components}
           bordered

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { getScoreUnits, deleteScoreUnit } from "../../utils/API";
 import { Table, Divider } from "antd";
-import { RightAddButton, DeleteButton, ViewButton } from "../../utils/Utils";
+import { FolderAddButton, DeleteButton, ViewButton } from "../../utils/Utils";
 import ScoreUnit from "./ScoreUnit";
 import ScoreUnitForm from "./ScoreUnitForm";
 
@@ -110,7 +110,7 @@ const ScoreUnits = props => {
             />
           </Table>
           <br />
-          <RightAddButton handleClick={handleNewScoreUnit} />
+          <FolderAddButton handleClick={handleNewScoreUnit} />
         </Fragment>
       );
     }

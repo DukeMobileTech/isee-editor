@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Divider, Collapse, Icon } from "antd";
-import { EditButton, DeleteButton, RightAddButton } from "../../utils/Utils";
+import { EditButton, DeleteButton, FolderAddButton } from "../../utils/Utils";
 import FolderForm from "./FolderForm";
 import { getFolders, deleteFolder } from "../../utils/API";
 import FolderQuestions from "./FolderQuestions";
@@ -102,7 +102,7 @@ const QuestionSet = props => {
           })}
         </Collapse>
         <br />
-        <RightAddButton handleClick={handleNewFolder} />
+        <FolderAddButton handleClick={handleNewFolder} />
       </Fragment>
     );
   };

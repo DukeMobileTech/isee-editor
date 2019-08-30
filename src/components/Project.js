@@ -3,7 +3,7 @@ import { Table, Divider } from "antd";
 import { Link } from "react-router-dom";
 import { getInstruments, deleteInstrument } from "../utils/API";
 import InstrumentForm from "./Instrument/InstrumentForm";
-import { EditButton, DeleteButton, RightAddButton } from "../utils/Utils";
+import { EditButton, DeleteButton, FolderAddButton } from "../utils/Utils";
 
 const { Column } = Table;
 
@@ -118,7 +118,7 @@ const Project = () => {
             )}
           />
         </Table>
-        <RightAddButton handleClick={handleNewInstrument} />
+        <FolderAddButton handleClick={handleNewInstrument} />
       </React.Fragment>
     );
   };

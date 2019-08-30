@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CenteredH1 } from "../../utils/Styles";
 import { getScoreSchemes, deleteScoreScheme } from "../../utils/API";
 import { Table, Divider } from "antd";
-import { EditButton, DeleteButton, RightAddButton } from "../../utils/Utils";
+import { EditButton, DeleteButton, FolderAddButton } from "../../utils/Utils";
 import ScoreSchemeForm from "./ScoreSchemeForm";
 
 const { Column } = Table;
@@ -111,7 +111,7 @@ const ScoreSchemes = props => {
             )}
           />
         </Table>
-        <RightAddButton handleClick={handleNewScheme} />
+        <FolderAddButton handleClick={handleNewScheme} />
       </Fragment>
     );
   };

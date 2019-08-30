@@ -2,7 +2,7 @@ import React, { useState, Fragment } from "react";
 import { Collapse, Divider } from "antd";
 import ScoreUnits from "./ScoreUnits";
 import Subdomain from "./Domain/Subdomain";
-import { EditButton, DeleteButton, RightAddButton } from "../../utils/Utils";
+import { EditButton, DeleteButton, FolderAddButton } from "../../utils/Utils";
 import { deleteSubdomain } from "../../utils/API";
 
 const { Panel } = Collapse;
@@ -72,7 +72,7 @@ const Subdomains = props => {
           })}
       </Collapse>
       <br />
-      <RightAddButton handleClick={onNewSubdomain} />
+      <FolderAddButton handleClick={onNewSubdomain} />
       <Subdomain
         domain={domain}
         subdomain={subdomain}

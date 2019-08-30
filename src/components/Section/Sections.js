@@ -4,7 +4,7 @@ import { deleteSection, getSections } from "../../utils/API";
 import { CenteredH4 } from "../../utils/Styles";
 import SectionForm from "./SectionForm";
 import Displays from "../Display/Displays";
-import { RightAddButton, EditButton, DeleteButton } from "../../utils/Utils";
+import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
 
 const InstrumentSections = props => {
   const instrument = props.instrument;
@@ -78,7 +78,7 @@ const InstrumentSections = props => {
     return (
       <List
         header={<CenteredH4>Sections</CenteredH4>}
-        footer={<RightAddButton handleClick={handleNewSection} />}
+        footer={<FolderAddButton handleClick={handleNewSection} />}
         bordered
         dataSource={sections}
         renderItem={section => (
