@@ -1,39 +1,53 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { CenteredH1 } from "../../utils/Styles";
-import { getQuestionSets, createInstrumentQuestion } from "../../utils/API";
-import { Tree } from "antd";
+import {
+  getQuestionSets,
+  createInstrumentQuestion,
+  getAllQuestions
+} from "../../utils/API";
+import { Tree, Spin } from "antd";
 import { RightSaveButton } from "../../utils/Utils";
 
 const { TreeNode } = Tree;
 
 const ImportInstrumentQuestion = props => {
   const [questionSets, setQuestionSets] = useState([]);
-  const [questions, setQuestions] = useState(new Map());
+  const [questionMap, setQuestionMap] = useState(new Map());
+  const [questions, setQuestions] = useState([]);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [loadingSets, setLoadingSets] = useState(true);
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
 
   useEffect(() => {
     const fetchQuestionSets = async () => {
       const results = await getQuestionSets();
       setQuestionSets(results.data);
-      const qsts = [];
-      for (const qs of results.data) {
-        for (const f of qs.folders) {
-          for (const q of f.questions) {
-            qsts.push([q.question_identifier, q]);
-          }
-        }
-      }
-      setQuestions(new Map(qsts));
+      setLoadingSets(false);
     };
     fetchQuestionSets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const qsts = [];
+      const results = await getAllQuestions();
+      setQuestions(results.data);
+      for (const question of results.data) {
+        qsts.push([question.question_identifier, question]);
+      }
+      setQuestionMap(new Map(qsts));
+      setLoadingQuestions(false);
+    };
+    fetchQuestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCheck = (checkedKeys, info) => {
     let selected = [];
     for (const key of checkedKeys) {
-      if (questions.has(key)) {
-        selected.push(questions.get(key));
+      if (questionMap.has(key)) {
+        selected.push(questionMap.get(key));
       }
     }
     setSelectedQuestions(selected);
@@ -59,46 +73,50 @@ const ImportInstrumentQuestion = props => {
         props.handleImportCompleted();
       })
       .catch(error => {
+        console.log(error);
         props.handleImportCompleted();
       });
-    // props.handleImportCompleted();
   };
 
   return (
     <Fragment>
       <CenteredH1>Import Questions from Bank</CenteredH1>
-      <Tree blockNode checkable onCheck={onCheck}>
-        {questionSets.map(questionSet => {
-          return (
-            <TreeNode
-              checkable
-              title={questionSet.title}
-              key={`${questionSet.title}${questionSet.id}`}
-            >
-              {questionSet.folders.map(folder => {
-                return (
-                  <TreeNode
-                    title={folder.title}
-                    key={`${folder.title}${folder.id}`}
-                  >
-                    {folder.questions.map(question => {
-                      return (
-                        <TreeNode
-                          checkStrictly
-                          checkable
-                          title={question.question_identifier}
-                          key={`${question.question_identifier}`}
-                        />
-                      );
-                    })}
-                  </TreeNode>
-                );
-              })}
-            </TreeNode>
-          );
-        })}
-      </Tree>
-      <RightSaveButton handleClick={onSaveSelection} />
+      <Spin spinning={loadingSets || loadingQuestions}>
+        <Tree checkable onCheck={onCheck}>
+          {questionSets.map(questionSet => {
+            return (
+              <TreeNode
+                checkable
+                title={questionSet.title}
+                key={`${questionSet.title}-${questionSet.id}`}
+              >
+                {questionSet.folders.map(folder => {
+                  return (
+                    <TreeNode
+                      title={folder.title}
+                      key={`${folder.title}-${folder.id}`}
+                    >
+                      {questions
+                        .filter(qst => qst.folder_id === folder.id)
+                        .map(question => {
+                          return (
+                            <TreeNode
+                              checkStrictly
+                              checkable
+                              title={question.question_identifier}
+                              key={`${question.question_identifier}`}
+                            />
+                          );
+                        })}
+                    </TreeNode>
+                  );
+                })}
+              </TreeNode>
+            );
+          })}
+        </Tree>
+        <RightSaveButton handleClick={onSaveSelection} />
+      </Spin>
     </Fragment>
   );
 };

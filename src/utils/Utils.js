@@ -1,6 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { ErrorMessage } from "formik";
-import { Alert, Button, Col, Icon, Divider, Row } from "antd";
+import { Alert, Button, Col, Icon, Row } from "antd";
 
 export const AlertErrorMessage = props => {
   return (
@@ -95,25 +95,6 @@ export const ViewButton = props => {
   );
 };
 
-export const EditDeleteBtnGroup = props => (
-  <Fragment>
-    <EditButton
-      handleClick={event => {
-        event.stopPropagation();
-        props.handleEdit(props.object);
-      }}
-    />
-    <Divider type="vertical" />
-    <DeleteButton
-      handleClick={event => {
-        event.stopPropagation();
-        if (window.confirm(`Are you sure you want to delete ${props.message}?`))
-          props.handleDelete(props.object);
-      }}
-    />
-  </Fragment>
-);
-
 export const DRow = ({ children }) => {
   return (
     <Row gutter={8} style={{ marginBottom: 8 }}>
@@ -122,13 +103,27 @@ export const DRow = ({ children }) => {
   );
 };
 
-export const questionTypesWithOptions = [
-  "SELECT_ONE",
-  "SELECT_MULTIPLE",
-  "SELECT_ONE_WRITE_OTHER",
-  "SELECT_MULTIPLE_WRITE_OTHER",
-  "LIST_OF_TEXT_BOXES",
-  "LIST_OF_INTEGER_BOXES",
-  "LABELED_SLIDER",
-  "DROP_DOWN"
-];
+export const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+const padding = 5;
+
+export const getItemStyle = (isDragging, draggableStyle) => ({
+  userSelect: "none",
+  padding: padding * 2,
+  margin: `0 0 ${padding}px 0`,
+  background: isDragging ? "lightgreen" : "white",
+
+  // styles we need to apply on draggables
+  ...draggableStyle
+});
+
+export const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "lightblue" : "lightgray",
+  padding: padding
+});

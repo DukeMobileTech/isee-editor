@@ -76,6 +76,10 @@ export const deleteFolder = (questionSetId, id) => {
 /**
  * Questions
  */
+export const getAllQuestions = () => {
+  return instance.get("/questions");
+};
+
 export const getQuestions = folder => {
   return instance.get(
     `/question_sets/${folder.question_set_id}/folders/${folder.id}/questions`
@@ -85,14 +89,14 @@ export const getQuestions = folder => {
 export const createQuestion = question => {
   return instance.post(
     `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions`,
-    question
+    { question: question }
   );
 };
 
 export const updateQuestion = question => {
   return instance.put(
     `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions/${question.id}`,
-    question
+    { question: question }
   );
 };
 
@@ -273,6 +277,20 @@ export const createInstrumentQuestion = (projectId, instrumentId, iQ) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/instrument_questions`,
     iQ
+  );
+};
+
+export const updateInstrumentQuestion = (projectId, instrumentQuestion) => {
+  return instance.put(
+    `/projects/${projectId}/instruments/${instrumentQuestion.instrument_id}/instrument_questions/${instrumentQuestion.id}`,
+    instrumentQuestion
+  );
+};
+
+export const deleteInstrumentQuestion = (projectId, instrumentQuestion) => {
+  return instance.delete(
+    `/projects/${projectId}/instruments/${instrumentQuestion.instrument_id}/instrument_questions/${instrumentQuestion.id}`,
+    instrumentQuestion
   );
 };
 

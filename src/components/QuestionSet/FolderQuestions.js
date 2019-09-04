@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Tag, Spin, Table, Button, Typography } from "antd";
+import { Spin, Table, Button } from "antd";
 import { getQuestions, deleteQuestion } from "../../utils/API";
-import { AddButton, EditDeleteBtnGroup } from "../../utils/Utils";
+import { AddButton } from "../../utils/Utils";
 import Question from "./Question";
+import ExpandedQuestion from "../utils/ExpandedQuestion";
+import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 
 const { Column } = Table;
-const { Text } = Typography;
 
 const FolderQuestions = props => {
   const folder = props.folder;
@@ -60,44 +61,7 @@ const FolderQuestions = props => {
         dataSource={questions}
         size="middle"
         rowKey={question => question.id}
-        expandedRowRender={question => (
-          <span>
-            {question.instructions && (
-              <p style={{ margin: 1 }}>
-                <Text strong>Instructions: </Text>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: question.instructions
-                  }}
-                />
-              </p>
-            )}
-            {question.options.length > 0 && (
-              <p style={{ margin: 1 }}>
-                <Text strong>Options: </Text>
-                {question.options.map((option, index) => (
-                  <Text code key={option.id}>{`${index + 1}) ${
-                    option.text
-                  }`}</Text>
-                ))}
-              </p>
-            )}
-            {question.special_options.length > 0 && (
-              <p style={{ margin: 1 }}>
-                <Text strong>Special Options: </Text>
-                {question.special_options.map((option, index) => (
-                  <Tag key={option.id}>{`${index + 1}) ${option.text}`}</Tag>
-                ))}
-              </p>
-            )}
-            {question.identifies_survey && (
-              <p style={{ margin: 1 }}>
-                <Text strong>Identifies Survey: </Text>
-                {question.identifies_survey.toString()}
-              </p>
-            )}
-          </span>
-        )}
+        expandedRowRender={question => <ExpandedQuestion question={question} />}
       >
         <Column
           title="Identifier"
@@ -129,6 +93,7 @@ const FolderQuestions = props => {
           )}
         />
       </Table>
+      <br />
       <AddButton handleClick={handleQuestionAdd} />
     </Spin>
   );

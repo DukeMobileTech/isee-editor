@@ -1,23 +1,20 @@
-/* eslint-disable no-unused-vars */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Form as AntForm, Typography, Col } from "antd";
+import { Typography, Col } from "antd";
 import ReactQuill from "react-quill";
-import {
-  AlertErrorMessage,
-  RightSubmitButton,
-  DRow,
-  questionTypesWithOptions
-} from "../../utils/Utils";
-import { QuestionTypeContext } from "../../context/QuestionTypeContext";
+import { AlertErrorMessage, RightSubmitButton, DRow } from "../../utils/Utils";
 import { updateQuestion, createQuestion } from "../../utils/API";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
+import { questionTypesWithOptions, questionTypes } from "../../utils/Constants";
+import { QuestionSetContext } from "../../context/QuestionSetContext";
 
 const { Text } = Typography;
 
 const QuestionSchema = Yup.object().shape({
+  question_set_id: Yup.number().required("Question Set is required"),
+  folder_id: Yup.number().required("Folder is required"),
   question_identifier: Yup.string().required("Identifier is required"),
   question_type: Yup.string().required("Type is required"),
   text: Yup.string()
@@ -35,15 +32,24 @@ const QuestionSchema = Yup.object().shape({
 
 const QuestionForm = props => {
   const question = props.question;
-  const question_types = useContext(QuestionTypeContext);
+  // eslint-disable-next-line no-unused-vars
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
+  // eslint-disable-next-line no-unused-vars
   const [instructions, setInstructions] = useContext(InstructionContext);
+  // eslint-disable-next-line no-unused-vars
+  const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
 
   return (
     <Formik
       initialValues={{
-        folder_id: props.folder && props.folder.id,
-        question_set_id: props.folder && props.folder.question_set_id,
+        folder_id:
+          (question && question.folder_id) ||
+          (props.folder && props.folder.id) ||
+          "",
+        question_set_id:
+          (question && question.question_set_id) ||
+          (props.folder && props.folder.question_set_id) ||
+          "",
         question_identifier: (question && question.question_identifier) || "",
         question_type: (question && question.question_type) || "",
         text: (question && question.text) || "",
@@ -81,7 +87,11 @@ const QuestionForm = props => {
           createQuestion(editQuestion)
             .then(response => {
               if (response.status === 201) {
-                props.fetchQuestions();
+                if (props.returnValue) {
+                  props.fetchQuestions(response.data);
+                } else {
+                  props.fetchQuestions();
+                }
               }
             })
             .catch(error => {
@@ -91,6 +101,57 @@ const QuestionForm = props => {
       }}
       render={({ values }) => (
         <Form>
+          <DRow>
+            <Col span={4}>
+              <Text strong>Question Set</Text>
+            </Col>
+            <Col span={14}>
+              <Field
+                className="ant-input"
+                name="question_set_id"
+                component="select"
+              >
+                <option></option>
+                {questionSets.map(set => {
+                  return (
+                    <option key={set.id} name="question_set_id" value={set.id}>
+                      {set.title}
+                    </option>
+                  );
+                })}
+              </Field>
+            </Col>
+            <Col span={6}>
+              <AlertErrorMessage name="question_set_id" type="error" />
+            </Col>
+          </DRow>
+          <DRow>
+            <Col span={4}>
+              <Text strong>Folder</Text>
+            </Col>
+            <Col span={14}>
+              <Field className="ant-input" name="folder_id" component="select">
+                <option></option>
+                {values.question_set_id &&
+                  questionSets
+                    .find(qs => qs.id === Number(values.question_set_id))
+                    .folders.map(folder => {
+                      return (
+                        <option
+                          key={folder.id}
+                          name="folder_id"
+                          value={folder.id}
+                        >
+                          {folder.title}
+                        </option>
+                      );
+                    })}
+              </Field>
+            </Col>
+            <Col span={6}>
+              <AlertErrorMessage name="folder_id" type="error" />
+            </Col>
+          </DRow>
           <DRow>
             <Col span={4}>
               <Text strong>Identifier</Text>
@@ -118,7 +179,7 @@ const QuestionForm = props => {
                 component="select"
               >
                 <option></option>
-                {question_types.map(type => {
+                {questionTypes.map(type => {
                   return (
                     <option key={type} name="question_type" value={type}>
                       {type}

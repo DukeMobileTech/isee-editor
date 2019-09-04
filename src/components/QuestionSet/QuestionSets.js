@@ -12,21 +12,23 @@ import QuestionSetForm from "./QuestionSetForm";
 import QuestionSet from "./QuestionSet";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
+import { QuestionSetContext } from "../../context/QuestionSetContext";
 
 const { Panel } = Collapse;
 
-const QuestionSets = props => {
+const QuestionSets = () => {
   const [loadingQs, setLoadingQs] = useState(true);
   const [loadingOs, setLoadingOs] = useState(true);
   const [loadingIs, setLoadingIs] = useState(true);
-  const [questionSets, setQuestionSets] = useState(props.questionSets);
   const [showForm, setShowForm] = useState(false);
   const [questionSet, setQuestionSet] = useState(null);
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
   const [instructions, setInstructions] = useContext(InstructionContext);
+  const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
 
   useEffect(() => {
     fetchQuestionSets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchQuestionSets = async () => {

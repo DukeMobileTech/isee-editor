@@ -1,47 +1,135 @@
-import React, { useState } from "react";
-import { Row, Col, Table, List } from "antd";
+import React, { useState, useEffect, Fragment } from "react";
+import { Row, Col, Table, Button, Icon, Typography, Spin } from "antd";
 import { CenteredH3 } from "../../utils/Styles";
-import { FolderAddButton } from "../../utils/Utils";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
-import { getDisplay } from "../../utils/API";
+import { getDisplay, deleteInstrumentQuestion } from "../../utils/API";
+import ExpandedQuestion from "../utils/ExpandedQuestion";
+import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
+import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
+import { OptionSetProvider } from "../../context/OptionSetContext";
+import { InstructionProvider } from "../../context/InstructionContext";
+import { QuestionSetProvider } from "../../context/QuestionSetContext";
+import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
 
 const { Column } = Table;
 
 let position = 1;
 const setPosition = display => {
-  if (display.instrument_questions && display.instrument_questions.length > 0) {
+  if (
+    display &&
+    display.instrument_questions &&
+    display.instrument_questions.length > 0
+  ) {
     position = display.instrument_questions.slice(-1)[0].number_in_instrument;
   }
 };
 
 const Display = props => {
+  const projectId = props.projectId;
+  const [loading, setLoading] = useState(false);
   const [display, setDisplay] = useState(props.display);
-  const [showForm, setShowForm] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editQuestion, setEditQuestion] = useState(null);
   setPosition(props.display);
 
-  const handleNewInstrumentQuestion = () => {
-    setShowForm(true);
+  useEffect(() => {
+    setShowNew(false);
+    let isSubscribed = true;
+    if (display) {
+      setLoading(true);
+      getDisplay(projectId, display.instrument_id, display.id).then(results => {
+        if (isSubscribed) {
+          setDisplay(results.data);
+          setPosition(results.data);
+          setLoading(false);
+        }
+      });
+    }
+    return () => (isSubscribed = false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleImportInstrumentQuestion = () => {
+    setShowImport(true);
   };
 
-  const fetchUpdatedDisplay = async () => {
-    setShowForm(false);
-    const results = await getDisplay(
-      props.projectId,
-      display.instrument_id,
-      display.id
-    );
-    setDisplay(results.data);
-    setPosition(results.data);
+  const handleCreateInstrumentQuestion = () => {
+    setShowNew(true);
+  };
+
+  const handleCancel = () => {
+    setShowNew(false);
+    setShowEdit(false);
+  };
+
+  const handleImportCompleted = () => {
+    setShowImport(false);
+    fetchDisplay();
+  };
+
+  const fetchDisplay = () => {
+    handleCancel();
+    setLoading(true);
+    getDisplay(projectId, display.instrument_id, display.id).then(results => {
+      setDisplay(results.data);
+      setPosition(results.data);
+      setLoading(false);
+    });
+  };
+
+  const handleQuestionEdit = question => {
+    setEditQuestion(question);
+    setShowEdit(true);
+  };
+
+  const handleQuestionDelete = question => {
+    deleteInstrumentQuestion(projectId, question)
+      .then(res => {
+        fetchDisplay();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const DisplayView = () => {
-    if (showForm) {
+    if (showNew) {
       return (
-        <NewInstrumentQuestion
-          projectId={props.projectId}
+        <QuestionSetProvider>
+          <OptionSetProvider>
+            <InstructionProvider>
+              <NewInstrumentQuestion
+                projectId={projectId}
+                display={display}
+                position={position}
+                fetchDisplay={fetchDisplay}
+                handleCancel={handleCancel}
+                visible={showNew}
+              />
+            </InstructionProvider>
+          </OptionSetProvider>
+        </QuestionSetProvider>
+      );
+    } else if (showEdit) {
+      return (
+        <InstrumentQuestion
+          instrumentQuestion={editQuestion}
+          displays={props.displays}
+          visible={showEdit}
+          handleCancel={handleCancel}
+          projectId={projectId}
+          fetchDisplay={fetchDisplay}
+        />
+      );
+    } else if (showImport) {
+      return (
+        <ImportInstrumentQuestion
+          projectId={projectId}
           display={display}
           position={position}
-          fetchUpdatedDisplay={fetchUpdatedDisplay}
+          handleImportCompleted={handleImportCompleted}
         />
       );
     } else {
@@ -52,12 +140,19 @@ const Display = props => {
   const InstrumentQuestionList = () => {
     return (
       <React.Fragment>
-        <Table dataSource={display.instrument_questions} rowKey={iq => iq.id}>
+        <Table
+          size="middle"
+          dataSource={display.instrument_questions}
+          rowKey={iq => iq.id}
+          expandedRowRender={question => (
+            <ExpandedQuestion question={question} />
+          )}
+        >
           <Column title="Position" dataIndex="number_in_instrument" />
           <Column title="Identifier" dataIndex="identifier" />
-          <Column title="Question Type" dataIndex="type" />
+          <Column title="Type" dataIndex="type" />
           <Column
-            title="Question Text"
+            title="Text"
             dataIndex="text"
             render={(text, iq) => (
               <span
@@ -68,42 +163,49 @@ const Display = props => {
             )}
           />
           <Column
-            title="Question Choices"
-            dataIndex="options"
-            render={(text, iq) =>
-              iq.options && (
-                <List
-                  bordered
-                  dataSource={iq.options}
-                  renderItem={(option, index) => (
-                    <List.Item>{`${index + 1}) ${option.text}`}</List.Item>
-                  )}
-                />
-              )
-            }
+            title="Actions"
+            dataIndex="actions"
+            render={(text, question) => (
+              <EditDeleteBtnGroup
+                object={question}
+                message={question.identifier}
+                handleEdit={handleQuestionEdit}
+                handleDelete={handleQuestionDelete}
+              />
+            )}
           />
         </Table>
-        <div style={{ marginTop: 10 }}>
-          <FolderAddButton handleClick={handleNewInstrumentQuestion} />
-        </div>
+        <br />
+        <Row gutter={8}>
+          <Col span={12}></Col>
+          <Col span={6}>
+            <Button type="primary" onClick={handleImportInstrumentQuestion}>
+              <Icon type="import" /> Add Existing
+            </Button>
+          </Col>
+          <Col span={6}>
+            <Button type="primary" onClick={handleCreateInstrumentQuestion}>
+              <Icon type="plus" /> Create New
+            </Button>
+          </Col>
+        </Row>
       </React.Fragment>
     );
   };
 
   return (
-    <React.Fragment>
-      <CenteredH3>
-        <Row>
-          <Col span={2}>
-            <b>{display.position}</b>
-          </Col>
-          <Col span={12} offset={10}>
-            <b>{display.title}</b>
-          </Col>
-        </Row>
-      </CenteredH3>
-      <DisplayView />
-    </React.Fragment>
+    <Fragment>
+      <Spin spinning={loading}>
+        <CenteredH3>
+          {display && (
+            <Typography.Text
+              strong
+            >{`(${display.position}) ${display.title}`}</Typography.Text>
+          )}
+        </CenteredH3>
+        {display && <DisplayView />}
+      </Spin>
+    </Fragment>
   );
 };
 

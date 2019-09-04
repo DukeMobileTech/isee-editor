@@ -1,7 +1,6 @@
 import React from "react";
 import { Modal } from "antd";
 import QuestionForm from "./QuestionForm";
-import { QuestionTypeProvider } from "../../context/QuestionTypeContext";
 
 const Question = props => {
   const title = props.question
@@ -22,13 +21,11 @@ const Question = props => {
       onCancel={onCancel}
       width={modalWidth}
     >
-      <QuestionTypeProvider>
-        <QuestionForm
-          question={props.question}
-          folder={props.folder}
-          fetchQuestions={props.fetchQuestions}
-        />
-      </QuestionTypeProvider>
+      <QuestionForm
+        question={props.question}
+        folder={props.folder}
+        fetchQuestions={props.fetchQuestions}
+      />
     </Modal>
   );
 };

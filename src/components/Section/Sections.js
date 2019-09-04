@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { List, Col, Button, Divider, Icon } from "antd";
-import { deleteSection, getSections } from "../../utils/API";
-import { CenteredH4 } from "../../utils/Styles";
+import { List, Col, Button, Divider, Icon, Typography } from "antd";
+import { deleteSection, getSections, updateSection } from "../../utils/API";
 import SectionForm from "./SectionForm";
-import Displays from "../Display/Displays";
-import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
+import Subsections from "./Subsection/Subsections";
+import {
+  FolderAddButton,
+  EditButton,
+  DeleteButton,
+  getItemStyle,
+  getListStyle
+} from "../../utils/Utils";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const InstrumentSections = props => {
   const instrument = props.instrument;
@@ -49,6 +55,25 @@ const InstrumentSections = props => {
     setSections(results.data);
   };
 
+  const onDragEnd = result => {
+    if (
+      !result.destination ||
+      result.destination.index === result.source.index
+    ) {
+      return;
+    }
+
+    const movedSection = sections[result.source.index];
+    movedSection.position = result.destination.index + 1;
+
+    updateSection(
+      instrument.project_id,
+      instrument.id,
+      movedSection.id,
+      movedSection
+    ).then(res => fetchUpdatedSections());
+  };
+
   const SectionsView = () => {
     if (showForm) {
       return (
@@ -62,7 +87,7 @@ const InstrumentSections = props => {
       );
     } else if (showDisplays) {
       return (
-        <Displays
+        <Subsections
           section={section}
           instrument={instrument}
           sections={sections}
@@ -76,36 +101,73 @@ const InstrumentSections = props => {
 
   const SectionList = () => {
     return (
-      <List
-        header={<CenteredH4>Sections</CenteredH4>}
-        footer={<FolderAddButton handleClick={handleNewSection} />}
-        bordered
-        dataSource={sections}
-        renderItem={section => (
-          <List.Item>
-            <Col span={2}>{section.position}</Col>
-            <Col span={16}>{section.title}</Col>
-            <Col span={6}>
-              <Button onClick={() => handleOpenSection(section)}>
-                <Icon type="folder-open" />
-              </Button>
-              <Divider type="vertical" />
-              <EditButton handleClick={() => handleEditSection(section)} />
-              <Divider type="vertical" />
-              <DeleteButton
-                handleClick={() => {
-                  if (
-                    window.confirm(
-                      `Are you sure you want to delete ${section.title}?`
-                    )
-                  )
-                    handleDeleteSection(section);
-                }}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="sections">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={getListStyle(snapshot.isDraggingOver)}
+            >
+              <List
+                footer={<FolderAddButton handleClick={handleNewSection} />}
+                bordered
+                dataSource={sections}
+                renderItem={(section, index) => (
+                  <Draggable
+                    key={section.id}
+                    draggableId={section.id}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}
+                      >
+                        <List.Item>
+                          <Col span={2}>
+                            <Icon type="drag" />{" "}
+                            <Typography.Text strong>
+                              {section.position}
+                            </Typography.Text>
+                          </Col>
+                          <Col span={14}>{section.title}</Col>
+                          <Col span={8}>
+                            <Button onClick={() => handleOpenSection(section)}>
+                              <Icon type="folder-open" />
+                            </Button>
+                            <Divider type="vertical" />
+                            <EditButton
+                              handleClick={() => handleEditSection(section)}
+                            />
+                            <Divider type="vertical" />
+                            <DeleteButton
+                              handleClick={() => {
+                                if (
+                                  window.confirm(
+                                    `Are you sure you want to delete ${section.title}?`
+                                  )
+                                )
+                                  handleDeleteSection(section);
+                              }}
+                            />
+                          </Col>
+                        </List.Item>
+                      </div>
+                    )}
+                  </Draggable>
+                )}
               />
-            </Col>
-          </List.Item>
-        )}
-      />
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     );
   };
 

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { List, Row, Col, Divider } from "antd";
-import { CenteredH3, CenteredH4 } from "../../utils/Styles";
-import DisplayForm from "./DisplayForm";
-import { getSection, deleteDisplay } from "../../utils/API";
+import { CenteredH3, CenteredH4 } from "../../../utils/Styles";
+import DisplayForm from "../../Display/DisplayForm";
+import { getSection, deleteDisplay } from "../../../utils/API";
 import {
   LeftCancelButton,
   FolderAddButton,
   EditButton,
   DeleteButton
-} from "../../utils/Utils";
+} from "../../../utils/Utils";
 
-const Displays = props => {
+const Subsections = props => {
   const [section, setSection] = useState(props.section);
   const [displays, setDisplays] = useState(section.displays);
   const [showForm, setShowForm] = useState(false);
@@ -132,4 +132,4 @@ const Displays = props => {
   );
 };
 
-export default Displays;
+export default Subsections;

@@ -9,6 +9,7 @@ const { Sider } = Layout;
 const InstrumentSider = props => {
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
+  const [displays, setDisplays] = useState([]);
   const [rootSubmenuKeys, setRootSubmenuKeys] = useState([]);
   const [openKeys, setOpenKeys] = useState([]);
 
@@ -17,20 +18,27 @@ const InstrumentSider = props => {
       const results = await getSections(props.projectId, props.instrumentId);
       setLoading(false);
       setSections(results.data);
-      props.mergeSections(results.data);
-      const ids = results.data.map(section => `${section.id}`);
-      setRootSubmenuKeys(ids);
-      setOpenKeys([ids[0]]);
-      results.data[0] &&
-        results.data[0].displays[0] &&
-        props.setDisplayQuestions(results.data[0].displays[0].id);
+      setKeys(props, results, setRootSubmenuKeys, setOpenKeys);
+      setDisplays([].concat.apply([], results.data.map(sec => sec.displays)));
     };
     fetchSections();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function setKeys(props, results, setRootSubmenuKeys, setOpenKeys) {
+    props.setSections(results.data);
+    const ids = results.data.map(section => `${section.id}`);
+    setRootSubmenuKeys(ids);
+    setOpenKeys([ids[0]]);
+    results.data[0] &&
+      results.data[0].displays[0] &&
+      props.setDisplay(results.data[0].displays[0]);
+  }
+
   const handleDisplayClick = items => {
-    props.setDisplayQuestions(items.key);
+    props.setDisplay(
+      displays.find(display => display.id === Number(items.key))
+    );
   };
 
   const onOpenChange = openKeys => {

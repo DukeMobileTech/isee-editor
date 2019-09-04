@@ -28,10 +28,10 @@ const AppHeader = () => {
       <Logo>iSEE</Logo>
       <Menu theme="light" mode="horizontal" style={{ lineHeight: "64px" }}>
         <Menu.Item key="1">
-          <a href="/">Home</a>
+          <a href="/">Survey Instruments</a>
         </Menu.Item>
         <Menu.Item key="2">
-          <a href="/banks">Banks</a>
+          <a href="/banks">Question Banks</a>
         </Menu.Item>
         <Menu.Item key="3" style={{ float: "right" }}>
           {localStorage.getItem("userEmail") &&

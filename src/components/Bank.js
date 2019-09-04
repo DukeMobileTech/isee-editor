@@ -6,6 +6,7 @@ import Validations from "./QuestionSet/Validations";
 import Instructions from "./Instruction/Instructions";
 import { OptionSetProvider } from "../context/OptionSetContext";
 import { InstructionProvider } from "../context/InstructionContext";
+import { QuestionSetProvider } from "../context/QuestionSetContext";
 
 const { TabPane } = Tabs;
 
@@ -27,11 +28,13 @@ const Bank = () => {
         }
         key="1"
       >
-        <OptionSetProvider>
-          <InstructionProvider>
-            <QuestionSets />
-          </InstructionProvider>
-        </OptionSetProvider>
+        <QuestionSetProvider>
+          <OptionSetProvider>
+            <InstructionProvider>
+              <QuestionSets />
+            </InstructionProvider>
+          </OptionSetProvider>
+        </QuestionSetProvider>
       </TabPane>
       <TabPane
         tab={
