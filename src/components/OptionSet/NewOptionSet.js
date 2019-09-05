@@ -3,6 +3,8 @@ import { Modal } from "antd";
 import OptionSetForm from "./OptionSetForm";
 
 const NewOptionSet = props => {
+  const modalWidth = window.innerWidth * 0.75;
+
   const optionSet = {
     title: "",
     instruction_id: "",
@@ -10,24 +12,24 @@ const NewOptionSet = props => {
     option_in_option_sets: []
   };
 
-  const handleCancel = e => {
-    props.setVisible(false);
-  };
-
-  const fetchOptionSet = id => {
+  const fetchOptionSet = () => {
     props.setVisible(false);
     props.fetchOptionSets();
   };
 
+  const onCancel = () => {
+    props.setVisible(false);
+  };
+
   return (
-    <Modal title="New Option Set" visible={props.visible} footer={null}>
-      <OptionSetForm
-        optionSet={optionSet}
-        options={props.options}
-        instructions={props.instructions}
-        handleCancel={handleCancel}
-        fetchOptionSet={fetchOptionSet}
-      />
+    <Modal
+      title="New Option Set"
+      visible={props.visible}
+      footer={null}
+      onCancel={onCancel}
+      width={modalWidth}
+    >
+      <OptionSetForm optionSet={optionSet} fetchOptionSet={fetchOptionSet} />
     </Modal>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Highlighter from "react-highlight-words";
 import {
   Table,
   Spin,
@@ -10,10 +11,10 @@ import {
   Icon
 } from "antd";
 import {
-  getInstructions,
-  updateInstruction,
-  createInstruction,
-  deleteInstruction
+  getOptions,
+  createOption,
+  updateOption,
+  deleteOption
 } from "../../utils/API";
 import { FolderAddButton } from "../../utils/Utils";
 
@@ -24,18 +25,75 @@ const EditableTable = props => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    render: text => (
+      <Highlighter
+        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+        searchWords={[searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ""}
+      />
+    )
+  });
+
   const columns = [
     {
-      title: "Title",
-      dataIndex: "title",
+      title: "Identifier",
+      dataIndex: "identifier",
       width: "25%",
-      editable: true
+      editable: true,
+      ...getColumnSearchProps("identifier")
     },
     {
       title: "Text",
       dataIndex: "text",
       width: "55%",
       editable: true,
+      ...getColumnSearchProps("text"),
       render: (text, instruction) => (
         <span
           dangerouslySetInnerHTML={{
@@ -94,12 +152,12 @@ const EditableTable = props => {
   ];
 
   useEffect(() => {
-    fetchInstructions();
+    fetchOptions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchInstructions = async () => {
-    const results = await getInstructions();
+  const fetchOptions = async () => {
+    const results = await getOptions();
     setLoading(false);
     setData(results.data);
   };
@@ -120,7 +178,7 @@ const EditableTable = props => {
       if (index > -1) {
         const item = newData[index];
         if (record.id === newId) {
-          createInstruction(row).then(result => {
+          createOption(row).then(result => {
             newData.splice(index, 1, {
               ...item,
               ...result.data
@@ -133,7 +191,7 @@ const EditableTable = props => {
             ...item,
             ...row
           });
-          updateInstruction(record.id, row).then(result => {
+          updateOption(record.id, row).then(result => {
             setEditingKey("");
             setData(newData);
           });
@@ -177,16 +235,26 @@ const EditableTable = props => {
   };
 
   const handleDelete = record => {
-    deleteInstruction(record.id).then(res => {
+    deleteOption(record.id).then(res => {
       const dataSource = [...data];
       setData(dataSource.filter(item => item.id !== record.id));
     });
   };
 
+  const handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+  };
+
+  const handleReset = clearFilters => {
+    clearFilters();
+    setSearchText("");
+  };
+
   return (
     <Spin spinning={loading}>
       <EditableContext.Provider value={props.form}>
-        <FolderAddButton handleClick={handleAdd} /> <br />
+        <FolderAddButton handleClick={handleAdd} />
         <Table
           components={components}
           bordered
@@ -238,9 +306,9 @@ const EditableCell = props => {
   return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
 };
 
-const Instructions = () => {
+const Options = () => {
   const EditableFormTable = Form.create()(EditableTable);
   return <EditableFormTable />;
 };
 
-export default Instructions;
+export default Options;

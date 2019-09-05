@@ -7,6 +7,7 @@ import Instructions from "./Instruction/Instructions";
 import { OptionSetProvider } from "../context/OptionSetContext";
 import { InstructionProvider } from "../context/InstructionContext";
 import { QuestionSetProvider } from "../context/QuestionSetContext";
+import Options from "./Option/Options";
 
 const { TabPane } = Tabs;
 
@@ -50,11 +51,22 @@ const Bank = () => {
       <TabPane
         tab={
           <span>
+            <Icon type="unordered-list" />
+            Options
+          </span>
+        }
+        key="3"
+      >
+        <Options />
+      </TabPane>
+      <TabPane
+        tab={
+          <span>
             <Icon type="stop" />
             Instructions
           </span>
         }
-        key="3"
+        key="4"
       >
         <Instructions />
       </TabPane>
@@ -65,7 +77,7 @@ const Bank = () => {
             Validations
           </span>
         }
-        key="4"
+        key="5"
       >
         <Validations />
       </TabPane>

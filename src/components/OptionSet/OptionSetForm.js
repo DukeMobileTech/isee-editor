@@ -1,32 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
-import { Form as AntForm, Card, Row, Col, Select, Button, Icon } from "antd";
+import { Col, Button, Icon, Typography } from "antd";
 import * as Yup from "yup";
 import {
   AlertErrorMessage,
-  LeftCancelButton,
   RightSubmitButton,
-  DeleteButton
+  DeleteButton,
+  DRow
 } from "../../utils/Utils";
 import {
   updateOptionSet,
   createOptionSet,
-  deleteOptionInOptionSet
+  deleteOptionInOptionSet,
+  getOptions,
+  getInstructions
 } from "../../utils/API";
-import OptionForm from "./OptionForm";
-// import { FormattedMessage } from "react-intl";
+import NewOption from "./NewOption";
+import ImportOption from "./ImportOption";
 
-const FormItem = AntForm.Item;
-const { Option } = Select;
+const { Text } = Typography;
 const OptionSetSchema = Yup.object().shape({
   title: Yup.string().required("Title is required")
 });
 
 const OptionSetForm = props => {
   const optionSet = props.optionSet;
-  const [options, setOptions] = useState(props.options);
-  const instructions = props.instructions;
+  const [options, setOptions] = useState([]);
+  const [instructions, setInstructions] = useState([]);
   const [showNewOptionForm, setShowNewOptionForm] = useState(false);
+  const [importOption, setImportOption] = useState(false);
+
+  useEffect(() => {
+    fetchOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    fetchInstructions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchOptions = async () => {
+    const results = await getOptions();
+    setOptions(results.data);
+  };
+
+  const fetchInstructions = async () => {
+    const results = await getInstructions();
+    setInstructions(results.data);
+  };
 
   const handleDeleteOption = oios => {
     if (oios.id) {
@@ -38,16 +60,8 @@ const OptionSetForm = props => {
           console.log(error);
         });
     } else {
-      console.log("remove recent");
-      //TODO: REMOVE FROM VALUES ARRAY ~ make enableReinitialize work
       props.fetchOptionSet(optionSet.id);
     }
-  };
-
-  const onNewOption = option => {
-    console.log("new option", option);
-    setOptions([option, ...options]);
-    //TODO: Automatically add to option
   };
 
   return (
@@ -99,22 +113,36 @@ const OptionSetForm = props => {
         }
       }}
       render={({ values, resetForm }) => (
-        <Card title={optionSet && optionSet.title}>
-          <Form>
-            <FormItem>
+        <Form>
+          <DRow>
+            <Col span={4}>
+              <Text strong>Title</Text>
+            </Col>
+            <Col span={14}>
               <Field
                 className="ant-input"
                 name="title"
                 placeholder="Enter option set title"
                 type="text"
               />
+            </Col>
+            <Col span={6}>
               <AlertErrorMessage name="title" type="error" />
-            </FormItem>
-            <FormItem>
+            </Col>
+          </DRow>
+          <DRow>
+            <Col span={4}>
+              <Text strong>Special</Text>
+            </Col>
+            <Col span={20}>
               <Field name="special" type="checkbox" checked={values.special} />
-              <span> Special</span>
-            </FormItem>
-            <FormItem>
+            </Col>
+          </DRow>
+          <DRow>
+            <Col span={4}>
+              <Text strong>Instructions</Text>
+            </Col>
+            <Col span={20}>
               <Field
                 className="ant-input"
                 name="instruction_id"
@@ -124,145 +152,98 @@ const OptionSetForm = props => {
                 <option></option>
                 {instructions.map(instruction => {
                   return (
-                    // <option key={instruction.id}>
-                    //   <FormattedMessage
-                    //     id={instruction.id}
-                    //     defaultMessage={instruction.title}
-                    //     values={{
-                    //       b: msg => <b>{msg}</b>,
-                    //       u: msg => <u>{msg}</u>
-                    //     }}
-                    //   >
-                    //     {message => ({ message })}
-                    //   </FormattedMessage>
-                    // </option>
-                    // <FormattedMessage
-                    //   id={instruction.id}
-                    //   key={instruction.id}
-                    //   defaultMessage={instruction.title}
-                    //   values={{
-                    //     b: msg => <b>{msg}</b>,
-                    //     u: msg => <u>{msg}</u>
-                    //   }}
-                    // >
-                    //   {message => (
-                    //     <option value={instruction.id}>{message}</option>
-                    //   )}
-                    // </FormattedMessage>
-
                     <option
                       key={instruction.id}
                       name="instruction_id"
                       value={instruction.id}
                     >
-                      {instruction.title}
+                      {instruction.title.replace(/<[^>]+>/g, "")}
                     </option>
                   );
                 })}
               </Field>
-              <AlertErrorMessage name="instruction_id" type="error" />
-            </FormItem>
-            {values.option_in_option_sets &&
-              values.option_in_option_sets.map((oios, index) => (
-                <Row
-                  key={oios.option_id}
-                  gutter={16}
-                  style={{ marginBottom: 8 }}
-                >
-                  <Col span={8}>
-                    <Field
-                      className="ant-input-number"
-                      name={`option_in_option_sets.${index}.number_in_question`}
-                      placeholder="Position"
-                      type="number"
-                    />
-                    <AlertErrorMessage
-                      name={`option_in_option_sets.${index}.number_in_question`}
-                      type="error"
-                    />
-                  </Col>
-                  <Col span={8}>{oios.option.text}</Col>
-                  <Col span={8}>
-                    <DeleteButton
-                      handleClick={() => {
-                        if (
-                          window.confirm(
-                            `Are you sure you want to remove ${oios.option.text} from the set?`
-                          )
-                        )
-                          handleDeleteOption(oios);
-                      }}
-                    />
-                  </Col>
-                </Row>
-              ))}
-            <FormItem>
-              <Row>
-                <Col span={6}>Add existing</Col>
-                <Col span={18}>
-                  <Select
-                    showSearch
-                    autoClearSearchValue
-                    mode="tags"
-                    style={{ width: "100%" }}
-                    placeholder="Search/select an option and add to the set"
-                    onChange={selectedValues => {
-                      selectedValues.forEach(selectedValue => {
-                        const option = options.find(
-                          option => option.identifier === selectedValue
-                        );
-                        if (option) {
-                          const exists = optionSet.option_in_option_sets.find(
-                            os => os.option_id === option.id
-                          );
-                          if (exists === undefined) {
-                            optionSet.option_in_option_sets.push({
-                              option_id: option.id,
-                              option_set_id: optionSet.id,
-                              number_in_question:
-                                optionSet.option_in_option_sets.length + 1,
-                              special: false,
-                              option: option
-                            });
-                            resetForm({
-                              id: values.id,
-                              title: values.title,
-                              instruction_id: values.instruction_id,
-                              special: values.special,
-                              option_in_option_sets:
-                                optionSet.option_in_option_sets
-                            });
-                          }
-                        }
-                      });
-                    }}
-                  >
-                    {options &&
-                      options.map(option => {
-                        return (
-                          <Option key={`${option.identifier}`}>
-                            {option.text}
-                          </Option>
-                        );
-                      })}
-                  </Select>
+            </Col>
+          </DRow>
+          <DRow gutter={16}>
+            <Col span={6}>
+              <Text strong>Position</Text>
+            </Col>
+            <Col span={12}>
+              <Text strong>Text</Text>
+            </Col>
+            <Col span={6}>
+              <Text strong>Action</Text>
+            </Col>
+          </DRow>
+          {values.option_in_option_sets &&
+            values.option_in_option_sets.map((oios, index) => (
+              <DRow
+                key={oios.option_id}
+                gutter={16}
+                style={{ marginBottom: 8 }}
+              >
+                <Col span={6}>
+                  <Field
+                    className="ant-input-number"
+                    name={`option_in_option_sets.${index}.number_in_question`}
+                    placeholder="Position"
+                    type="number"
+                  />
+                  <AlertErrorMessage
+                    name={`option_in_option_sets.${index}.number_in_question`}
+                    type="error"
+                  />
                 </Col>
-              </Row>
-            </FormItem>
-            <FormItem>
-              <Button type="primary" onClick={() => setShowNewOptionForm(true)}>
-                <Icon type="plus" /> ADD NEW
+                <Col span={12}>{oios.option.text}</Col>
+                <Col span={6}>
+                  <DeleteButton
+                    handleClick={() => {
+                      if (
+                        window.confirm(
+                          `Are you sure you want to remove ${oios.option.text} from the set?`
+                        )
+                      )
+                        handleDeleteOption(oios);
+                    }}
+                  />
+                </Col>
+              </DRow>
+            ))}
+          <DRow>
+            <Col span={6}>
+              <Button
+                type="primary"
+                onClick={() => setImportOption(!importOption)}
+              >
+                <Icon type="import" /> IMPORT EXISTING
               </Button>
-              <OptionForm
-                showNewOptionForm={showNewOptionForm}
-                onNewOption={onNewOption}
-                setShowNewOptionForm={setShowNewOptionForm}
+            </Col>
+            <Col span={18}>
+              <ImportOption
+                importOption={importOption}
+                options={options}
+                optionSet={optionSet}
+                resetForm={resetForm}
+                values={values}
               />
-            </FormItem>
-            <LeftCancelButton handleClick={props.handleCancel} />
-            <RightSubmitButton />
-          </Form>
-        </Card>
+            </Col>
+          </DRow>
+          <DRow>
+            <Button type="primary" onClick={() => setShowNewOptionForm(true)}>
+              <Icon type="plus" /> ADD NEW
+            </Button>
+            <NewOption
+              showNewOptionForm={showNewOptionForm}
+              setShowNewOptionForm={setShowNewOptionForm}
+              options={options}
+              setOptions={setOptions}
+              optionSet={optionSet}
+              resetForm={resetForm}
+              values={values}
+            />
+          </DRow>
+          <RightSubmitButton />
+        </Form>
       )}
     />
   );

@@ -1,25 +1,24 @@
 import React, { useState } from "react";
-import { Row, Col, Card, Descriptions, Divider } from "antd";
+import { Row, Col, Card, Divider, Typography } from "antd";
 import { EditButton, DeleteButton } from "../../utils/Utils";
 import { getOptionSet, deleteOptionSet } from "../../utils/API";
 import EditOptionSet from "./EditOptionSet";
 
+const { Text } = Typography;
+const { Paragraph } = Typography;
+
 const OptionSet = props => {
   const [optionSet, setOptionSet] = useState(props.optionSet);
-  const [showForm, setShowForm] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const fetchOptionSet = async id => {
-    setShowForm(false);
+    setVisible(false);
     const result = await getOptionSet(id);
     setOptionSet(result.data);
   };
 
-  const handleCancel = () => {
-    setShowForm(false);
-  };
-
   const handleEditOptionSet = () => {
-    setShowForm(true);
+    setVisible(true);
   };
 
   const handleDeleteOptionSet = () => {
@@ -31,29 +30,29 @@ const OptionSet = props => {
   };
 
   const OptionSetDetails = () => (
-    <Card title={optionSet.title}>
+    <Card title={optionSet.title} style={{ flex: 1 }}>
       {optionSet.instructions && (
-        <i
-          dangerouslySetInnerHTML={{
-            __html: optionSet.instructions
-          }}
-        />
+        <p>
+          <i
+            dangerouslySetInnerHTML={{
+              __html: optionSet.instructions
+            }}
+          />
+        </p>
       )}
       {optionSet.option_in_option_sets &&
-        optionSet.option_in_option_sets.length > 0 && (
-          <Descriptions.Item label="Options">
-            <Row gutter={16}>
-              {optionSet.option_in_option_sets.map((oios, index) => (
-                <Col key={oios.id} span={12}>
-                  <b>{`${oios.number_in_question})`}</b> {oios.option.text}
-                </Col>
-              ))}
-            </Row>
-          </Descriptions.Item>
+        optionSet.option_in_option_sets.map(
+          (oios, index) =>
+            oios.id && (
+              <Paragraph key={oios.id || oios.option.id}>
+                <Text strong>{`${oios.number_in_question})`}</Text>
+                {oios.option.text}
+              </Paragraph>
+            )
         )}
       <br />
       <Row>
-        <Col offset={16}>
+        <Col offset={12}>
           <EditButton handleClick={handleEditOptionSet} />
           <Divider type="vertical" />
           <DeleteButton
@@ -72,14 +71,12 @@ const OptionSet = props => {
   );
 
   const View = () => {
-    if (showForm) {
+    if (visible) {
       return (
         <EditOptionSet
-          visible={true}
+          visible={visible}
           optionSet={optionSet}
-          options={props.options}
-          instructions={props.instructions}
-          handleCancel={handleCancel}
+          setVisible={setVisible}
           fetchOptionSet={fetchOptionSet}
         />
       );
