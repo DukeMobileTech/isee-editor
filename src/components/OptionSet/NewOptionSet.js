@@ -1,10 +1,9 @@
 import React from "react";
 import { Modal } from "antd";
 import OptionSetForm from "./OptionSetForm";
+import { modalWidth } from "../../utils/Constants";
 
 const NewOptionSet = props => {
-  const modalWidth = window.innerWidth * 0.75;
-
   const optionSet = {
     title: "",
     instruction_id: "",
@@ -28,6 +27,7 @@ const NewOptionSet = props => {
       footer={null}
       onCancel={onCancel}
       width={modalWidth}
+      destroyOnClose={true}
     >
       <OptionSetForm optionSet={optionSet} fetchOptionSet={fetchOptionSet} />
     </Modal>

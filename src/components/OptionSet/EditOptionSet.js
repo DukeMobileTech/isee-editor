@@ -1,10 +1,10 @@
 import React from "react";
 import { Modal } from "antd";
 import OptionSetForm from "./OptionSetForm";
+import { modalWidth } from "../../utils/Constants";
 
 const EditOptionSet = props => {
   const optionSet = props.optionSet;
-  const modalWidth = window.innerWidth * 0.75;
 
   const onCancel = () => {
     props.setVisible(false);

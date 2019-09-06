@@ -1,12 +1,12 @@
 import React from "react";
 import { Modal } from "antd";
 import QuestionForm from "./QuestionForm";
+import { modalWidth } from "../../utils/Constants";
 
 const Question = props => {
   const title = props.question
     ? props.question.question_identifier
     : "New Question";
-  const modalWidth = window.innerWidth * 0.75;
 
   const onCancel = () => {
     props.setVisible(false);

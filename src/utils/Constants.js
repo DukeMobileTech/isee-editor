@@ -34,3 +34,16 @@ export const questionTypesWithOptions = [
   "LABELED_SLIDER",
   "DROP_DOWN"
 ];
+
+export const languages = [
+  { name: "English", code: "en" },
+  { name: "Amharic", code: "am" },
+  { name: "Arabic", code: "ar" },
+  { name: "Khmer", code: "km" },
+  { name: "Spanish", code: "es" },
+  { name: "Swahili", code: "sw" },
+  { name: "Telugu", code: "te" },
+  { name: "Chinese", code: "zh" }
+];
+
+export const modalWidth = window.innerWidth * 0.8;

@@ -4,6 +4,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { updateInstrumentQuestion } from "../../utils/API";
 import { DRow, AlertErrorMessage, RightSubmitButton } from "../../utils/Utils";
+import { modalWidth } from "../../utils/Constants";
 
 const { Text } = Typography;
 
@@ -110,7 +111,6 @@ const InstrumentQuestionForm = props => {
 };
 
 const InstrumentQuestion = props => {
-  const modalWidth = window.innerWidth * 0.75;
   const instrumentQuestion = props.instrumentQuestion;
 
   const onCancel = () => {

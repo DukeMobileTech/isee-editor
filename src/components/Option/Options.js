@@ -17,13 +17,13 @@ import {
   deleteOption
 } from "../../utils/API";
 import { FolderAddButton } from "../../utils/Utils";
+import Translations from "./Translations";
 
 const EditableContext = React.createContext();
 
 const EditableTable = props => {
   const newId = "new";
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(props.options);
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
 
@@ -151,17 +151,6 @@ const EditableTable = props => {
     }
   ];
 
-  useEffect(() => {
-    fetchOptions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchOptions = async () => {
-    const results = await getOptions();
-    setLoading(false);
-    setData(results.data);
-  };
-
   const isEditing = record => record.id === editingKey;
 
   const cancel = () => {
@@ -252,21 +241,19 @@ const EditableTable = props => {
   };
 
   return (
-    <Spin spinning={loading}>
-      <EditableContext.Provider value={props.form}>
-        <FolderAddButton handleClick={handleAdd} />
-        <Table
-          components={components}
-          bordered
-          dataSource={data}
-          rowKey={instruction => instruction.id}
-          columns={tableColumns}
-          pagination={{
-            onChange: cancel
-          }}
-        />
-      </EditableContext.Provider>
-    </Spin>
+    <EditableContext.Provider value={props.form}>
+      <FolderAddButton handleClick={handleAdd} /> <br />
+      <Table
+        components={components}
+        bordered
+        dataSource={data}
+        rowKey={instruction => instruction.id}
+        columns={tableColumns}
+        pagination={{
+          onChange: cancel
+        }}
+      />
+    </EditableContext.Provider>
   );
 };
 
@@ -307,8 +294,62 @@ const EditableCell = props => {
 };
 
 const Options = () => {
-  const EditableFormTable = Form.create()(EditableTable);
-  return <EditableFormTable />;
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showTranslations, setShowTranslations] = useState(false);
+
+  useEffect(() => {
+    fetchOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchOptions = async () => {
+    const results = await getOptions();
+    setLoading(false);
+    setOptions(results.data);
+  };
+
+  const OptionsTable = () => {
+    const EditableFormTable = Form.create()(EditableTable);
+    return <EditableFormTable options={options} />;
+  };
+
+  const View = () => {
+    if (showTranslations) {
+      return (
+        <Translations
+          options={options}
+          setShowTranslations={setShowTranslations}
+          showTranslations={showTranslations}
+        />
+      );
+    } else {
+      return <OptionsTable />;
+    }
+  };
+
+  const TButton = () => {
+    if (showTranslations) {
+      return null;
+    } else {
+      return (
+        <Button
+          type="primary"
+          onClick={() => setShowTranslations(!showTranslations)}
+        >
+          <Icon type="global" />
+          Translations
+        </Button>
+      );
+    }
+  };
+
+  return (
+    <Spin spinning={loading}>
+      <TButton />
+      <View />
+    </Spin>
+  );
 };
 
 export default Options;

@@ -10,9 +10,9 @@ import {
   createInstrumentQuestion
 } from "../../utils/API";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
+import { modalWidth } from "../../utils/Constants";
 
 const NewInstrumentQuestion = props => {
-  const modalWidth = window.innerWidth * 0.75;
   // eslint-disable-next-line no-unused-vars
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
   // eslint-disable-next-line no-unused-vars

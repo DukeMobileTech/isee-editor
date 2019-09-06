@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { ProjectContext } from "../../context/ProjectContext";
-import { LanguageContext } from "../../context/LanguageContext";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { createInstrument, updateInstrument } from "../../utils/API";
@@ -11,6 +10,7 @@ import {
   RightSubmitButton,
   LeftCancelButton
 } from "../../utils/Utils";
+import { languages } from "../../utils/Constants";
 
 const FormItem = AntForm.Item;
 
@@ -22,7 +22,6 @@ const InstrumentSchema = Yup.object().shape({
 
 const InstrumentForm = props => {
   const projects = useContext(ProjectContext);
-  const languages = useContext(LanguageContext);
   const instrument = props.instrument ? props.instrument : null;
 
   return (

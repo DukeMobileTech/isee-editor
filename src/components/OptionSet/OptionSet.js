@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Row, Col, Card, Divider, Typography } from "antd";
+import { Row, Col, Card, Divider, Typography, Button, Icon } from "antd";
 import { EditButton, DeleteButton } from "../../utils/Utils";
 import { getOptionSet, deleteOptionSet } from "../../utils/API";
 import EditOptionSet from "./EditOptionSet";
+import Translations from "../Option/Translations";
+import OptionSetTranslations from "./OptionSetTranslations";
 
 const { Text } = Typography;
 const { Paragraph } = Typography;
@@ -10,6 +12,7 @@ const { Paragraph } = Typography;
 const OptionSet = props => {
   const [optionSet, setOptionSet] = useState(props.optionSet);
   const [visible, setVisible] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
 
   const fetchOptionSet = async id => {
     setVisible(false);
@@ -51,21 +54,24 @@ const OptionSet = props => {
             )
         )}
       <br />
-      <Row>
-        <Col offset={12}>
-          <EditButton handleClick={handleEditOptionSet} />
-          <Divider type="vertical" />
-          <DeleteButton
-            handleClick={() => {
-              if (
-                window.confirm(
-                  `Are you sure you want to delete ${optionSet.title}?`
-                )
+      <Row gutter={8} type="flex" justify="space-around" align="middle">
+        <Button
+          type="primary"
+          onClick={() => setShowTranslations(!showTranslations)}
+        >
+          <Icon type="global" />
+        </Button>
+        <EditButton handleClick={handleEditOptionSet} />
+        <DeleteButton
+          handleClick={() => {
+            if (
+              window.confirm(
+                `Are you sure you want to delete ${optionSet.title}?`
               )
-                handleDeleteOptionSet();
-            }}
-          />
-        </Col>
+            )
+              handleDeleteOptionSet();
+          }}
+        />
       </Row>
     </Card>
   );
@@ -78,6 +84,14 @@ const OptionSet = props => {
           optionSet={optionSet}
           setVisible={setVisible}
           fetchOptionSet={fetchOptionSet}
+        />
+      );
+    } else if (showTranslations) {
+      return (
+        <OptionSetTranslations
+          optionSet={optionSet}
+          setShowTranslations={setShowTranslations}
+          showTranslations={showTranslations}
         />
       );
     } else {
