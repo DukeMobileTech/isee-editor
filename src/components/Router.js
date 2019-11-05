@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Project from "./Project";
 import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
-import ScoreScheme from "./ScoringScheme/ScoreScheme";
+import ScoreScheme from "./ScoreScheme/ScoreScheme";
 import Bank from "./Bank";
 
 const Router = () => {

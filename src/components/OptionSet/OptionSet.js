@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Row, Col, Card, Divider, Typography, Button, Icon } from "antd";
+import { Row, Card, Typography, Button, Icon } from "antd";
 import { EditButton, DeleteButton } from "../../utils/Utils";
 import { getOptionSet, deleteOptionSet } from "../../utils/API";
 import EditOptionSet from "./EditOptionSet";
-import Translations from "../Option/Translations";
 import OptionSetTranslations from "./OptionSetTranslations";
 
 const { Text } = Typography;
