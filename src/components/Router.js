@@ -5,6 +5,8 @@ import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
 import ScoreScheme from "./ScoreScheme/ScoreScheme";
 import Bank from "./Bank";
+import Survey from "./Survey";
+import Responses from "./Survey/Responses";
 
 const Router = () => {
   return (
@@ -22,6 +24,12 @@ const Router = () => {
           exact
         />
         <Route path="/banks" component={Bank} exact />
+        <Route path="/surveys" component={Survey} exact />
+        <Route
+          path="/surveys/:survey_id/responses"
+          component={Responses}
+          exact
+        />
         <Route component={Error} />
       </Switch>
     </BrowserRouter>

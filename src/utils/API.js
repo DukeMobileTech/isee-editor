@@ -448,6 +448,16 @@ export const deleteOptionScore = (instrument, scoreSchemeId, scoreUnit, id) => {
   );
 };
 
+/** Survey */
+export const getSurveys = () => {
+  return instance.get("/surveys");
+};
+
+/** Response */
+export const getResponses = surveyId => {
+  return instance.get(`/surveys/${surveyId}/responses`);
+};
+
 // Instance without interceptors
 const authInstance = axios.create({
   baseURL: "http://localhost:3000/api/v4/",
