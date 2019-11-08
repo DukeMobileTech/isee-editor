@@ -2,12 +2,15 @@ import React from "react";
 import { UserProvider } from "./UserContext";
 import { ProjectProvider } from "./ProjectContext";
 import { ScoreTypeProvider } from "./ScoreTypeContext";
+import { InstrumentSectionProvider } from "./InstrumentSectionContext";
 
 function AppProviders({ children }) {
   return (
     <UserProvider>
       <ProjectProvider>
-        <ScoreTypeProvider>{children}</ScoreTypeProvider>
+        <InstrumentSectionProvider>
+          <ScoreTypeProvider>{children}</ScoreTypeProvider>
+        </InstrumentSectionProvider>
       </ProjectProvider>
     </UserProvider>
   );

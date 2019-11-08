@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import { getInstrument } from "../../utils/API";
 import { Layout, Tabs, Icon, Spin } from "antd";
 import InstrumentSider from "./InstrumentSider";
 import { CenteredH1 } from "../../utils/Styles";
 import Display from "../Display/Display";
-import InstrumentSections from "../Section/Sections";
+import Sections from "../Section/Sections";
 import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -15,7 +16,8 @@ const Instrument = ({ match }) => {
   const instrumentId = match.params.id;
   const [loading, setLoading] = useState(true);
   const [instrument, setInstrument] = useState({});
-  const [sections, setSections] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [sections, setSections] = useContext(InstrumentSectionContext);
   const [display, setDisplay] = useState(null);
   const [selectedKey, setSelectedKey] = useState("1");
 
@@ -33,24 +35,14 @@ const Instrument = ({ match }) => {
     setSelectedKey(key);
   };
 
+  const showQuestions = display => {
+    setSelectedKey("2");
+    setDisplay(display);
+  };
+
   const InstrumentView = () => {
     return (
       <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
-        <TabPane
-          tab={
-            <span>
-              <Icon type="project" />
-              Questions
-            </span>
-          }
-          key="1"
-        >
-          <Display
-            projectId={projectId}
-            display={display}
-            displays={[].concat.apply([], sections.map(sec => sec.displays))}
-          />
-        </TabPane>
         <TabPane
           tab={
             <span>
@@ -58,40 +50,56 @@ const Instrument = ({ match }) => {
               Sections
             </span>
           }
-          key="2"
+          key="1"
         >
-          <InstrumentSections instrument={instrument} sections={sections} />
+          <Sections instrument={instrument} showQuestions={showQuestions} />
         </TabPane>
-        <TabPane
-          tab={
-            <span>
-              <Icon type="check-square" />
-              Scoring Schemes
-            </span>
-          }
-          key="3"
-        >
-          <ScoreSchemes instrument={instrument} />
-        </TabPane>
+        {sections.length > 0 && (
+          <TabPane
+            tab={
+              <span>
+                <Icon type="project" />
+                Questions
+              </span>
+            }
+            key="2"
+          >
+            <Display projectId={projectId} display={display} />
+          </TabPane>
+        )}
+        {sections.length > 0 && (
+          <TabPane
+            tab={
+              <span>
+                <Icon type="check-square" />
+                Scoring Schemes
+              </span>
+            }
+            key="3"
+          >
+            <ScoreSchemes instrument={instrument} />
+          </TabPane>
+        )}
       </Tabs>
     );
   };
 
   return (
-    <Layout>
-      <InstrumentSider
-        projectId={projectId}
-        instrumentId={instrumentId}
-        setDisplay={setDisplay}
-        setSections={setSections}
-      />
-      <Content style={{ padding: "10px" }}>
-        <CenteredH1>{instrument.title}</CenteredH1>
-        <Spin spinning={loading}>
-          <InstrumentView />
-        </Spin>
-      </Content>
-    </Layout>
+    <Fragment>
+      <CenteredH1>{instrument.title}</CenteredH1>
+      <Layout>
+        <InstrumentSider
+          projectId={projectId}
+          instrumentId={instrumentId}
+          showQuestions={showQuestions}
+        />
+        <Content style={{ padding: "10px" }}>
+          <Spin spinning={loading}>
+            <InstrumentView />
+          </Spin>
+        </Content>
+      </Layout>
+    </Fragment>
   );
 };
 

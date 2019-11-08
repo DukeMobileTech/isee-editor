@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, Fragment, useContext } from "react";
-import { Divider, Collapse, Spin } from "antd";
+import { Divider, Collapse, Spin, Row, Pagination, Col } from "antd";
 import {
   deleteQuestionSet,
   getQuestionSets,
   getOptionSets,
-  getInstructions
+  getInstructions,
+  getQuestionSetCount
 } from "../../utils/API";
 import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
 import QuestionSetForm from "./QuestionSetForm";
@@ -17,46 +18,29 @@ import { QuestionSetContext } from "../../context/QuestionSetContext";
 const { Panel } = Collapse;
 
 const QuestionSets = () => {
-  const [loadingQs, setLoadingQs] = useState(true);
-  const [loadingOs, setLoadingOs] = useState(true);
-  const [loadingIs, setLoadingIs] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [questionSet, setQuestionSet] = useState(null);
-  const [optionSets, setOptionSets] = useContext(OptionSetContext);
-  const [instructions, setInstructions] = useContext(InstructionContext);
-  const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
+  const [questionSets, setQuestionSets] = useState([]);
+  const [current, setCurrent] = useState(1);
+  const [perPage, setPerPage] = useState(1);
+  const [total, setTotal] = useState(1);
+
+  useEffect(() => {
+    getQuestionSetCount().then(res => setTotal(res.data));
+  }, []);
 
   useEffect(() => {
     fetchQuestionSets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [current, perPage]);
 
   const fetchQuestionSets = async () => {
     setShowForm(false);
-    const results = await getQuestionSets();
+    const results = await getQuestionSets(current, perPage);
     setQuestionSets(results.data);
-    setLoadingQs(false);
+    setLoading(false);
   };
-
-  useEffect(() => {
-    const fetchOptionSets = async () => {
-      const results = await getOptionSets();
-      setOptionSets(results.data);
-      setLoadingOs(false);
-    };
-    fetchOptionSets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const fetchInstructions = async () => {
-      const results = await getInstructions();
-      setInstructions(results.data);
-      setLoadingIs(false);
-    };
-    fetchInstructions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleDeleteQuestionSet = questionSet => {
     deleteQuestionSet(questionSet.id)
@@ -93,59 +77,63 @@ const QuestionSets = () => {
         />
       );
     } else {
-      return <CollapseView />;
-    }
-  };
-
-  const genExtra = questionSet => (
-    <Fragment>
-      <EditButton
-        handleClick={event => {
-          event.stopPropagation();
-          handleEditQuestionSet(questionSet);
-        }}
-      />
-      <Divider type="vertical" />
-      <DeleteButton
-        handleClick={event => {
-          event.stopPropagation();
-          if (
-            window.confirm(
-              `Are you sure you want to delete ${questionSet.title}?`
-            )
-          )
-            handleDeleteQuestionSet(questionSet);
-        }}
-      />
-    </Fragment>
-  );
-
-  const CollapseView = () => {
-    return (
-      <Fragment>
-        <Collapse accordion expandIconPosition={"left"}>
+      return (
+        <Fragment>
           {questionSets &&
             questionSets.map(questionSet => {
               return (
-                <Panel
-                  header={questionSet.title}
-                  key={`${questionSet.id}`}
-                  extra={genExtra(questionSet)}
-                >
+                <Fragment key={`${questionSet.id}`}>
+                  <Row>
+                    <Col offset={10} span={8}>
+                      <strong>{questionSet.title}</strong>
+                    </Col>
+                    <Col span={6}>
+                      <EditButton
+                        handleClick={event => {
+                          event.stopPropagation();
+                          handleEditQuestionSet(questionSet);
+                        }}
+                      />
+                      <Divider type="vertical" />
+                      <DeleteButton
+                        handleClick={event => {
+                          event.stopPropagation();
+                          if (
+                            window.confirm(
+                              `Are you sure you want to delete ${questionSet.title}?`
+                            )
+                          )
+                            handleDeleteQuestionSet(questionSet);
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <br />
                   <QuestionSet questionSet={questionSet} />
-                </Panel>
+                </Fragment>
               );
             })}
-        </Collapse>
-        <br />
-        <FolderAddButton handleClick={handleNewQuestionSet} />
-      </Fragment>
-    );
+        </Fragment>
+      );
+    }
+  };
+
+  const onChange = page => {
+    setCurrent(page);
   };
 
   return (
-    <Spin spinning={loadingQs || loadingOs || loadingIs}>
+    <Spin spinning={loading}>
+      <FolderAddButton handleClick={handleNewQuestionSet} />
       <View />
+      <Row type="flex" justify="space-around" align="middle">
+        <Pagination
+          current={current}
+          onChange={onChange}
+          total={total}
+          defaultPageSize={perPage}
+        />
+      </Row>
     </Spin>
   );
 };

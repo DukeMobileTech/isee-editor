@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { List, Row, Col, Divider } from "antd";
-import { CenteredH3, CenteredH4 } from "../../../utils/Styles";
-import DisplayForm from "../../Display/DisplayForm";
-import { getSection, deleteDisplay } from "../../../utils/API";
+import React, { useState, Fragment, useContext } from "react";
+import { List, Row, Col, Divider, Button } from "antd";
+import { CenteredH3 } from "../../../utils/Styles";
+import SubsectionForm from "./SubsectionForm";
+import { deleteDisplay, getSections } from "../../../utils/API";
 import {
   LeftCancelButton,
   FolderAddButton,
   EditButton,
   DeleteButton
 } from "../../../utils/Utils";
+import { InstrumentSectionContext } from "../../../context/InstrumentSectionContext";
 
 const Subsections = props => {
-  const [section, setSection] = useState(props.section);
-  const [displays, setDisplays] = useState(section.displays);
+  const section = props.section;
+  const displays = section.displays;
   const [showForm, setShowForm] = useState(false);
   const [display, setDisplay] = useState(null);
 
@@ -27,6 +28,17 @@ const Subsections = props => {
   } else {
     lPosition = 0;
   }
+  // eslint-disable-next-line no-unused-vars
+  const [sections, setSections] = useContext(InstrumentSectionContext);
+
+  const fetchSections = async () => {
+    setShowForm(false);
+    const results = await getSections(
+      props.instrument.project_id,
+      props.instrument.id
+    );
+    setSections(results.data);
+  };
 
   const handleNewDisplay = () => {
     setDisplay(null);
@@ -45,7 +57,7 @@ const Subsections = props => {
       display.id
     )
       .then(res => {
-        fetchUpdatedDisplays();
+        fetchSections();
       })
       .catch(error => {
         console.log(error);
@@ -54,17 +66,6 @@ const Subsections = props => {
 
   const handleCancel = () => {
     setShowForm(false);
-  };
-
-  const fetchUpdatedDisplays = async () => {
-    setShowForm(false);
-    const results = await getSection(
-      props.instrument.project_id,
-      section.instrument_id,
-      section.id
-    );
-    setSection(results.data);
-    setDisplays(results.data.displays);
   };
 
   const FooterButtons = () => {
@@ -76,59 +77,61 @@ const Subsections = props => {
     );
   };
 
-  const DisplayList = () => {
-    return (
-      <List
-        header={<CenteredH4>Subsections</CenteredH4>}
-        footer={<FooterButtons />}
-        bordered
-        dataSource={displays}
-        renderItem={display => (
-          <List.Item>
-            <Col span={2}>{display.position}</Col>
-            <Col span={16}>{display.title}</Col>
-            <Col span={6}>
-              <EditButton handleClick={() => handleEditDisplay(display)} />
-              <Divider type="vertical" />
-              <DeleteButton
-                handleClick={() => {
-                  if (
-                    window.confirm(
-                      `Are you sure you want to delete ${display.title}?`
-                    )
-                  )
-                    handleDeleteDisplay(display);
-                }}
-              />
-            </Col>
-          </List.Item>
-        )}
-      />
-    );
-  };
-
   const DisplaysView = () => {
     if (showForm) {
       return (
-        <DisplayForm
+        <SubsectionForm
           instrument={props.instrument}
           section={section}
           display={display}
           lastDisplayPosition={lPosition}
           handleCancel={handleCancel}
-          fetchUpdatedDisplays={fetchUpdatedDisplays}
+          fetchSections={fetchSections}
         />
       );
     } else {
-      return <DisplayList />;
+      return (
+        <List
+          footer={<FooterButtons />}
+          bordered
+          dataSource={displays}
+          renderItem={display => (
+            <List.Item>
+              <Col span={2}>{display.position}</Col>
+              <Col span={16}>
+                <Button
+                  type="link"
+                  onClick={() => props.showQuestions(display)}
+                >
+                  {display.title}
+                </Button>
+              </Col>
+              <Col span={6}>
+                <EditButton handleClick={() => handleEditDisplay(display)} />
+                <Divider type="vertical" />
+                <DeleteButton
+                  handleClick={() => {
+                    if (
+                      window.confirm(
+                        `Are you sure you want to delete ${display.title}?`
+                      )
+                    )
+                      handleDeleteDisplay(display);
+                  }}
+                />
+              </Col>
+            </List.Item>
+          )}
+        />
+      );
     }
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <CenteredH3>{section.title}</CenteredH3>
       <DisplaysView />
-    </React.Fragment>
+    </Fragment>
   );
 };
 

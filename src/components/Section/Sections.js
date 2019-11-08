@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { List, Col, Button, Divider, Icon, Typography } from "antd";
-import { deleteSection, getSections, updateSection } from "../../utils/API";
+import { deleteSection, updateSection, getSections } from "../../utils/API";
 import SectionForm from "./SectionForm";
 import Subsections from "./Subsection/Subsections";
 import {
@@ -11,18 +11,25 @@ import {
   getListStyle
 } from "../../utils/Utils";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 
-const InstrumentSections = props => {
+const Sections = props => {
   const instrument = props.instrument;
-  const [sections, setSections] = useState(props.sections);
+  const [sections, setSections] = useContext(InstrumentSectionContext);
   const [showForm, setShowForm] = useState(false);
   const [showDisplays, setShowDisplays] = useState(false);
   const [section, setSection] = useState(null);
 
+  const fetchSections = async () => {
+    setShowForm(false);
+    const results = await getSections(instrument.project_id, instrument.id);
+    setSections(results.data);
+  };
+
   const handleDeleteSection = section => {
     deleteSection(instrument.project_id, instrument.id, section.id)
       .then(res => {
-        fetchUpdatedSections();
+        fetchSections();
       })
       .catch(error => {
         console.log(error);
@@ -49,13 +56,7 @@ const InstrumentSections = props => {
     setShowDisplays(true);
   };
 
-  const fetchUpdatedSections = async () => {
-    setShowForm(false);
-    const results = await getSections(instrument.project_id, instrument.id);
-    setSections(results.data);
-  };
-
-  const onDragEnd = result => {
+  const onDragEnd = async result => {
     if (
       !result.destination ||
       result.destination.index === result.source.index
@@ -66,40 +67,36 @@ const InstrumentSections = props => {
     const movedSection = sections[result.source.index];
     movedSection.position = result.destination.index + 1;
 
-    updateSection(
+    await updateSection(
       instrument.project_id,
       instrument.id,
       movedSection.id,
       movedSection
-    ).then(res => fetchUpdatedSections());
+    );
+    fetchSections();
   };
 
-  const SectionsView = () => {
-    if (showForm) {
-      return (
-        <SectionForm
-          instrument={instrument}
-          section={section}
-          sectionCount={sections.length}
-          fetchUpdatedSections={fetchUpdatedSections}
-          handleCancel={handleCancel}
-        />
-      );
-    } else if (showDisplays) {
-      return (
-        <Subsections
-          section={section}
-          instrument={instrument}
-          sections={sections}
-          handleCancel={handleCancel}
-        />
-      );
-    } else {
-      return <SectionList />;
-    }
-  };
-
-  const SectionList = () => {
+  if (showForm) {
+    return (
+      <SectionForm
+        instrument={instrument}
+        section={section}
+        handleCancel={handleCancel}
+        fetchSections={fetchSections}
+        maxCount={sections.length + 1}
+      />
+    );
+  } else if (showDisplays) {
+    return (
+      <Subsections
+        section={section}
+        instrument={instrument}
+        sections={sections}
+        handleCancel={handleCancel}
+        showQuestions={props.showQuestions}
+      />
+    );
+  } else {
     return (
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="sections">
@@ -136,12 +133,15 @@ const InstrumentSections = props => {
                               {section.position}
                             </Typography.Text>
                           </Col>
-                          <Col span={14}>{section.title}</Col>
-                          <Col span={8}>
-                            <Button onClick={() => handleOpenSection(section)}>
-                              <Icon type="folder-open" />
+                          <Col span={16}>
+                            <Button
+                              type="link"
+                              onClick={() => handleOpenSection(section)}
+                            >
+                              {section.title}
                             </Button>
-                            <Divider type="vertical" />
+                          </Col>
+                          <Col span={6}>
                             <EditButton
                               handleClick={() => handleEditSection(section)}
                             />
@@ -169,9 +169,7 @@ const InstrumentSections = props => {
         </Droppable>
       </DragDropContext>
     );
-  };
-
-  return <SectionsView />;
+  }
 };
 
-export default InstrumentSections;
+export default Sections;

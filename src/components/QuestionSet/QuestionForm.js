@@ -194,7 +194,7 @@ const QuestionForm = props => {
           </DRow>
           <DRow>
             <Col span={4}>
-              <Text strong>Type</Text>
+              <Text strong>Text</Text>
             </Col>
             <Col span={14}>
               <Field name="text">

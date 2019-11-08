@@ -16,7 +16,6 @@ const SectionSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   position: Yup.number()
     .min(1, "Number must be greater than 0")
-    // .max(maxCount, "Number cannot exceed the current number of sections")
     .required("Postion is required")
 });
 
@@ -24,7 +23,7 @@ const SectionForm = props => {
   const projectId = props.instrument.project_id;
   const instrumentId = props.instrument.id;
   const section = props.section;
-  const maxCount = props.sectionCount ? props.sectionCount + 1 : 1;
+  const maxCount = props.maxCount;
 
   return (
     <Formik
@@ -37,6 +36,7 @@ const SectionForm = props => {
       validationSchema={SectionSchema}
       onSubmit={(values, { setErrors }) => {
         const section = {
+          id: values.id,
           title: values.title,
           instrument_id: values.instrument_id,
           position: values.position
@@ -44,9 +44,7 @@ const SectionForm = props => {
         if (values.id) {
           updateSection(projectId, values.instrument_id, values.id, section)
             .then(response => {
-              if (response.status === 204) {
-                props.fetchUpdatedSections();
-              }
+              props.fetchSections();
             })
             .catch(error => {
               for (const err of error.response.data.errors) {
@@ -58,9 +56,7 @@ const SectionForm = props => {
         } else {
           createSection(projectId, values.instrument_id, section)
             .then(response => {
-              if (response.status === 201) {
-                props.fetchUpdatedSections();
-              }
+              props.fetchSections();
             })
             .catch(error => {
               for (const err of error.response.data.errors) {

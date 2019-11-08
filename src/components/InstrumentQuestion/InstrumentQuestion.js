@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Modal, Typography, Col } from "antd";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { updateInstrumentQuestion } from "../../utils/API";
 import { DRow, AlertErrorMessage, RightSubmitButton } from "../../utils/Utils";
 import { modalWidth } from "../../utils/Constants";
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 
 const { Text } = Typography;
 
@@ -16,7 +17,9 @@ const InstrumentQuestionSchema = Yup.object().shape({
 
 const InstrumentQuestionForm = props => {
   const iq = props.instrumentQuestion;
-  const displays = props.displays;
+  // eslint-disable-next-line no-unused-vars
+  const [sections, setSections] = useContext(InstrumentSectionContext);
+  const displays = [].concat.apply([], sections.map(sec => sec.displays));
 
   return (
     <Formik

@@ -38,8 +38,16 @@ instance.interceptors.response.use(
 /**
  * QuestionSet
  */
-export const getQuestionSets = () => {
-  return instance.get("/question_sets");
+export const getQuestionSets = (page, perPage) => {
+  if (page && perPage)
+    return instance.get("/question_sets", {
+      params: { page: page, per_page: perPage }
+    });
+  else return instance.get("/question_sets");
+};
+
+export const getQuestionSetCount = () => {
+  return instance.get("/question_sets/total");
 };
 
 export const createQuestionSet = questionSet => {
@@ -296,6 +304,48 @@ export const updateDisplay = (projectId, instrumentId, id, display) => {
 export const deleteDisplay = (projectId, instrumentId, id) => {
   return instance.delete(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
+  );
+};
+
+/**DisplayInstruction */
+export const getDisplayInstructions = (projectId, instrumentId, displayId) => {
+  return instance.get(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${displayId}/display_instructions`
+  );
+};
+
+export const createDisplayInstruction = (
+  projectId,
+  instrumentId,
+  displayId,
+  di
+) => {
+  return instance.post(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${displayId}/display_instructions`,
+    di
+  );
+};
+
+export const updateDisplayInstruction = (
+  projectId,
+  instrumentId,
+  displayId,
+  di
+) => {
+  return instance.put(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${displayId}/display_instructions/${di.id}`,
+    di
+  );
+};
+
+export const deleteDisplayInstruction = (
+  projectId,
+  instrumentId,
+  displayId,
+  id
+) => {
+  return instance.delete(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${displayId}/display_instructions/${id}`
   );
 };
 

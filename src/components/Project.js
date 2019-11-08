@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Table, Divider } from "antd";
 import { Link } from "react-router-dom";
 import { getInstruments, deleteInstrument } from "../utils/API";
@@ -49,23 +49,17 @@ const Project = () => {
     setShowForm(true);
   };
 
-  const InstrumentsView = () => {
-    if (showForm) {
-      return (
-        <InstrumentForm
-          instrument={instrument}
-          handleCancel={handleCancel}
-          fetchInstruments={fetchInstruments}
-        />
-      );
-    } else {
-      return <InstrumentList />;
-    }
-  };
-
-  const InstrumentList = () => {
+  if (showForm) {
     return (
-      <React.Fragment>
+      <InstrumentForm
+        instrument={instrument}
+        handleCancel={handleCancel}
+        fetchInstruments={fetchInstruments}
+      />
+    );
+  } else {
+    return (
+      <Fragment>
         <Table dataSource={instruments} rowKey={instrument => instrument.id}>
           <Column
             title="Title"
@@ -119,11 +113,9 @@ const Project = () => {
           />
         </Table>
         <FolderAddButton handleClick={handleNewInstrument} />
-      </React.Fragment>
+      </Fragment>
     );
-  };
-
-  return <InstrumentsView />;
+  }
 };
 
 export default Project;

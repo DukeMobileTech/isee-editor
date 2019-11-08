@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CenteredH1 } from "../../utils/Styles";
 import { getScoreSchemes, deleteScoreScheme } from "../../utils/API";
 import { Table, Divider } from "antd";
 import { EditButton, DeleteButton, FolderAddButton } from "../../utils/Utils";
@@ -118,7 +117,6 @@ const ScoreSchemes = props => {
 
   return (
     <Fragment>
-      <CenteredH1>Scoring Schemes</CenteredH1>
       <ScoreSchemesView />
     </Fragment>
   );

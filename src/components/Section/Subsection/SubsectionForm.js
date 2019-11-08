@@ -2,13 +2,13 @@ import React from "react";
 import { Formik, Form, Field } from "formik";
 import { Form as AntForm } from "antd";
 import * as Yup from "yup";
-import { createDisplay, updateDisplay } from "../../utils/API";
-import { CenteredH4 } from "../../utils/Styles";
+import { createDisplay, updateDisplay } from "../../../utils/API";
+import { CenteredH4 } from "../../../utils/Styles";
 import {
   AlertErrorMessage,
   RightSubmitButton,
   LeftCancelButton
-} from "../../utils/Utils";
+} from "../../../utils/Utils";
 
 const FormItem = AntForm.Item;
 
@@ -16,11 +16,10 @@ const DisplaySchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   position: Yup.number()
     .min(1, "Number must be greater than 0")
-    // .max(maxCount, "Number cannot exceed the current number of sections")
-    .required("Postion is required")
+    .required("Position is required")
 });
 
-const DisplayForm = props => {
+const SubsectionForm = props => {
   const projectId = props.instrument.project_id;
   const instrumentId = props.section.instrument_id;
   const sectionId = props.section.id;
@@ -47,9 +46,10 @@ const DisplayForm = props => {
         if (values.id) {
           updateDisplay(projectId, values.instrument_id, values.id, display)
             .then(response => {
-              if (response.status === 204) {
-                props.fetchUpdatedDisplays();
-              }
+              // if (response.status === 204) {
+              //   props.fetchUpdatedDisplays();
+              // }
+              props.fetchSections();
             })
             .catch(error => {
               for (const err of error.response.data.errors) {
@@ -63,9 +63,10 @@ const DisplayForm = props => {
         } else {
           createDisplay(projectId, values.instrument_id, display)
             .then(response => {
-              if (response.status === 201) {
-                props.fetchUpdatedDisplays();
-              }
+              // if (response.status === 201) {
+              //   props.fetchUpdatedDisplays();
+              // }
+              props.fetchSections();
             })
             .catch(error => {
               for (const err of error.response.data.errors) {
@@ -109,4 +110,4 @@ const DisplayForm = props => {
   );
 };
 
-export default DisplayForm;
+export default SubsectionForm;

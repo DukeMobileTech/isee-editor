@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Row, Col, Table, Button, Icon, Typography, Spin } from "antd";
+import { Row, Col, Table, Button, Icon, Typography, Spin, Tabs } from "antd";
 import { CenteredH3 } from "../../utils/Styles";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
 import { getDisplay, deleteInstrumentQuestion } from "../../utils/API";
@@ -10,8 +10,10 @@ import { OptionSetProvider } from "../../context/OptionSetContext";
 import { InstructionProvider } from "../../context/InstructionContext";
 import { QuestionSetProvider } from "../../context/QuestionSetContext";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
+import DisplayInstructions from "./DisplayInstructions";
 
 const { Column } = Table;
+const { TabPane } = Tabs;
 
 let position = 1;
 const setPosition = display => {
@@ -32,6 +34,7 @@ const Display = props => {
   const [showImport, setShowImport] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [editQuestion, setEditQuestion] = useState(null);
+  const [selectedKey, setSelectedKey] = useState("1");
   setPosition(props.display);
 
   useEffect(() => {
@@ -116,7 +119,6 @@ const Display = props => {
       return (
         <InstrumentQuestion
           instrumentQuestion={editQuestion}
-          displays={props.displays}
           visible={showEdit}
           handleCancel={handleCancel}
           projectId={projectId}
@@ -137,59 +139,88 @@ const Display = props => {
     }
   };
 
+  const onTabSelection = key => {
+    setSelectedKey(key);
+  };
+
   const InstrumentQuestionList = () => {
     return (
-      <React.Fragment>
-        <Table
-          size="middle"
-          dataSource={display.instrument_questions}
-          rowKey={iq => iq.id}
-          expandedRowRender={question => (
-            <ExpandedQuestion question={question} />
-          )}
+      <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
+        <TabPane
+          tab={
+            <span>
+              <Icon type="project" />
+              Questions
+            </span>
+          }
+          key="1"
         >
-          <Column title="Position" dataIndex="number_in_instrument" />
-          <Column title="Identifier" dataIndex="identifier" />
-          <Column title="Type" dataIndex="type" />
-          <Column
-            title="Text"
-            dataIndex="text"
-            render={(text, iq) => (
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: iq.text
-                }}
-              />
+          <Table
+            size="middle"
+            dataSource={display.instrument_questions}
+            rowKey={iq => iq.id}
+            expandedRowRender={question => (
+              <ExpandedQuestion question={question} />
             )}
+          >
+            <Column title="Position" dataIndex="number_in_instrument" />
+            <Column title="Identifier" dataIndex="identifier" />
+            <Column title="Type" dataIndex="type" />
+            <Column
+              title="Text"
+              dataIndex="text"
+              render={(text, iq) => (
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: iq.text
+                  }}
+                />
+              )}
+            />
+            <Column
+              title="Actions"
+              dataIndex="actions"
+              render={(text, question) => (
+                <EditDeleteBtnGroup
+                  object={question}
+                  message={question.identifier}
+                  handleEdit={handleQuestionEdit}
+                  handleDelete={handleQuestionDelete}
+                />
+              )}
+            />
+          </Table>
+          <br />
+          <Row gutter={8}>
+            <Col span={12}></Col>
+            <Col span={6}>
+              <Button type="primary" onClick={handleImportInstrumentQuestion}>
+                <Icon type="import" /> Add Question
+              </Button>
+            </Col>
+            <Col span={6}>
+              <Button type="primary" onClick={handleCreateInstrumentQuestion}>
+                <Icon type="plus" /> Create Question
+              </Button>
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane
+          tab={
+            <span>
+              <Icon type="check-square" />
+              Instructions
+            </span>
+          }
+          key="2"
+        >
+          <DisplayInstructions
+            projectId={projectId}
+            display={display}
+            setSelectedKey={setSelectedKey}
           />
-          <Column
-            title="Actions"
-            dataIndex="actions"
-            render={(text, question) => (
-              <EditDeleteBtnGroup
-                object={question}
-                message={question.identifier}
-                handleEdit={handleQuestionEdit}
-                handleDelete={handleQuestionDelete}
-              />
-            )}
-          />
-        </Table>
-        <br />
-        <Row gutter={8}>
-          <Col span={12}></Col>
-          <Col span={6}>
-            <Button type="primary" onClick={handleImportInstrumentQuestion}>
-              <Icon type="import" /> Add Existing
-            </Button>
-          </Col>
-          <Col span={6}>
-            <Button type="primary" onClick={handleCreateInstrumentQuestion}>
-              <Icon type="plus" /> Create New
-            </Button>
-          </Col>
-        </Row>
-      </React.Fragment>
+        </TabPane>
+      </Tabs>
     );
   };
 
@@ -197,11 +228,7 @@ const Display = props => {
     <Fragment>
       <Spin spinning={loading}>
         <CenteredH3>
-          {display && (
-            <Typography.Text
-              strong
-            >{`(${display.position}) ${display.title}`}</Typography.Text>
-          )}
+          {display && <Typography.Text strong>{display.title}</Typography.Text>}
         </CenteredH3>
         {display && <DisplayView />}
       </Spin>

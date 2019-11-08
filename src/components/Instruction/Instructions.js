@@ -16,6 +16,7 @@ import {
   deleteInstruction
 } from "../../utils/API";
 import { FolderAddButton } from "../../utils/Utils";
+import ReactQuill from "react-quill";
 
 const EditableContext = React.createContext();
 
@@ -217,17 +218,31 @@ const EditableCell = props => {
     return (
       <td {...restProps}>
         {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`
-                }
-              ],
-              initialValue: record[dataIndex]
-            })(<Input.TextArea />)}
-          </Form.Item>
+          dataIndex === "title" ? (
+            <Form.Item style={{ margin: 0 }}>
+              {getFieldDecorator(dataIndex, {
+                rules: [
+                  {
+                    required: true,
+                    message: `Please Input ${title}!`
+                  }
+                ],
+                initialValue: record[dataIndex]
+              })(<Input.TextArea />)}
+            </Form.Item>
+          ) : (
+            <Form.Item style={{ margin: 0 }}>
+              {getFieldDecorator(dataIndex, {
+                rules: [
+                  {
+                    required: true,
+                    message: `Please Input ${title}!`
+                  }
+                ],
+                initialValue: record[dataIndex]
+              })(<ReactQuill value={record[dataIndex]} />)}
+            </Form.Item>
+          )
         ) : (
           children
         )}

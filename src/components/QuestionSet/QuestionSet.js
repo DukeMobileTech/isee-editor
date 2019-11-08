@@ -9,7 +9,9 @@ const { Panel } = Collapse;
 
 const QuestionSet = props => {
   const questionSet = props.questionSet;
-  const [folders, setFolders] = useState(questionSet.folders);
+  const [folders, setFolders] = useState(
+    questionSet === null ? [] : questionSet.folders
+  );
   const [showForm, setShowForm] = useState(false);
   const [folder, setFolder] = useState(null);
 
@@ -107,7 +109,11 @@ const QuestionSet = props => {
     );
   };
 
-  return <View />;
+  return (
+    <Fragment>
+      <View />
+    </Fragment>
+  );
 };
 
 export default QuestionSet;
