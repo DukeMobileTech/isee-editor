@@ -8,6 +8,7 @@ import {
   RightSubmitButton
 } from "../../utils/Utils";
 import { updateFolder, createFolder } from "../../utils/API";
+import { CenteredH3 } from "../../utils/Styles";
 
 const FormItem = AntForm.Item;
 
@@ -18,6 +19,7 @@ const FolderSchema = Yup.object().shape({
 const FolderForm = props => {
   const questionSet = props.questionSet;
   const folder = props.folder;
+  const title = folder ? `Editing ${folder.title}` : "New Folder";
 
   return (
     <Formik
@@ -64,6 +66,7 @@ const FolderForm = props => {
       }}
       render={({ values }) => (
         <Form>
+          <CenteredH3>{title}</CenteredH3>
           <FormItem>
             <Field
               className="ant-input"

@@ -17,16 +17,18 @@ const Subsections = props => {
   const [showForm, setShowForm] = useState(false);
   const [display, setDisplay] = useState(null);
 
-  let lPosition;
+  let lPosition = 0;
   if (section.displays.length > 0) {
     lPosition = section.displays.slice(-1)[0].position;
-  } else if (props.sections.length === 1 && section.displays.length === 0) {
-    lPosition = 0;
   } else if (props.sections.length > 1) {
     const index = props.sections.indexOf(section);
-    lPosition = props.sections[index - 1].displays.slice(-1)[0].position;
-  } else {
-    lPosition = 0;
+    let prevSec = props.sections.slice(0, index).reverse();
+    for (let i = 0; i < prevSec.length; i++) {
+      if (prevSec[i].displays.length > 0) {
+        lPosition = prevSec[i].displays.slice(-1)[0].position;
+        break;
+      }
+    }
   }
   // eslint-disable-next-line no-unused-vars
   const [sections, setSections] = useContext(InstrumentSectionContext);

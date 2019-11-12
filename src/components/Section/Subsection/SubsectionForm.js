@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import { Form as AntForm } from "antd";
 import * as Yup from "yup";
@@ -9,10 +9,12 @@ import {
   RightSubmitButton,
   LeftCancelButton
 } from "../../../utils/Utils";
+import { InstrumentSectionContext } from "../../../context/InstrumentSectionContext";
 
 const FormItem = AntForm.Item;
 
 const DisplaySchema = Yup.object().shape({
+  section_id: Yup.number().required("Section is required"),
   title: Yup.string().required("Title is required"),
   position: Yup.number()
     .min(1, "Number must be greater than 0")
@@ -25,6 +27,8 @@ const SubsectionForm = props => {
   const sectionId = props.section.id;
   const display = props.display;
   const displayPosition = props.lastDisplayPosition + 1;
+  // eslint-disable-next-line no-unused-vars
+  const [sections, setSections] = useContext(InstrumentSectionContext);
 
   return (
     <Formik
@@ -46,9 +50,6 @@ const SubsectionForm = props => {
         if (values.id) {
           updateDisplay(projectId, values.instrument_id, values.id, display)
             .then(response => {
-              // if (response.status === 204) {
-              //   props.fetchUpdatedDisplays();
-              // }
               props.fetchSections();
             })
             .catch(error => {
@@ -63,9 +64,6 @@ const SubsectionForm = props => {
         } else {
           createDisplay(projectId, values.instrument_id, display)
             .then(response => {
-              // if (response.status === 201) {
-              //   props.fetchUpdatedDisplays();
-              // }
               props.fetchSections();
             })
             .catch(error => {
@@ -84,6 +82,19 @@ const SubsectionForm = props => {
           <CenteredH4>
             {values.title ? values.title : "New Subsection"}
           </CenteredH4>
+          <FormItem>
+            <Field className="ant-input" name="section_id" component="select">
+              <option></option>
+              {sections.map(section => {
+                return (
+                  <option key={section.id} name="section_id" value={section.id}>
+                    {section.title}
+                  </option>
+                );
+              })}
+            </Field>
+            <AlertErrorMessage name="section_id" type="error" />
+          </FormItem>
           <FormItem>
             <Field
               className="ant-input"

@@ -8,6 +8,7 @@ import {
   RightSubmitButton
 } from "../../utils/Utils";
 import { updateQuestionSet, createQuestionSet } from "../../utils/API";
+import { CenteredH3 } from "../../utils/Styles";
 
 const FormItem = AntForm.Item;
 
@@ -17,6 +18,9 @@ const QuestionSetSchema = Yup.object().shape({
 
 const QuestionSetForm = props => {
   const questionSet = props.questionSet;
+  const title = questionSet
+    ? `Editing ${questionSet.title}`
+    : "New Question Set";
 
   return (
     <Formik
@@ -61,6 +65,7 @@ const QuestionSetForm = props => {
       }}
       render={({ values }) => (
         <Form>
+          <CenteredH3>{title}</CenteredH3>
           <FormItem>
             <Field
               className="ant-input"

@@ -45,8 +45,7 @@ const InstrumentSider = props => {
   return (
     <Sider width={250} style={{ background: "#fff" }}>
       <CenteredH4>
-        <Icon type="container" />
-        Sections
+        <Icon type="menu-unfold" /> Sections
       </CenteredH4>
       <Spin spinning={loading}>
         {sections.map(section => {

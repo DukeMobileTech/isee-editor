@@ -127,7 +127,7 @@ const Sections = props => {
                         )}
                       >
                         <List.Item>
-                          <Col span={2}>
+                          <Col span={4}>
                             <Icon type="drag" />{" "}
                             <Typography.Text strong>
                               {section.position}
@@ -141,7 +141,7 @@ const Sections = props => {
                               {section.title}
                             </Button>
                           </Col>
-                          <Col span={6}>
+                          <Col span={4}>
                             <EditButton
                               handleClick={() => handleEditSection(section)}
                             />

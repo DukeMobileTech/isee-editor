@@ -3,6 +3,8 @@ import { Tag, Typography } from "antd";
 const { Text } = Typography;
 
 const ExpandedQuestion = ({ question }) => {
+  console.log(question);
+
   return (
     <span>
       {question.instructions && (
