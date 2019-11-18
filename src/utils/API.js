@@ -6,7 +6,7 @@ const deleteUserInfo = () => {
 };
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000/api/v4/",
+  baseURL: process.env.REACT_APP_BASE_URL,
   responseType: "json"
 });
 // Request interceptor that adds params expected by the backend api
@@ -510,7 +510,7 @@ export const getResponses = surveyId => {
 
 // Instance without interceptors
 const authInstance = axios.create({
-  baseURL: "http://localhost:3000/api/v4/",
+  baseURL: process.env.REACT_APP_BASE_URL,
   responseType: "json"
 });
 

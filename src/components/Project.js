@@ -87,7 +87,7 @@ const Project = () => {
             title="Published"
             dataIndex="published"
             key="published"
-            render={(text, instrument) => instrument.published.toString()}
+            render={(text, instrument) => String(instrument.published)}
           />
           <Column
             title="Action"
