@@ -1,5 +1,15 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Row, Col, Table, Button, Icon, Typography, Spin, Tabs } from "antd";
+import {
+  Row,
+  Col,
+  Table,
+  Button,
+  Icon,
+  Typography,
+  Spin,
+  Tabs,
+  Modal
+} from "antd";
 import { CenteredH3 } from "../../utils/Styles";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
 import { getDisplay, deleteInstrumentQuestion } from "../../utils/API";
@@ -11,20 +21,11 @@ import { InstructionProvider } from "../../context/InstructionContext";
 import { QuestionSetProvider } from "../../context/QuestionSetContext";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
 import DisplayInstructions from "./DisplayInstructions";
+import QuestionForm from "../QuestionSet/QuestionForm";
+import { modalWidth } from "../../utils/Constants";
 
 const { Column } = Table;
 const { TabPane } = Tabs;
-
-let position = 1;
-const setPosition = display => {
-  if (
-    display &&
-    display.instrument_questions &&
-    display.instrument_questions.length > 0
-  ) {
-    position = display.instrument_questions.slice(-1)[0].number_in_instrument;
-  }
-};
 
 const Display = props => {
   const projectId = props.projectId;
@@ -35,7 +36,8 @@ const Display = props => {
   const [showEdit, setShowEdit] = useState(false);
   const [editQuestion, setEditQuestion] = useState(null);
   const [selectedKey, setSelectedKey] = useState("1");
-  setPosition(props.display);
+  const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [instrumentQuestion, setInstrumentQuestion] = useState(null);
 
   useEffect(() => {
     setShowNew(false);
@@ -45,7 +47,6 @@ const Display = props => {
       getDisplay(projectId, display.instrument_id, display.id).then(results => {
         if (isSubscribed) {
           setDisplay(results.data);
-          setPosition(results.data);
           setLoading(false);
         }
       });
@@ -77,7 +78,6 @@ const Display = props => {
     setLoading(true);
     getDisplay(projectId, display.instrument_id, display.id).then(results => {
       setDisplay(results.data);
-      setPosition(results.data);
       setLoading(false);
     });
   };
@@ -97,6 +97,18 @@ const Display = props => {
       });
   };
 
+  const getPosition = display => {
+    if (
+      display &&
+      display.instrument_questions &&
+      display.instrument_questions.length > 0
+    ) {
+      return display.instrument_questions.slice(-1)[0].number_in_instrument;
+    } else {
+      return 1;
+    }
+  };
+
   const DisplayView = () => {
     if (showNew) {
       return (
@@ -106,7 +118,7 @@ const Display = props => {
               <NewInstrumentQuestion
                 projectId={projectId}
                 display={display}
-                position={position}
+                position={getPosition(display)}
                 fetchDisplay={fetchDisplay}
                 handleCancel={handleCancel}
                 visible={showNew}
@@ -130,17 +142,44 @@ const Display = props => {
         <ImportInstrumentQuestion
           projectId={projectId}
           display={display}
-          position={position}
+          position={getPosition(display)}
           handleImportCompleted={handleImportCompleted}
         />
+      );
+    } else if (showQuestionModal) {
+      return (
+        <Modal
+          title={instrumentQuestion.question.question_identifier}
+          visible={true}
+          footer={null}
+          destroyOnClose={true}
+          onCancel={handleCancelQuestion}
+          width={modalWidth}
+        >
+          <QuestionForm
+            question={instrumentQuestion.question}
+            folder={null}
+            fetchQuestions={handleCancelQuestion}
+          />
+        </Modal>
       );
     } else {
       return <InstrumentQuestionList />;
     }
   };
 
+  const handleCancelQuestion = () => {
+    setShowQuestionModal(false);
+    setInstrumentQuestion(null);
+  };
+
   const onTabSelection = key => {
     setSelectedKey(key);
+  };
+
+  const handleQuestionClick = question => {
+    setInstrumentQuestion(question);
+    setShowQuestionModal(true);
   };
 
   const InstrumentQuestionList = () => {
@@ -159,20 +198,26 @@ const Display = props => {
             size="middle"
             dataSource={display.instrument_questions}
             rowKey={iq => iq.id}
-            expandedRowRender={question => (
-              <ExpandedQuestion question={question} />
-            )}
+            expandedRowRender={iq => <ExpandedQuestion iq={iq} />}
           >
             <Column title="Position" dataIndex="number_in_instrument" />
             <Column title="Identifier" dataIndex="identifier" />
-            <Column title="Type" dataIndex="type" />
+            <Column
+              title="Type"
+              dataIndex="type"
+              render={(text, iq) => (
+                <Button type="link" onClick={() => handleQuestionClick(iq)}>
+                  {iq.question.question_type}
+                </Button>
+              )}
+            />
             <Column
               title="Text"
               dataIndex="text"
               render={(text, iq) => (
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: iq.text
+                    __html: iq.question.text
                   }}
                 />
               )}
@@ -180,10 +225,10 @@ const Display = props => {
             <Column
               title="Actions"
               dataIndex="actions"
-              render={(text, question) => (
+              render={(text, iq) => (
                 <EditDeleteBtnGroup
-                  object={question}
-                  message={question.identifier}
+                  object={iq}
+                  message={iq.question.question_identifier}
                   handleEdit={handleQuestionEdit}
                   handleDelete={handleQuestionDelete}
                 />

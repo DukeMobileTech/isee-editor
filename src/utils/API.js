@@ -27,7 +27,7 @@ instance.interceptors.response.use(
     return response;
   },
   function(error) {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       deleteUserInfo();
       window.location = "/";
     }

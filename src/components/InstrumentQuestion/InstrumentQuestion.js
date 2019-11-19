@@ -44,7 +44,6 @@ const InstrumentQuestionForm = props => {
             }
           })
           .catch(error => {
-            console.log(error);
             setErrors(error);
           });
       }}

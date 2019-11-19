@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useContext, Fragment } from "react";
-import { getInstrument } from "../../utils/API";
+import {
+  getInstrument,
+  getQuestionSets,
+  getOptionSets,
+  getInstructions
+} from "../../utils/API";
 import { Layout, Tabs, Icon, Spin } from "antd";
 import InstrumentSider from "./InstrumentSider";
 import { CenteredH1 } from "../../utils/Styles";
@@ -7,6 +12,9 @@ import Display from "../Display/Display";
 import Sections from "../Section/Sections";
 import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
+import { OptionSetContext } from "../../context/OptionSetContext";
+import { InstructionContext } from "../../context/InstructionContext";
+import { QuestionSetContext } from "../../context/QuestionSetContext";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -20,6 +28,39 @@ const Instrument = ({ match }) => {
   const [sections, setSections] = useContext(InstrumentSectionContext);
   const [display, setDisplay] = useState(null);
   const [selectedKey, setSelectedKey] = useState("1");
+  // eslint-disable-next-line no-unused-vars
+  const [optionSets, setOptionSets] = useContext(OptionSetContext);
+  // eslint-disable-next-line no-unused-vars
+  const [instructions, setInstructions] = useContext(InstructionContext);
+  // eslint-disable-next-line no-unused-vars
+  const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
+
+  useEffect(() => {
+    const fetchQuestionSets = async () => {
+      const results = await getQuestionSets();
+      setQuestionSets(results.data);
+    };
+    fetchQuestionSets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchOptionSets = async () => {
+      const results = await getOptionSets();
+      setOptionSets(results.data);
+    };
+    fetchOptionSets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchInstructions = async () => {
+      const results = await getInstructions();
+      setInstructions(results.data);
+    };
+    fetchInstructions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const fetchInstrument = async () => {

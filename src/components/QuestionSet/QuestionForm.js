@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Typography, Col } from "antd";
+import { Typography, Col, Select } from "antd";
 import ReactQuill from "react-quill";
 import { AlertErrorMessage, RightSubmitButton, DRow } from "../../utils/Utils";
 import { updateQuestion, createQuestion } from "../../utils/API";
@@ -11,6 +11,7 @@ import { questionTypesWithOptions, questionTypes } from "../../utils/Constants";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
 
 const { Text } = Typography;
+const { Option } = Select;
 
 const QuestionSchema = Yup.object().shape({
   question_set_id: Yup.number().required("Question Set is required"),
@@ -99,7 +100,7 @@ const QuestionForm = props => {
             });
         }
       }}
-      render={({ values }) => (
+      render={({ values, setFieldValue }) => (
         <Form>
           <DRow>
             <Col span={4}>
@@ -216,57 +217,79 @@ const QuestionForm = props => {
             </Col>
             <Col span={20}>
               <Field
-                className="ant-input"
                 name="instruction_id"
-                placeholder="Select instructions for the question"
-                component="select"
-              >
-                <option></option>
-                {instructions.map(instruction => {
-                  return (
-                    <option
-                      key={instruction.id}
-                      name="instruction_id"
-                      value={instruction.id}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    showSearch
+                    optionFilterProp="children"
+                    onChange={value => setFieldValue("instruction_id", value)}
+                    filterOption={(input, option) =>
+                      option.props.children &&
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    <Option value=""></Option>
+                    {instructions.map(instruction => {
+                      return (
+                        <Option
+                          key={instruction.id}
+                          name="instruction_id"
+                          value={instruction.id}
+                        >
+                          {instruction.title.replace(/<[^>]+>/g, "")}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                )}
+              />
+            </Col>
+          </DRow>
+          {questionTypesWithOptions.includes(values.question_type) && (
+            <DRow>
+              <Col span={4}>
+                <Text strong>Option Set</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  name="option_set_id"
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      showSearch
+                      optionFilterProp="children"
+                      onChange={value => setFieldValue("option_set_id", value)}
+                      filterOption={(input, option) =>
+                        option.props.children &&
+                        option.props.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
                     >
-                      {instruction.title.replace(/<[^>]+>/g, "")}
-                    </option>
-                  );
-                })}
-              </Field>
-            </Col>
-          </DRow>
-          <DRow>
-            <Col span={4}>
-              <Text strong>Option Set</Text>
-            </Col>
-            <Col span={14}>
-              <Field
-                className="ant-input"
-                name="option_set_id"
-                placeholder="Select option set for the question"
-                component="select"
-              >
-                <option></option>
-                {optionSets
-                  .filter(os => !os.special)
-                  .map(optionSet => {
-                    return (
-                      <option
-                        key={optionSet.id}
-                        name="option_set_id"
-                        value={optionSet.id}
-                      >
-                        {optionSet.title.replace(/<[^>]+>/g, "")}
-                      </option>
-                    );
-                  })}
-              </Field>
-            </Col>
-            <Col span={6}>
-              <AlertErrorMessage name="option_set_id" type="error" />
-            </Col>
-          </DRow>
+                      <Option value=""></Option>
+                      {optionSets.map(optionSet => {
+                        return (
+                          <Option
+                            key={optionSet.id}
+                            name="option_set_id"
+                            value={optionSet.id}
+                          >
+                            {optionSet.title.replace(/<[^>]+>/g, "")}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  )}
+                />
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="option_set_id" type="error" />
+              </Col>
+            </DRow>
+          )}
           <DRow>
             <Col span={4}>
               <Text strong>Special Option Set</Text>

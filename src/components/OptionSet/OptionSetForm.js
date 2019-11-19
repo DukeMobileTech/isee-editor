@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
-import { Col, Button, Icon, Typography } from "antd";
+import { Col, Button, Icon, Typography, Select } from "antd";
 import * as Yup from "yup";
 import {
   AlertErrorMessage,
@@ -19,6 +19,7 @@ import NewOption from "./NewOption";
 import ImportOption from "./ImportOption";
 
 const { Text } = Typography;
+const { Option } = Select;
 const OptionSetSchema = Yup.object().shape({
   title: Yup.string().required("Title is required")
 });
@@ -104,15 +105,17 @@ const OptionSetForm = props => {
               }
             })
             .catch(error => {
-              for (const err of error.response.data.errors) {
-                if (err.includes("Title")) {
-                  setErrors({ title: err });
+              if (error.response.data) {
+                for (const err of error.response.data.errors) {
+                  if (err.includes("Title")) {
+                    setErrors({ title: err });
+                  }
                 }
               }
             });
         }
       }}
-      render={({ values, resetForm }) => (
+      render={({ values, resetForm, setFieldValue }) => (
         <Form>
           <DRow>
             <Col span={4}>
@@ -144,24 +147,35 @@ const OptionSetForm = props => {
             </Col>
             <Col span={20}>
               <Field
-                className="ant-input"
                 name="instruction_id"
-                placeholder="Selection instructions for the option set"
-                component="select"
-              >
-                <option></option>
-                {instructions.map(instruction => {
-                  return (
-                    <option
-                      key={instruction.id}
-                      name="instruction_id"
-                      value={instruction.id}
-                    >
-                      {instruction.title.replace(/<[^>]+>/g, "")}
-                    </option>
-                  );
-                })}
-              </Field>
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    showSearch
+                    optionFilterProp="children"
+                    onChange={value => setFieldValue("instruction_id", value)}
+                    filterOption={(input, option) =>
+                      option.props.children &&
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    <Option value=""></Option>
+                    {instructions.map(instruction => {
+                      return (
+                        <Option
+                          key={instruction.id}
+                          name="instruction_id"
+                          value={instruction.id}
+                        >
+                          {instruction.title.replace(/<[^>]+>/g, "")}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                )}
+              />
             </Col>
           </DRow>
           <DRow gutter={16}>
