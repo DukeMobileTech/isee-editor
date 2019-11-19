@@ -12,13 +12,14 @@ import {
 } from "antd";
 import { CenteredH3 } from "../../utils/Styles";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
-import { getDisplay, deleteInstrumentQuestion } from "../../utils/API";
+import {
+  getDisplay,
+  deleteInstrumentQuestion,
+  reorderInstrumentQuestions
+} from "../../utils/API";
 import ExpandedQuestion from "../utils/ExpandedQuestion";
 import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
-import { OptionSetProvider } from "../../context/OptionSetContext";
-import { InstructionProvider } from "../../context/InstructionContext";
-import { QuestionSetProvider } from "../../context/QuestionSetContext";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
 import DisplayInstructions from "./DisplayInstructions";
 import QuestionForm from "../QuestionSet/QuestionForm";
@@ -109,23 +110,37 @@ const Display = props => {
     }
   };
 
+  const reorderQuestions = () => {
+    reorderInstrumentQuestions(projectId, display.instrument_id).then(res => {
+      fetchDisplay();
+    });
+  };
+
+  const handleCancelQuestion = () => {
+    setShowQuestionModal(false);
+    setInstrumentQuestion(null);
+  };
+
+  const onTabSelection = key => {
+    setSelectedKey(key);
+  };
+
+  const handleQuestionClick = question => {
+    setInstrumentQuestion(question);
+    setShowQuestionModal(true);
+  };
+
   const DisplayView = () => {
     if (showNew) {
       return (
-        <QuestionSetProvider>
-          <OptionSetProvider>
-            <InstructionProvider>
-              <NewInstrumentQuestion
-                projectId={projectId}
-                display={display}
-                position={getPosition(display)}
-                fetchDisplay={fetchDisplay}
-                handleCancel={handleCancel}
-                visible={showNew}
-              />
-            </InstructionProvider>
-          </OptionSetProvider>
-        </QuestionSetProvider>
+        <NewInstrumentQuestion
+          projectId={projectId}
+          display={display}
+          position={getPosition(display)}
+          fetchDisplay={fetchDisplay}
+          handleCancel={handleCancel}
+          visible={showNew}
+        />
       );
     } else if (showEdit) {
       return (
@@ -166,20 +181,6 @@ const Display = props => {
     } else {
       return <InstrumentQuestionList />;
     }
-  };
-
-  const handleCancelQuestion = () => {
-    setShowQuestionModal(false);
-    setInstrumentQuestion(null);
-  };
-
-  const onTabSelection = key => {
-    setSelectedKey(key);
-  };
-
-  const handleQuestionClick = question => {
-    setInstrumentQuestion(question);
-    setShowQuestionModal(true);
   };
 
   const InstrumentQuestionList = () => {
@@ -270,14 +271,25 @@ const Display = props => {
   };
 
   return (
-    <Fragment>
-      <Spin spinning={loading}>
-        <CenteredH3>
-          {display && <Typography.Text strong>{display.title}</Typography.Text>}
-        </CenteredH3>
-        {display && <DisplayView />}
-      </Spin>
-    </Fragment>
+    <Spin spinning={loading}>
+      {display && (
+        <Fragment>
+          <CenteredH3>
+            <Typography.Text strong>{display.title}</Typography.Text>
+          </CenteredH3>
+          <Row>
+            <Button
+              style={{ float: "right" }}
+              type="primary"
+              onClick={reorderQuestions}
+            >
+              Renumber Questions
+            </Button>
+          </Row>
+          <DisplayView />
+        </Fragment>
+      )}
+    </Spin>
   );
 };
 
