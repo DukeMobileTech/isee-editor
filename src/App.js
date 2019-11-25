@@ -5,8 +5,6 @@ import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 import Router from "./components/Router";
 import Login from "./components/Login";
-
-import { useUser } from "./context/UserContext";
 import { MainContent } from "./utils/Styles";
 
 const { Content } = Layout;
@@ -26,7 +24,9 @@ const AuthenticatedApp = () => {
 };
 
 export const App = () => {
-  const user = useUser();
-
-  return user.email && user.token ? <AuthenticatedApp /> : <Login />;
+  return sessionStorage.getItem("email") && sessionStorage.getItem("jwt") ? (
+    <AuthenticatedApp />
+  ) : (
+    <Login />
+  );
 };

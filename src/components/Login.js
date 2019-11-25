@@ -1,5 +1,4 @@
 import React from "react";
-import { login } from "../utils/API";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import AppFooter from "./AppFooter";
@@ -7,6 +6,7 @@ import AppHeader from "./AppHeader";
 import { Layout, Form as AntForm } from "antd";
 import { MainContent, CenteredH2 } from "../utils/Styles";
 import { AlertErrorMessage, CenteredSubmitButton } from "../utils/Utils";
+import axios from "axios";
 
 const { Content } = Layout;
 const FormItem = AntForm.Item;
@@ -29,12 +29,20 @@ const Login = () => {
       }}
       validationSchema={LoginSchema}
       onSubmit={(values, { resetForm }) => {
-        const credentials = {
-          email: values.email,
-          password: values.password
-        };
-        login(credentials)
-          .then(response => {})
+        axios
+          .create({
+            baseURL: process.env.REACT_APP_BASE_URL,
+            responseType: "json"
+          })
+          .post("/user_token", {
+            auth: { email: values.email, password: values.password }
+          })
+          .then(response => {
+            console.log("response", response);
+            sessionStorage.setItem("email", values.email);
+            sessionStorage.setItem("jwt", response.data.jwt);
+            window.location = "/";
+          })
           .catch(error => {
             resetForm();
           });

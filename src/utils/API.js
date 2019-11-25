@@ -1,10 +1,5 @@
 import axios from "axios";
 
-const deleteUserInfo = () => {
-  localStorage.removeItem("userEmail");
-  localStorage.removeItem("authenticationToken");
-};
-
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   responseType: "json"
@@ -12,9 +7,8 @@ const instance = axios.create({
 // Request interceptor that adds params expected by the backend api
 instance.interceptors.request.use(
   function(config) {
-    const email = localStorage.getItem("userEmail");
-    const token = localStorage.getItem("authenticationToken");
-    config.url = `${config.url}?user_email=${email}&authentication_token=${token}`;
+    config["headers"]["Authorization"] =
+      "Bearer " + sessionStorage.getItem("jwt");
     return config;
   },
   function(error) {
@@ -28,7 +22,7 @@ instance.interceptors.response.use(
   },
   function(error) {
     if (error.response && error.response.status === 401) {
-      deleteUserInfo();
+      sessionStorage.clear();
       window.location = "/";
     }
     return Promise.reject(error);
@@ -510,34 +504,4 @@ export const getSurveys = () => {
 /** Response */
 export const getResponses = surveyId => {
   return instance.get(`/surveys/${surveyId}/responses`);
-};
-
-// Instance without interceptors
-const authInstance = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
-  responseType: "json"
-});
-
-export const login = user => {
-  localStorage.setItem("userEmail", user.email);
-  return authInstance
-    .post("/login", {
-      user
-    })
-    .then(res => {
-      localStorage.setItem(
-        "authenticationToken",
-        res.data.authentication_token
-      );
-      window.location = "/";
-    });
-};
-
-export const logout = () => {
-  const token = localStorage.getItem("authenticationToken");
-  return authInstance
-    .delete(`/logout?authentication_token=${token}`)
-    .then(() => {
-      deleteUserInfo();
-    });
 };
