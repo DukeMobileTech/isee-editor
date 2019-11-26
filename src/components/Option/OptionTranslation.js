@@ -1,12 +1,13 @@
+import { Col, Divider, Icon, Popconfirm, Row, Typography } from "antd";
 import React, { useState } from "react";
-import { Typography, Icon, Divider, Popconfirm, Row, Col } from "antd";
+import {
+  createOptionTranslation,
+  deleteOptionTranslation,
+  updateOptionTranslation
+} from "../../utils/api/api";
+
 import { Button } from "antd/lib/radio";
 import { NEW_ID } from "../../utils/Constants";
-import {
-  deleteOptionTranslation,
-  createOptionTranslation,
-  updateOptionTranslation
-} from "../../utils/API";
 
 const { Paragraph } = Typography;
 

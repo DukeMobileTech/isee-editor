@@ -1,9 +1,10 @@
+import { Col, Pagination, Row, Spin } from "antd";
 import React, { useEffect, useState } from "react";
-import { Row, Col, Spin, Pagination } from "antd";
-import { getOptionSets, getOptionSetCount } from "../../utils/API";
+import { getOptionSetCount, getOptionSets } from "../../utils/api/option_set";
+
 import { FolderAddButton } from "../../utils/Utils";
-import OptionSet from "./OptionSet";
 import NewOptionSet from "./NewOptionSet";
+import OptionSet from "./OptionSet";
 
 const OptionSets = () => {
   const [loading, setLoading] = useState(true);

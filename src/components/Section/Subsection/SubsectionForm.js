@@ -1,14 +1,16 @@
-import React, { useContext } from "react";
-import { Formik, Form, Field } from "formik";
-import { Form as AntForm } from "antd";
 import * as Yup from "yup";
-import { createDisplay, updateDisplay } from "../../../utils/API";
-import { CenteredH4 } from "../../../utils/Styles";
+
 import {
   AlertErrorMessage,
-  RightSubmitButton,
-  LeftCancelButton
+  LeftCancelButton,
+  RightSubmitButton
 } from "../../../utils/Utils";
+import { Field, Form, Formik } from "formik";
+import React, { useContext } from "react";
+import { createDisplay, updateDisplay } from "../../../utils/api/display";
+
+import { Form as AntForm } from "antd";
+import { CenteredH4 } from "../../../utils/Styles";
 import { InstrumentSectionContext } from "../../../context/InstrumentSectionContext";
 
 const FormItem = AntForm.Item;

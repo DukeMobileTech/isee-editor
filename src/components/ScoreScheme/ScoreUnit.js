@@ -1,8 +1,9 @@
+import { CenteredH3, CenteredH4 } from "../../utils/Styles";
+import { Col, Row, Table } from "antd";
+import { DeleteButton, LeftCancelButton } from "../../utils/Utils";
 import React, { useState } from "react";
-import { Table, Row, Col } from "antd";
-import { LeftCancelButton, DeleteButton } from "../../utils/Utils";
-import { CenteredH4, CenteredH3 } from "../../utils/Styles";
-import { deleteOptionScore } from "../../utils/API";
+
+import { deleteOptionScore } from "../../utils/api/option_score";
 
 const { Column } = Table;
 

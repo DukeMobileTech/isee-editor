@@ -1,14 +1,19 @@
-import React from "react";
-import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { createScoreScheme, updateScoreScheme } from "../../utils/API";
-import { Form as AntForm } from "antd";
-import { CenteredH4 } from "../../utils/Styles";
+
 import {
   AlertErrorMessage,
-  RightSubmitButton,
-  LeftCancelButton
+  LeftCancelButton,
+  RightSubmitButton
 } from "../../utils/Utils";
+import { Field, Form, Formik } from "formik";
+import {
+  createScoreScheme,
+  updateScoreScheme
+} from "../../utils/api/score_scheme";
+
+import { Form as AntForm } from "antd";
+import { CenteredH4 } from "../../utils/Styles";
+import React from "react";
 
 const FormItem = AntForm.Item;
 

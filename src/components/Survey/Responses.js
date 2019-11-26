@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Spin, Table, Row, Col } from "antd";
-import { getResponses } from "../../utils/API";
+import { Col, Row, Spin, Table } from "antd";
+import React, { useEffect, useState } from "react";
+
+import { getResponses } from "../../utils/api/response";
 
 const { Column } = Table;
 

@@ -1,21 +1,21 @@
+import {
+  Button,
+  Col,
+  ConfigProvider,
+  Divider,
+  Form,
+  Icon,
+  Input,
+  Popconfirm,
+  Row,
+  Table
+} from "antd";
 import React, { useState } from "react";
 import {
-  Table,
-  Form,
-  Input,
-  Button,
-  Popconfirm,
-  Divider,
-  Icon,
-  ConfigProvider,
-  Row,
-  Col
-} from "antd";
-import {
   createOptionTranslation,
-  updateOptionTranslation,
-  deleteOptionTranslation
-} from "../../utils/API";
+  deleteOptionTranslation,
+  updateOptionTranslation
+} from "../../utils/api/option_translation";
 
 const EditableContext = React.createContext();
 

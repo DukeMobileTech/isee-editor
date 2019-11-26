@@ -1,17 +1,22 @@
-import React, { useState, useContext } from "react";
-import { List, Col, Button, Divider, Icon, Typography } from "antd";
-import { deleteSection, updateSection, getSections } from "../../utils/API";
-import SectionForm from "./SectionForm";
-import Subsections from "./Subsection/Subsections";
+import { Button, Col, Divider, Icon, List, Typography } from "antd";
 import {
-  FolderAddButton,
-  EditButton,
   DeleteButton,
+  EditButton,
+  FolderAddButton,
   getItemStyle,
   getListStyle
 } from "../../utils/Utils";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import React, { useContext, useState } from "react";
+import {
+  deleteSection,
+  getSections,
+  updateSection
+} from "../../utils/api/section";
+
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
+import SectionForm from "./SectionForm";
+import Subsections from "./Subsection/Subsections";
 
 const Sections = props => {
   const instrument = props.instrument;

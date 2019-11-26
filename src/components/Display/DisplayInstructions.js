@@ -1,10 +1,11 @@
-import React, { useState, Fragment, useEffect } from "react";
-import { Row, Col, Table, Button, Icon, Divider } from "antd";
-import DisplayInstructionForm from "./DisplayInstructionForm";
+import { Button, Col, Divider, Icon, Row, Table } from "antd";
+import React, { Fragment, useEffect, useState } from "react";
 import {
-  getDisplayInstructions,
-  deleteDisplayInstruction
-} from "../../utils/API";
+  deleteDisplayInstruction,
+  getDisplayInstructions
+} from "../../utils/api/display_instruction";
+
+import DisplayInstructionForm from "./DisplayInstructionForm";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 
 const { Column } = Table;

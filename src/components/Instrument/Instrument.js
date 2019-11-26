@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useContext, Fragment } from "react";
-import {
-  getInstrument,
-  getQuestionSets,
-  getOptionSets,
-  getInstructions
-} from "../../utils/API";
-import { Layout, Tabs, Icon, Spin } from "antd";
-import InstrumentSider from "./InstrumentSider";
+import { Icon, Layout, Spin, Tabs } from "antd";
+import React, { Fragment, useContext, useEffect, useState } from "react";
+
 import { CenteredH1 } from "../../utils/Styles";
 import Display from "../Display/Display";
-import Sections from "../Section/Sections";
-import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
-import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
-import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
+import InstrumentSider from "./InstrumentSider";
+import { OptionSetContext } from "../../context/OptionSetContext";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
+import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
+import Sections from "../Section/Sections";
+import { getInstructions } from "../../utils/api/instruction";
+import { getInstrument } from "../../utils/api/instrument";
+import { getOptionSets } from "../../utils/api/option_set";
+import { getQuestionSets } from "../../utils/api/question_set";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;

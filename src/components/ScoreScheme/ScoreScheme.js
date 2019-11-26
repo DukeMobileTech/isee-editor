@@ -1,10 +1,11 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { Collapse, Divider } from "antd";
 import { CenteredH1, CenteredH3 } from "../../utils/Styles";
-import { getDomains, deleteDomain } from "../../utils/API";
-import Subdomains from "./Subdomains";
-import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
+import { Collapse, Divider } from "antd";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Utils";
+import React, { Fragment, useEffect, useState } from "react";
+import { deleteDomain, getDomains } from "../../utils/api/domain";
+
 import Domain from "./Domain/Domain";
+import Subdomains from "./Subdomains";
 
 const { Panel } = Collapse;
 

@@ -1,8 +1,9 @@
+import { Collapse, Divider, Icon } from "antd";
+import { DeleteButton, EditButton } from "../../utils/Utils";
 import React, { Fragment, useState } from "react";
-import { Divider, Collapse, Icon } from "antd";
-import { EditButton, DeleteButton } from "../../utils/Utils";
+import { deleteFolder, getFolders } from "../../utils/api/folder";
+
 import FolderForm from "./FolderForm";
-import { getFolders, deleteFolder } from "../../utils/API";
 import FolderQuestions from "./FolderQuestions";
 
 const { Panel } = Collapse;

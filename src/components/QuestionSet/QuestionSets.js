@@ -1,19 +1,20 @@
-import React, { useState, useEffect, Fragment, useContext } from "react";
-import { Divider, Spin, Row, Pagination, Button, Icon } from "antd";
+import { Button, Divider, Icon, Pagination, Row, Spin } from "antd";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import {
   deleteQuestionSet,
-  getQuestionSets,
   getQuestionSetCount,
-  getOptionSets,
-  getInstructions
-} from "../../utils/API";
+  getQuestionSets
+} from "../../utils/api/question_set";
+
 import { FolderAddButton } from "../../utils/Utils";
-import QuestionSetForm from "./QuestionSetForm";
-import QuestionSet from "./QuestionSet";
 import FolderForm from "./FolderForm";
-import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
+import { OptionSetContext } from "../../context/OptionSetContext";
+import QuestionSet from "./QuestionSet";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
+import QuestionSetForm from "./QuestionSetForm";
+import { getInstructions } from "../../utils/api/instruction";
+import { getOptionSets } from "../../utils/api/option_set";
 
 const QuestionSets = () => {
   const [loading, setLoading] = useState(true);

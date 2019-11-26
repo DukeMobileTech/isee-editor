@@ -1,12 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import "antd/dist/antd.css";
 import "react-quill/dist/quill.snow.css";
 import "./index.css";
-import { App } from "./App";
+
 import * as serviceWorker from "./serviceWorker";
+
+import { App } from "./App";
 import AppProviders from "./context/AppProviders";
 import { IntlProvider } from "react-intl";
+import React from "react";
+import ReactDOM from "react-dom";
 
 ReactDOM.render(
   <IntlProvider locale="en">

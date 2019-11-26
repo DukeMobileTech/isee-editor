@@ -1,8 +1,12 @@
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Utils";
+import { Divider, Table } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
+import {
+  deleteScoreScheme,
+  getScoreSchemes
+} from "../../utils/api/score_scheme";
+
 import { Link } from "react-router-dom";
-import { getScoreSchemes, deleteScoreScheme } from "../../utils/API";
-import { Table, Divider } from "antd";
-import { EditButton, DeleteButton, FolderAddButton } from "../../utils/Utils";
 import ScoreSchemeForm from "./ScoreSchemeForm";
 
 const { Column } = Table;

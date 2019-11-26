@@ -1,5 +1,6 @@
-import React from "react";
 import { Tag, Typography } from "antd";
+
+import React from "react";
 const { Text } = Typography;
 
 const ExpandedQuestion = ({ iq }) => {

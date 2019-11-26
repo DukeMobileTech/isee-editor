@@ -1,10 +1,11 @@
+import { Button, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { Spin, Table, Button } from "antd";
-import { getQuestions, deleteQuestion } from "../../utils/API";
+import { deleteQuestion, getQuestions } from "../../utils/api/question";
+
 import { AddButton } from "../../utils/Utils";
-import Question from "./Question";
-import ExpandedQuestion from "../utils/ExpandedQuestion";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
+import ExpandedQuestion from "../utils/ExpandedQuestion";
+import Question from "./Question";
 
 const { Column } = Table;
 

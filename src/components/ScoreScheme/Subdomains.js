@@ -1,9 +1,10 @@
-import React, { useState, Fragment } from "react";
 import { Collapse, Divider } from "antd";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Utils";
+import React, { Fragment, useState } from "react";
+
 import ScoreUnits from "./ScoreUnits";
 import Subdomain from "./Domain/Subdomain";
-import { EditButton, DeleteButton, FolderAddButton } from "../../utils/Utils";
-import { deleteSubdomain } from "../../utils/API";
+import { deleteSubdomain } from "../../utils/api/subdomain";
 
 const { Panel } = Collapse;
 

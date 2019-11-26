@@ -1,12 +1,11 @@
-import React, { useState, Fragment, useEffect } from "react";
-import { CenteredH1 } from "../../utils/Styles";
-import {
-  getQuestionSets,
-  createInstrumentQuestion,
-  getAllQuestions
-} from "../../utils/API";
-import { Tree, Spin } from "antd";
-import { RightSaveButton } from "../../utils/Utils";
+import { LeftCancelButton, RightSaveButton } from "../../utils/Utils";
+import React, { Fragment, useEffect, useState } from "react";
+import { Spin, Tree } from "antd";
+
+import { CenteredH4 } from "../../utils/Styles";
+import { createInstrumentQuestion } from "../../utils/api/instrument_question";
+import { getAllQuestions } from "../../utils/api/question";
+import { getQuestionSets } from "../../utils/api/question_set";
 
 const { TreeNode } = Tree;
 
@@ -80,7 +79,7 @@ const ImportInstrumentQuestion = props => {
 
   return (
     <Fragment>
-      <CenteredH1>Import Questions from Bank</CenteredH1>
+      <CenteredH4>Import Questions from Question Banks</CenteredH4>
       <Spin spinning={loadingSets || loadingQuestions}>
         <Tree checkable onCheck={onCheck}>
           {questionSets.map(questionSet => {
@@ -115,6 +114,7 @@ const ImportInstrumentQuestion = props => {
             );
           })}
         </Tree>
+        <LeftCancelButton handleClick={props.handleCancel} />
         <RightSaveButton handleClick={onSaveSelection} />
       </Spin>
     </Fragment>

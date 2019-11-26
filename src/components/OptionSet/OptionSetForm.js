@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { Formik, Form, Field } from "formik";
-import { Col, Button, Icon, Typography, Select } from "antd";
 import * as Yup from "yup";
+
 import {
   AlertErrorMessage,
-  RightSubmitButton,
+  DRow,
   DeleteButton,
-  DRow
+  RightSubmitButton
 } from "../../utils/Utils";
-import {
-  updateOptionSet,
-  createOptionSet,
-  deleteOptionInOptionSet,
-  getOptions,
-  getInstructions
-} from "../../utils/API";
-import NewOption from "./NewOption";
+import { Button, Col, Icon, Select, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { createOptionSet, updateOptionSet } from "../../utils/api/option_set";
+
 import ImportOption from "./ImportOption";
+import NewOption from "./NewOption";
+import { deleteOptionInOptionSet } from "../../utils/api/option_in_option_set";
+import { getInstructions } from "../../utils/api/instruction";
+import { getOptions } from "../../utils/api/option";
 
 const { Text } = Typography;
 const { Option } = Select;

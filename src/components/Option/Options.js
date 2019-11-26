@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
-import Highlighter from "react-highlight-words";
 import {
-  Table,
-  Spin,
-  Form,
-  Input,
   Button,
-  Popconfirm,
   Divider,
-  Icon
+  Form,
+  Icon,
+  Input,
+  Popconfirm,
+  Spin,
+  Table
 } from "antd";
+import React, { useEffect, useState } from "react";
 import {
-  getOptions,
   createOption,
-  updateOption,
-  deleteOption
-} from "../../utils/API";
+  deleteOption,
+  getOptions,
+  updateOption
+} from "../../utils/api/option";
+
 import { FolderAddButton } from "../../utils/Utils";
+import Highlighter from "react-highlight-words";
 import Translations from "./Translations";
 
 const EditableContext = React.createContext();

@@ -1,14 +1,16 @@
-import React, { useContext } from "react";
-import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Typography, Col, Select } from "antd";
-import ReactQuill from "react-quill";
-import { AlertErrorMessage, RightSubmitButton, DRow } from "../../utils/Utils";
-import { updateQuestion, createQuestion } from "../../utils/API";
-import { OptionSetContext } from "../../context/OptionSetContext";
+
+import { AlertErrorMessage, DRow, RightSubmitButton } from "../../utils/Utils";
+import { Col, Select, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
+import React, { useContext } from "react";
+import { createQuestion, updateQuestion } from "../../utils/api/question";
+import { questionTypes, questionTypesWithOptions } from "../../utils/Constants";
+
 import { InstructionContext } from "../../context/InstructionContext";
-import { questionTypesWithOptions, questionTypes } from "../../utils/Constants";
+import { OptionSetContext } from "../../context/OptionSetContext";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
+import ReactQuill from "react-quill";
 
 const { Text } = Typography;
 const { Option } = Select;

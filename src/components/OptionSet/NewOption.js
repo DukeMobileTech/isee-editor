@@ -1,8 +1,10 @@
-import React from "react";
-import { Row, Col, Button, Icon, Modal } from "antd";
-import { createOption } from "../../utils/API";
-import { useFormState } from "react-use-form-state";
 import * as Yup from "yup";
+
+import { Button, Col, Icon, Modal, Row } from "antd";
+
+import React from "react";
+import { createOption } from "../../utils/api/option";
+import { useFormState } from "react-use-form-state";
 
 const OptionSchema = Yup.object().shape({
   identifier: Yup.string().required("Identifier is required"),

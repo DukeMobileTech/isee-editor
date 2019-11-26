@@ -1,58 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Modal, Spin } from "antd";
+import { Modal } from "antd";
 import QuestionForm from "../QuestionSet/QuestionForm";
-import { OptionSetContext } from "../../context/OptionSetContext";
-import { InstructionContext } from "../../context/InstructionContext";
-import {
-  getOptionSets,
-  getInstructions,
-  getQuestionSets,
-  createInstrumentQuestion
-} from "../../utils/API";
-import { QuestionSetContext } from "../../context/QuestionSetContext";
+import React from "react";
+import { createInstrumentQuestion } from "../../utils/api/instrument_question";
 import { modalWidth } from "../../utils/Constants";
 
 const NewInstrumentQuestion = props => {
-  // eslint-disable-next-line no-unused-vars
-  const [optionSets, setOptionSets] = useContext(OptionSetContext);
-  // eslint-disable-next-line no-unused-vars
-  const [instructions, setInstructions] = useContext(InstructionContext);
-  // eslint-disable-next-line no-unused-vars
-  const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
-  const [loadingOs, setLoadingOs] = useState(true);
-  const [loadingIs, setLoadingIs] = useState(true);
-  const [loadingQs, setLoadingQs] = useState(true);
-
-  useEffect(() => {
-    const fetchOptionSets = async () => {
-      const results = await getOptionSets();
-      setOptionSets(results.data);
-      setLoadingOs(false);
-    };
-    fetchOptionSets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const fetchInstructions = async () => {
-      const results = await getInstructions();
-      setInstructions(results.data);
-      setLoadingIs(false);
-    };
-    fetchInstructions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const fetchQuestionSets = async () => {
-      const results = await getQuestionSets();
-      setQuestionSets(results.data);
-      setLoadingQs(false);
-    };
-    fetchQuestionSets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const onCancel = () => {
     props.handleCancel();
   };
@@ -86,14 +38,12 @@ const NewInstrumentQuestion = props => {
       onCancel={onCancel}
       width={modalWidth}
     >
-      <Spin spinning={loadingOs || loadingIs || loadingQs}>
-        <QuestionForm
-          question={null}
-          folder={null}
-          fetchQuestions={onCreateQuestion}
-          returnValue={true}
-        />
-      </Spin>
+      <QuestionForm
+        question={null}
+        folder={null}
+        fetchQuestions={onCreateQuestion}
+        returnValue={true}
+      />
     </Modal>
   );
 };

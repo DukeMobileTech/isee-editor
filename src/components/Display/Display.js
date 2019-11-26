@@ -1,29 +1,29 @@
-import React, { useState, useEffect, Fragment } from "react";
 import {
-  Row,
-  Col,
-  Table,
   Button,
+  Col,
   Icon,
-  Typography,
+  Modal,
+  Row,
   Spin,
+  Table,
   Tabs,
-  Modal
+  Typography
 } from "antd";
-import { CenteredH3 } from "../../utils/Styles";
-import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
-import {
-  getDisplay,
-  deleteInstrumentQuestion,
-  reorderInstrumentQuestions
-} from "../../utils/API";
+import React, { Fragment, useEffect, useState } from "react";
+
+import { CenteredH2 } from "../../utils/Styles";
+import DisplayInstructions from "./DisplayInstructions";
+import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import ExpandedQuestion from "../utils/ExpandedQuestion";
 import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
-import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
+import InstrumentLogic from "../InstrumentQuestion/InstrumentLogic";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
-import DisplayInstructions from "./DisplayInstructions";
+import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
 import QuestionForm from "../QuestionSet/QuestionForm";
+import { deleteInstrumentQuestion } from "../../utils/api/instrument_question";
+import { getDisplay } from "../../utils/api/display";
 import { modalWidth } from "../../utils/Constants";
+import { reorderInstrumentQuestions } from "../../utils/api/instrument";
 
 const { Column } = Table;
 const { TabPane } = Tabs;
@@ -39,6 +39,7 @@ const Display = props => {
   const [selectedKey, setSelectedKey] = useState("1");
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [instrumentQuestion, setInstrumentQuestion] = useState(null);
+  const [showLogicModal, setShowLogicModal] = useState(false);
 
   useEffect(() => {
     setShowNew(false);
@@ -67,6 +68,7 @@ const Display = props => {
   const handleCancel = () => {
     setShowNew(false);
     setShowEdit(false);
+    setShowImport(false);
   };
 
   const handleImportCompleted = () => {
@@ -118,6 +120,7 @@ const Display = props => {
 
   const handleCancelQuestion = () => {
     setShowQuestionModal(false);
+    setShowLogicModal(false);
     setInstrumentQuestion(null);
   };
 
@@ -128,6 +131,11 @@ const Display = props => {
   const handleQuestionClick = question => {
     setInstrumentQuestion(question);
     setShowQuestionModal(true);
+  };
+
+  const handleLogicClick = question => {
+    setInstrumentQuestion(question);
+    setShowLogicModal(true);
   };
 
   const DisplayView = () => {
@@ -159,6 +167,7 @@ const Display = props => {
           display={display}
           position={getPosition(display)}
           handleImportCompleted={handleImportCompleted}
+          handleCancel={handleCancel}
         />
       );
     } else if (showQuestionModal) {
@@ -178,6 +187,19 @@ const Display = props => {
           />
         </Modal>
       );
+    } else if (showLogicModal) {
+      return (
+        <Modal
+          title={instrumentQuestion.question.question_identifier}
+          visible={true}
+          footer={null}
+          destroyOnClose={true}
+          onCancel={handleCancelQuestion}
+          width={modalWidth}
+        >
+          <InstrumentLogic instrumentQuestion={instrumentQuestion} />
+        </Modal>
+      );
     } else {
       return <InstrumentQuestionList />;
     }
@@ -190,52 +212,71 @@ const Display = props => {
           tab={
             <span>
               <Icon type="project" />
-              Questions
+              Instrument Questions
             </span>
           }
           key="1"
         >
-          <Table
-            size="middle"
-            dataSource={display.instrument_questions}
-            rowKey={iq => iq.id}
-            expandedRowRender={iq => <ExpandedQuestion iq={iq} />}
-          >
-            <Column title="Position" dataIndex="number_in_instrument" />
-            <Column title="Identifier" dataIndex="identifier" />
-            <Column
-              title="Type"
-              dataIndex="type"
-              render={(text, iq) => (
-                <Button type="link" onClick={() => handleQuestionClick(iq)}>
-                  {iq.question.question_type}
-                </Button>
-              )}
-            />
-            <Column
-              title="Text"
-              dataIndex="text"
-              render={(text, iq) => (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: iq.question.text
-                  }}
-                />
-              )}
-            />
-            <Column
-              title="Actions"
-              dataIndex="actions"
-              render={(text, iq) => (
-                <EditDeleteBtnGroup
-                  object={iq}
-                  message={iq.question.question_identifier}
-                  handleEdit={handleQuestionEdit}
-                  handleDelete={handleQuestionDelete}
-                />
-              )}
-            />
-          </Table>
+          <Fragment>
+            <Row>
+              <Button
+                style={{ float: "right", marginBottom: "3px" }}
+                type="primary"
+                onClick={reorderQuestions}
+              >
+                Renumber Instrument Questions
+              </Button>
+            </Row>
+            <Table
+              size="middle"
+              dataSource={display.instrument_questions}
+              rowKey={iq => iq.id}
+              expandedRowRender={iq => <ExpandedQuestion iq={iq} />}
+            >
+              <Column title="Position" dataIndex="number_in_instrument" />
+              <Column
+                title="Logic"
+                dataIndex="identifier"
+                render={(text, iq) => (
+                  <Button type="link" onClick={() => handleLogicClick(iq)}>
+                    {iq.identifier}
+                  </Button>
+                )}
+              />
+              <Column
+                title="Question"
+                dataIndex="type"
+                render={(text, iq) => (
+                  <Button type="link" onClick={() => handleQuestionClick(iq)}>
+                    {iq.question.question_type}
+                  </Button>
+                )}
+              />
+              <Column
+                title="Text"
+                dataIndex="text"
+                render={(text, iq) => (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: iq.question.text
+                    }}
+                  />
+                )}
+              />
+              <Column
+                title="Actions"
+                dataIndex="actions"
+                render={(text, iq) => (
+                  <EditDeleteBtnGroup
+                    object={iq}
+                    message={iq.question.question_identifier}
+                    handleEdit={handleQuestionEdit}
+                    handleDelete={handleQuestionDelete}
+                  />
+                )}
+              />
+            </Table>
+          </Fragment>
           <br />
           <Row gutter={8}>
             <Col span={12}></Col>
@@ -255,7 +296,7 @@ const Display = props => {
           tab={
             <span>
               <Icon type="check-square" />
-              Instructions
+              Display Instructions
             </span>
           }
           key="2"
@@ -274,18 +315,9 @@ const Display = props => {
     <Spin spinning={loading}>
       {display && (
         <Fragment>
-          <CenteredH3>
+          <CenteredH2>
             <Typography.Text strong>{display.title}</Typography.Text>
-          </CenteredH3>
-          <Row>
-            <Button
-              style={{ float: "right" }}
-              type="primary"
-              onClick={reorderQuestions}
-            >
-              Renumber Questions
-            </Button>
-          </Row>
+          </CenteredH2>
           <DisplayView />
         </Fragment>
       )}

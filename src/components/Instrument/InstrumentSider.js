@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Layout, Menu, Icon, Spin } from "antd";
-import { getSections } from "../../utils/API";
+import { Icon, Layout, Menu, Spin } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+
 import { CenteredH4 } from "../../utils/Styles";
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
+import { getSections } from "../../utils/api/section";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;

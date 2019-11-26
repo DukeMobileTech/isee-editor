@@ -1,7 +1,8 @@
+import { Button, Col, Icon, Modal, Row } from "antd";
 import React, { useEffect } from "react";
-import { Row, Col, Button, Icon, Modal } from "antd";
+import { createSubdomain, updateSubdomain } from "../../../utils/api/subdomain";
+
 import { useFormState } from "react-use-form-state";
-import { updateSubdomain, createSubdomain } from "../../../utils/API";
 
 const Subdomain = props => {
   const domain = props.domain;

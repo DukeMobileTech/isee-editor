@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Spin, Table } from "antd";
-import { getSurveys } from "../../utils/API";
+
 import { Link } from "react-router-dom";
+import { getSurveys } from "../../utils/api/survey";
 
 const { Column } = Table;
 

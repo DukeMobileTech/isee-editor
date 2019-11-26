@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
 import {
-  Input,
   Button,
+  Col,
   Icon,
+  Input,
+  Select,
   Spin,
   Table,
-  Select,
-  Col,
   Typography
 } from "antd";
-import Highlighter from "react-highlight-words";
+import React, { useEffect, useState } from "react";
+
 import { DRow } from "../../utils/Utils";
-import { languages } from "../../utils/Constants";
-import { getOptionTranslations } from "../../utils/API";
+import Highlighter from "react-highlight-words";
 import OptionTranslations from "./OptionTranslations";
+import { getOptionTranslations } from "../../utils/api/option_translation";
+import { languages } from "../../utils/Constants";
 
 const { Option } = Select;
 const { Text } = Typography;

@@ -1,11 +1,10 @@
-import React from "react";
-import { Layout } from "antd";
-
-import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
-import Router from "./components/Router";
+import AppHeader from "./components/AppHeader";
+import { Layout } from "antd";
 import Login from "./components/Login";
 import { MainContent } from "./utils/Styles";
+import React from "react";
+import Router from "./components/Router";
 
 const { Content } = Layout;
 

@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
 import {
-  Table,
-  Spin,
-  Form,
-  Input,
   Button,
-  Popconfirm,
   Divider,
-  Icon
+  Form,
+  Icon,
+  Input,
+  Popconfirm,
+  Spin,
+  Table
 } from "antd";
+import React, { useEffect, useState } from "react";
 import {
-  getInstructions,
-  updateInstruction,
   createInstruction,
-  deleteInstruction
-} from "../../utils/API";
+  deleteInstruction,
+  getInstructions,
+  updateInstruction
+} from "../../utils/api/instruction";
+
 import { FolderAddButton } from "../../utils/Utils";
 import ReactQuill from "react-quill";
 

@@ -1,15 +1,17 @@
-import React, { useState, Fragment, useContext } from "react";
-import { List, Row, Col, Divider, Button } from "antd";
-import { CenteredH3 } from "../../../utils/Styles";
-import SubsectionForm from "./SubsectionForm";
-import { deleteDisplay, getSections } from "../../../utils/API";
+import { Button, Col, Divider, List, Row } from "antd";
 import {
-  LeftCancelButton,
-  FolderAddButton,
+  DeleteButton,
   EditButton,
-  DeleteButton
+  FolderAddButton,
+  LeftCancelButton
 } from "../../../utils/Utils";
+import React, { Fragment, useContext, useState } from "react";
+
+import { CenteredH3 } from "../../../utils/Styles";
 import { InstrumentSectionContext } from "../../../context/InstrumentSectionContext";
+import SubsectionForm from "./SubsectionForm";
+import { deleteDisplay } from "../../../utils/api/display";
+import { getSections } from "../../../utils/api/section";
 
 const Subsections = props => {
   const section = props.section;

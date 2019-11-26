@@ -1,7 +1,8 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { getScoreUnits, deleteScoreUnit } from "../../utils/API";
-import { Table, Divider } from "antd";
-import { FolderAddButton, DeleteButton, ViewButton } from "../../utils/Utils";
+import { DeleteButton, FolderAddButton, ViewButton } from "../../utils/Utils";
+import { Divider, Table } from "antd";
+import React, { Fragment, useEffect, useState } from "react";
+import { deleteScoreUnit, getScoreUnits } from "../../utils/api/score_unit";
+
 import ScoreUnit from "./ScoreUnit";
 import ScoreUnitForm from "./ScoreUnitForm";
 

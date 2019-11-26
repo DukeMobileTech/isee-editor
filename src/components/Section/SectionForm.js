@@ -1,14 +1,16 @@
-import React from "react";
-import { Formik, Form, Field } from "formik";
-import { Form as AntForm } from "antd";
 import * as Yup from "yup";
-import { createSection, updateSection } from "../../utils/API";
-import { CenteredH4 } from "../../utils/Styles";
+
 import {
   AlertErrorMessage,
   LeftCancelButton,
   RightSubmitButton
 } from "../../utils/Utils";
+import { Field, Form, Formik } from "formik";
+import { createSection, updateSection } from "../../utils/api/section";
+
+import { Form as AntForm } from "antd";
+import { CenteredH4 } from "../../utils/Styles";
+import React from "react";
 
 const FormItem = AntForm.Item;
 

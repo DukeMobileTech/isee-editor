@@ -1,7 +1,8 @@
+import { Button, Card, Icon, Row, Typography } from "antd";
+import { DeleteButton, EditButton } from "../../utils/Utils";
 import React, { useState } from "react";
-import { Row, Card, Typography, Button, Icon } from "antd";
-import { EditButton, DeleteButton } from "../../utils/Utils";
-import { getOptionSet, deleteOptionSet } from "../../utils/API";
+import { deleteOptionSet, getOptionSet } from "../../utils/api/option_set";
+
 import EditOptionSet from "./EditOptionSet";
 import OptionSetTranslations from "./OptionSetTranslations";
 

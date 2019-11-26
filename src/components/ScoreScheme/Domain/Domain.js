@@ -1,7 +1,7 @@
+import { Button, Col, Icon, Modal, Row } from "antd";
 import React from "react";
-import { Row, Col, Button, Icon, Modal } from "antd";
 import { useFormState } from "react-use-form-state";
-import { updateDomain, createDomain } from "../../../utils/API";
+import { createDomain, updateDomain } from "../../../utils/api/domain";
 
 const Domain = props => {
   const domain = props.domain

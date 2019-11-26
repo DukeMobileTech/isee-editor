@@ -1,9 +1,10 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Table, Divider } from "antd";
-import { Link } from "react-router-dom";
-import { getInstruments, deleteInstrument } from "../utils/API";
+import { DeleteButton, EditButton, FolderAddButton } from "../utils/Utils";
+import { Divider, Table } from "antd";
+import React, { Fragment, useEffect, useState } from "react";
+import { deleteInstrument, getInstruments } from "../utils/api/instrument";
+
 import InstrumentForm from "./Instrument/InstrumentForm";
-import { EditButton, DeleteButton, FolderAddButton } from "../utils/Utils";
+import { Link } from "react-router-dom";
 
 const { Column } = Table;
 
