@@ -1,8 +1,15 @@
 import { instance } from "./api";
 
-/*
+/**
  * InstrumentQuestion
  */
+
+export const getInstrumentQuestions = (projectId, instrumentId) => {
+  return instance.get(
+    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions`
+  );
+};
+
 export const createInstrumentQuestion = (projectId, instrumentId, iQ) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/instrument_questions`,

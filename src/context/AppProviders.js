@@ -5,6 +5,7 @@ import { ProjectProvider } from "./ProjectContext";
 import { QuestionSetProvider } from "./QuestionSetContext";
 import React from "react";
 import { ScoreTypeProvider } from "./ScoreTypeContext";
+import { InstrumentQuestionProvider } from "./InstrumentQuestionContext";
 
 function AppProviders({ children }) {
   return (
@@ -13,7 +14,9 @@ function AppProviders({ children }) {
         <QuestionSetProvider>
           <OptionSetProvider>
             <InstructionProvider>
-              <ScoreTypeProvider>{children}</ScoreTypeProvider>
+              <InstrumentQuestionProvider>
+                <ScoreTypeProvider>{children}</ScoreTypeProvider>
+              </InstrumentQuestionProvider>
             </InstructionProvider>
           </OptionSetProvider>
         </QuestionSetProvider>

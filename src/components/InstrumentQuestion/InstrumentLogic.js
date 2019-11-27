@@ -1,20 +1,43 @@
-import { Collapse, Icon, Tabs, Typography } from "antd";
-import React, { Fragment, useState } from "react";
+import { Collapse, Icon, Tabs, Typography, Spin } from "antd";
+import React, { useState, useContext, useEffect } from "react";
 
 import ExpandedQuestion from "../utils/ExpandedQuestion";
+import NextQuestion from "../NextQuestion/NextQuestion";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { getInstrumentQuestions } from "../../utils/api/instrument_question";
+import MultipleSkip from "../MultipleSkip/MultipleSkip";
 
 const { TabPane } = Tabs;
 
 const InstrumentLogic = props => {
   const instrumentQuestion = props.instrumentQuestion;
   const [selectedKey, setSelectedKey] = useState("1");
+  const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [instrumentQuestions, setInstrumentQuestions] = useContext(
+    InstrumentQuestionContext
+  );
+
+  useEffect(() => {
+    const fetchInstrumentQuestions = () => {
+      getInstrumentQuestions(
+        props.projectId,
+        instrumentQuestion.instrument_id
+      ).then(results => {
+        setInstrumentQuestions(results.data);
+        setLoading(false);
+      });
+    };
+    fetchInstrumentQuestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onTabSelection = key => {
     setSelectedKey(key);
   };
 
   return (
-    <Fragment>
+    <Spin spinning={loading}>
       <Collapse>
         <Collapse.Panel header="Question Details" key="1">
           <Typography.Paragraph>
@@ -26,7 +49,11 @@ const InstrumentLogic = props => {
             />
           </Typography.Paragraph>
           <Typography.Paragraph>
-            <ExpandedQuestion iq={instrumentQuestion} />
+            <ExpandedQuestion
+              question={instrumentQuestion.question}
+              options={instrumentQuestion.options}
+              specialOptions={instrumentQuestion.special_options}
+            />
           </Typography.Paragraph>
         </Collapse.Panel>
       </Collapse>
@@ -40,7 +67,10 @@ const InstrumentLogic = props => {
           }
           key="1"
         >
-          Select One Skip To
+          <NextQuestion
+            instrumentQuestion={instrumentQuestion}
+            projectId={props.projectId}
+          />
         </TabPane>
         <TabPane
           tab={
@@ -51,7 +81,10 @@ const InstrumentLogic = props => {
           }
           key="2"
         >
-          Multiple Skip
+          <MultipleSkip
+            instrumentQuestion={instrumentQuestion}
+            projectId={props.projectId}
+          />
         </TabPane>
         <TabPane
           tab={
@@ -65,7 +98,7 @@ const InstrumentLogic = props => {
           Loops
         </TabPane>
       </Tabs>
-    </Fragment>
+    </Spin>
   );
 };
 

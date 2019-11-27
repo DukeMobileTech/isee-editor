@@ -197,7 +197,10 @@ const Display = props => {
           onCancel={handleCancelQuestion}
           width={modalWidth}
         >
-          <InstrumentLogic instrumentQuestion={instrumentQuestion} />
+          <InstrumentLogic
+            instrumentQuestion={instrumentQuestion}
+            projectId={projectId}
+          />
         </Modal>
       );
     } else {
@@ -231,7 +234,13 @@ const Display = props => {
               size="middle"
               dataSource={display.instrument_questions}
               rowKey={iq => iq.id}
-              expandedRowRender={iq => <ExpandedQuestion iq={iq} />}
+              expandedRowRender={iq => (
+                <ExpandedQuestion
+                  question={iq.question}
+                  options={iq.options}
+                  specialOptions={iq.special_options}
+                />
+              )}
             >
               <Column title="Position" dataIndex="number_in_instrument" />
               <Column

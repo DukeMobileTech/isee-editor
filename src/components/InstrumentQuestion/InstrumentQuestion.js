@@ -1,34 +1,34 @@
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
-import { AlertErrorMessage, DRow, RightSubmitButton } from '../../utils/Utils';
-import { Col, Modal, Typography } from 'antd';
-import { Field, Form, Formik } from 'formik';
-import React, { useContext } from 'react';
+import { AlertErrorMessage, DRow, RightSubmitButton } from "../../utils/Utils";
+import { Col, Modal, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
+import React, { useContext } from "react";
 
-import { InstrumentSectionContext } from '../../context/InstrumentSectionContext';
-import { modalWidth } from '../../utils/Constants';
-import { updateInstrumentQuestion } from '../../utils/api/instrument_question';
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
+import { modalWidth } from "../../utils/Constants";
+import { updateInstrumentQuestion } from "../../utils/api/instrument_question";
 
 const { Text } = Typography;
 
 const InstrumentQuestionSchema = Yup.object().shape({
-  number_in_instrument: Yup.number().required('Position is required'),
-  identifier: Yup.string().required('Identifier is required'),
-  display_id: Yup.number().required('Subsection is required'),
+  number_in_instrument: Yup.number().required("Position is required"),
+  identifier: Yup.string().required("Identifier is required"),
+  display_id: Yup.number().required("Subsection is required")
 });
 
-const InstrumentQuestionForm = (props) => {
+const InstrumentQuestionForm = props => {
   const iq = props.instrumentQuestion;
   // eslint-disable-next-line no-unused-vars
   const [sections, setSections] = useContext(InstrumentSectionContext);
-  const displays = [].concat.apply([], sections.map((sec) => sec.displays));
+  const displays = [].concat.apply([], sections.map(sec => sec.displays));
 
   return (
     <Formik
       initialValues={{
-        number_in_instrument: iq.number_in_instrument || '',
-        identifier: iq.identifier || '',
-        display_id: iq.display_id || '',
+        number_in_instrument: iq.number_in_instrument || "",
+        identifier: iq.identifier || "",
+        display_id: iq.display_id || ""
       }}
       validationSchema={InstrumentQuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -37,15 +37,15 @@ const InstrumentQuestionForm = (props) => {
           instrument_id: iq.instrument_id,
           number_in_instrument: values.number_in_instrument,
           identifier: values.identifier,
-          display_id: values.display_id,
+          display_id: values.display_id
         };
         updateInstrumentQuestion(props.projectId, editQuestion)
-          .then((response) => {
+          .then(response => {
             if (response.status === 204) {
               props.fetchDisplay();
             }
           })
-          .catch((error) => {
+          .catch(error => {
             setErrors(error);
           });
       }}
@@ -90,7 +90,7 @@ const InstrumentQuestionForm = (props) => {
             <Col span={14}>
               <Field className="ant-input" name="display_id" component="select">
                 <option></option>
-                {displays.map((display) => {
+                {displays.map(display => {
                   return (
                     <option
                       key={display.id}
@@ -114,7 +114,7 @@ const InstrumentQuestionForm = (props) => {
   );
 };
 
-const InstrumentQuestion = (props) => {
+const InstrumentQuestion = props => {
   const instrumentQuestion = props.instrumentQuestion;
 
   const onCancel = () => {
