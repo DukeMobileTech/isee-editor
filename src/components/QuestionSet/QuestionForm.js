@@ -4,7 +4,10 @@ import { AlertErrorMessage, DRow, RightSubmitButton } from "../../utils/Utils";
 import { Col, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useContext } from "react";
-import { createQuestion, updateQuestion } from "../../utils/api/question";
+import {
+  createFolderQuestion,
+  updateFolderQuestion
+} from "../../utils/api/question";
 import { questionTypes, questionTypesWithOptions } from "../../utils/Constants";
 
 import { InstructionContext } from "../../context/InstructionContext";
@@ -77,7 +80,7 @@ const QuestionForm = props => {
         };
         if (question && question.id) {
           editQuestion.id = question.id;
-          updateQuestion(editQuestion)
+          updateFolderQuestion(editQuestion)
             .then(response => {
               if (response.status === 204) {
                 props.fetchQuestions();
@@ -87,7 +90,7 @@ const QuestionForm = props => {
               setErrors(error);
             });
         } else {
-          createQuestion(editQuestion)
+          createFolderQuestion(editQuestion)
             .then(response => {
               if (response.status === 201) {
                 if (props.returnValue) {

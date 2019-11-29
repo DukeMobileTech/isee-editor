@@ -94,14 +94,7 @@ const EditableTable = props => {
       dataIndex: "text",
       width: "55%",
       editable: true,
-      ...getColumnSearchProps("text"),
-      render: (text, instruction) => (
-        <span
-          dangerouslySetInnerHTML={{
-            __html: instruction.text
-          }}
-        />
-      )
+      ...getColumnSearchProps("text")
     },
     {
       title: "Actions",
@@ -339,7 +332,6 @@ const Options = () => {
           onClick={() => setShowTranslations(!showTranslations)}
         >
           <Icon type="global" />
-          Translations
         </Button>
       );
     }

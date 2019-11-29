@@ -6,46 +6,113 @@ import {
   Input,
   Popconfirm,
   Spin,
-  Table
+  Table,
+  Row
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import {
   createInstruction,
   deleteInstruction,
   getInstructions,
   updateInstruction
 } from "../../utils/api/instruction";
+import Highlighter from "react-highlight-words";
 
 import { FolderAddButton } from "../../utils/Utils";
 import ReactQuill from "react-quill";
+import Translations from "./Translations";
 
 const EditableContext = React.createContext();
 
 const EditableTable = props => {
   const newId = "new";
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(props.instructions);
   const [editingKey, setEditingKey] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    render: text => (
+      <Highlighter
+        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+        searchWords={[searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ""}
+      />
+    )
+  });
+
   const columns = [
     {
       title: "Title",
       dataIndex: "title",
       width: "25%",
-      editable: true
-    },
-    {
-      title: "Text",
-      dataIndex: "text",
-      width: "55%",
       editable: true,
-      render: (text, instruction) => (
-        <span
-          dangerouslySetInnerHTML={{
-            __html: instruction.text
-          }}
-        />
-      )
+      ...getColumnSearchProps("title")
     },
+    searchText === ""
+      ? {
+          title: "Text",
+          dataIndex: "text",
+          width: "55%",
+          editable: true,
+          ...getColumnSearchProps("text"),
+          render: (text, instruction) => (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: instruction.text
+              }}
+            />
+          )
+        }
+      : {
+          title: "Text",
+          dataIndex: "text",
+          width: "55%",
+          editable: true,
+          ...getColumnSearchProps("text")
+        },
     {
       title: "Actions",
       dataIndex: "actions",
@@ -95,15 +162,14 @@ const EditableTable = props => {
     }
   ];
 
-  useEffect(() => {
-    fetchInstructions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+  };
 
-  const fetchInstructions = async () => {
-    const results = await getInstructions();
-    setLoading(false);
-    setData(results.data);
+  const handleReset = clearFilters => {
+    clearFilters();
+    setSearchText("");
   };
 
   const isEditing = record => record.id === editingKey;
@@ -186,21 +252,21 @@ const EditableTable = props => {
   };
 
   return (
-    <Spin spinning={loading}>
-      <EditableContext.Provider value={props.form}>
-        <FolderAddButton handleClick={handleAdd} /> <br />
-        <Table
-          components={components}
-          bordered
-          dataSource={data}
-          rowKey={instruction => instruction.id}
-          columns={tableColumns}
-          pagination={{
-            onChange: cancel
-          }}
-        />
-      </EditableContext.Provider>
-    </Spin>
+    <EditableContext.Provider value={props.form}>
+      <Row style={{ marginBottom: "2px" }}>
+        <FolderAddButton handleClick={handleAdd} />
+      </Row>
+      <Table
+        components={components}
+        bordered
+        dataSource={data}
+        rowKey={instruction => instruction.id}
+        columns={tableColumns}
+        pagination={{
+          onChange: cancel
+        }}
+      />
+    </EditableContext.Provider>
   );
 };
 
@@ -255,8 +321,53 @@ const EditableCell = props => {
 };
 
 const Instructions = () => {
-  const EditableFormTable = Form.create()(EditableTable);
-  return <EditableFormTable />;
+  const [loading, setLoading] = useState(true);
+  const [instructions, setInstructions] = useState([]);
+  const [showTranslations, setShowTranslations] = useState(false);
+
+  useEffect(() => {
+    fetchInstructions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchInstructions = async () => {
+    const results = await getInstructions();
+    setLoading(false);
+    setInstructions(results.data);
+  };
+
+  const TranslationButton = () => {
+    if (showTranslations) {
+      return <Fragment />;
+    } else {
+      return (
+        <Button
+          type="primary"
+          onClick={() => setShowTranslations(!showTranslations)}
+        >
+          <Icon type="global" />
+        </Button>
+      );
+    }
+  };
+
+  if (showTranslations) {
+    return (
+      <Translations
+        instructions={instructions}
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+      />
+    );
+  } else {
+    const EditableFormTable = Form.create()(EditableTable);
+    return (
+      <Spin spinning={loading}>
+        <TranslationButton />
+        <EditableFormTable instructions={instructions} />
+      </Spin>
+    );
+  }
 };
 
 export default Instructions;

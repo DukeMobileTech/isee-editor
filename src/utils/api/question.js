@@ -7,27 +7,31 @@ export const getAllQuestions = () => {
   return instance.get("/questions");
 };
 
-export const getQuestions = folder => {
+export const getFolderQuestions = folder => {
   return instance.get(
     `/question_sets/${folder.question_set_id}/folders/${folder.id}/questions`
   );
 };
 
-export const createQuestion = question => {
+export const getQuestionSetQuestions = questionSetId => {
+  return instance.get(`/question_sets/${questionSetId}/questions`);
+};
+
+export const createFolderQuestion = question => {
   return instance.post(
     `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions`,
     { question: question }
   );
 };
 
-export const updateQuestion = question => {
+export const updateFolderQuestion = question => {
   return instance.put(
     `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions/${question.id}`,
     { question: question }
   );
 };
 
-export const deleteQuestion = question => {
+export const deleteFolderQuestion = question => {
   return instance.delete(
     `/question_sets/${question.question_set_id}/folders/${question.folder_id}/questions/${question.id}`
   );

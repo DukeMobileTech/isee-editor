@@ -1,4 +1,4 @@
-import { Button, Divider, Icon, Pagination, Row, Spin } from "antd";
+import { Button, Divider, Icon, Pagination, Row, Spin, Col } from "antd";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import {
   deleteQuestionSet,
@@ -15,6 +15,7 @@ import { QuestionSetContext } from "../../context/QuestionSetContext";
 import QuestionSetForm from "./QuestionSetForm";
 import { getInstructions } from "../../utils/api/instruction";
 import { getOptionSets } from "../../utils/api/option_set";
+import Translations from "../QuestionTranslation/Translations";
 
 const QuestionSets = () => {
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,7 @@ const QuestionSets = () => {
   const [instructions, setInstructions] = useContext(InstructionContext);
   // eslint-disable-next-line no-unused-vars
   const [sets, setSets] = useContext(QuestionSetContext);
+  const [showTranslations, setShowTranslations] = useState(false);
 
   useEffect(() => {
     const fetchSets = async () => {
@@ -108,6 +110,11 @@ const QuestionSets = () => {
     setQuestionSet(null);
   };
 
+  const handleTranslations = questionSet => {
+    setQuestionSet(questionSet);
+    setShowTranslations(true);
+  };
+
   const onChange = page => {
     setCurrent(page);
   };
@@ -118,6 +125,14 @@ const QuestionSets = () => {
         questionSet={questionSet}
         fetchQuestionSets={fetchQuestionSets}
         handleCancel={handleCancel}
+      />
+    );
+  } else if (showTranslations) {
+    return (
+      <Translations
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+        questionSet={questionSet}
       />
     );
   } else if (showFolderForm) {
@@ -132,7 +147,17 @@ const QuestionSets = () => {
   } else {
     return (
       <Spin spinning={loading}>
-        <FolderAddButton handleClick={handleNewQuestionSet} />
+        <Row>
+          <Col span={2}>
+            <Button
+              type="primary"
+              onClick={() => setShowTranslations(!showTranslations)}
+            >
+              <Icon type="global" />
+            </Button>
+          </Col>
+          <FolderAddButton handleClick={handleNewQuestionSet} />
+        </Row>
         {questionSets.map(qs => {
           return (
             <Fragment key={`${qs.id}`}>
@@ -178,6 +203,17 @@ const QuestionSets = () => {
                     }}
                   >
                     <Icon type="folder-add" />
+                  </Button>
+                  <Divider type="vertical" />
+                  <Button
+                    title={`Show translations ${qs.title}`}
+                    type="link"
+                    onClick={event => {
+                      event.stopPropagation();
+                      handleTranslations(qs);
+                    }}
+                  >
+                    <Icon type="global" />
                   </Button>
                 </span>
               </div>
