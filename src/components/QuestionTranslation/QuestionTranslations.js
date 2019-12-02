@@ -5,7 +5,6 @@ import {
   Divider,
   Form,
   Icon,
-  Input,
   Popconfirm,
   Row,
   Table
@@ -16,6 +15,7 @@ import {
   updateQuestionTranslation,
   deleteQuestionTranslation
 } from "../../utils/api/question_translation";
+import ReactQuill from "react-quill";
 
 const EditableContext = React.createContext();
 
@@ -234,7 +234,7 @@ const EditableCell = props => {
                 }
               ],
               initialValue: record[dataIndex]
-            })(<Input.TextArea />)}
+            })(<ReactQuill value={record[dataIndex]} />)}
           </Form.Item>
         ) : (
           children

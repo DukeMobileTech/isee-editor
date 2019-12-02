@@ -24,6 +24,7 @@ import { deleteInstrumentQuestion } from "../../utils/api/instrument_question";
 import { getDisplay } from "../../utils/api/display";
 import { modalWidth } from "../../utils/Constants";
 import { reorderInstrumentQuestions } from "../../utils/api/instrument";
+import TableQuestions from "./TableQuestions";
 
 const { Column } = Table;
 const { TabPane } = Tabs;
@@ -40,6 +41,7 @@ const Display = props => {
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [instrumentQuestion, setInstrumentQuestion] = useState(null);
   const [showLogicModal, setShowLogicModal] = useState(false);
+  const [showTables, setShowTables] = useState(false);
 
   useEffect(() => {
     setShowNew(false);
@@ -69,6 +71,7 @@ const Display = props => {
     setShowNew(false);
     setShowEdit(false);
     setShowImport(false);
+    setShowTables(false);
   };
 
   const handleImportCompleted = () => {
@@ -138,6 +141,10 @@ const Display = props => {
     setShowLogicModal(true);
   };
 
+  const tabulateQuestions = () => {
+    setShowTables(true);
+  };
+
   const DisplayView = () => {
     if (showNew) {
       return (
@@ -203,6 +210,15 @@ const Display = props => {
           />
         </Modal>
       );
+    } else if (showTables) {
+      return (
+        <TableQuestions
+          handleCancel={handleCancel}
+          display={display}
+          projectId={projectId}
+          fetchDisplay={fetchDisplay}
+        />
+      );
     } else {
       return <InstrumentQuestionList />;
     }
@@ -221,9 +237,12 @@ const Display = props => {
           key="1"
         >
           <Fragment>
-            <Row>
+            <Row style={{ marginBottom: "3px" }}>
+              <Button type="primary" onClick={tabulateQuestions}>
+                Tabular Display
+              </Button>
               <Button
-                style={{ float: "right", marginBottom: "3px" }}
+                style={{ float: "right" }}
                 type="primary"
                 onClick={reorderQuestions}
               >
