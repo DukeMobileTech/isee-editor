@@ -14,6 +14,7 @@ import { getInstructions } from "../../utils/api/instruction";
 import { getInstrument } from "../../utils/api/instrument";
 import { getOptionSets } from "../../utils/api/option_set";
 import { getQuestionSets } from "../../utils/api/question_set";
+import PdfDownload from "./PdfDownload";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -118,6 +119,19 @@ const Instrument = ({ match }) => {
             key="3"
           >
             <ScoreSchemes instrument={instrument} />
+          </TabPane>
+        )}
+        {sections.length > 0 && (
+          <TabPane
+            tab={
+              <span>
+                <Icon type="layout" />
+                PDF
+              </span>
+            }
+            key="4"
+          >
+            <PdfDownload instrument={instrument} />
           </TabPane>
         )}
       </Tabs>

@@ -11,6 +11,19 @@ export const getInstrument = (projectId, id) => {
   return instance.get(`/projects/${projectId}/instruments/${id}`);
 };
 
+export const getInstrumentPdf = (instrument, language) => {
+  return instance.get(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/pdf_export`,
+    {
+      params: { language: language },
+      responseType: "arraybuffer",
+      headers: {
+        Accept: "application/pdf"
+      }
+    }
+  );
+};
+
 export const createInstrument = (projectId, instrument) => {
   return instance.post(`/projects/${projectId}/instruments`, instrument);
 };
