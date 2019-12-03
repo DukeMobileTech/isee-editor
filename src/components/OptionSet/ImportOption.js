@@ -16,6 +16,11 @@ const ImportOption = props => {
         mode="tags"
         style={{ width: "100%" }}
         placeholder="Search/select an option and add to the set"
+        optionFilterProp="children"
+        filterOption={(input, option) =>
+          option.props.children &&
+          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
         onChange={selectedValues => {
           selectedValues.forEach(selectedValue => {
             const option = options.find(
@@ -48,7 +53,11 @@ const ImportOption = props => {
       >
         {options &&
           options.map(option => {
-            return <Option key={`${option.identifier}`}>{option.text}</Option>;
+            return (
+              <Option key={`${option.identifier}`}>
+                {`${option.identifier} - ${option.text}`}
+              </Option>
+            );
           })}
       </Select>
     );

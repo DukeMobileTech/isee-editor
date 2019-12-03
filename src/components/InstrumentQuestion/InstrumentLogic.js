@@ -6,6 +6,7 @@ import NextQuestion from "../NextQuestion/NextQuestion";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { getInstrumentQuestions } from "../../utils/api/instrument_question";
 import MultipleSkip from "../MultipleSkip/MultipleSkip";
+import LoopQuestion from "../LoopQuestion/LoopQuestion";
 
 const { TabPane } = Tabs;
 
@@ -95,7 +96,10 @@ const InstrumentLogic = props => {
           }
           key="3"
         >
-          Loops
+          <LoopQuestion
+            instrumentQuestion={instrumentQuestion}
+            projectId={props.projectId}
+          />
         </TabPane>
       </Tabs>
     </Spin>

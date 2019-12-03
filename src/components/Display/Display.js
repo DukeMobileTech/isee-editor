@@ -224,6 +224,21 @@ const Display = props => {
     }
   };
 
+  const customExpandIcon = props => {
+    if (props.expanded) {
+      return (
+        <Icon type="caret-up" onClick={e => props.onExpand(props.record, e)} />
+      );
+    } else {
+      return (
+        <Icon
+          type="caret-down"
+          onClick={e => props.onExpand(props.record, e)}
+        />
+      );
+    }
+  };
+
   const InstrumentQuestionList = () => {
     return (
       <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
@@ -260,6 +275,7 @@ const Display = props => {
                   specialOptions={iq.special_options}
                 />
               )}
+              expandIcon={props => customExpandIcon(props)}
             >
               <Column title="Position" dataIndex="number_in_instrument" />
               <Column

@@ -200,24 +200,6 @@ const QuestionForm = props => {
           </DRow>
           <DRow>
             <Col span={4}>
-              <Text strong>Text</Text>
-            </Col>
-            <Col span={14}>
-              <Field name="text">
-                {({ field }) => (
-                  <ReactQuill
-                    value={field.value}
-                    onChange={field.onChange(field.name)}
-                  />
-                )}
-              </Field>
-            </Col>
-            <Col span={6}>
-              <AlertErrorMessage name="text" type="error" />
-            </Col>
-          </DRow>
-          <DRow>
-            <Col span={4}>
               <Text strong>Instructions</Text>
             </Col>
             <Col span={20}>
@@ -251,6 +233,24 @@ const QuestionForm = props => {
                   </Select>
                 )}
               />
+            </Col>
+          </DRow>
+          <DRow>
+            <Col span={4}>
+              <Text strong>Text</Text>
+            </Col>
+            <Col span={14}>
+              <Field name="text">
+                {({ field }) => (
+                  <ReactQuill
+                    value={field.value}
+                    onChange={field.onChange(field.name)}
+                  />
+                )}
+              </Field>
+            </Col>
+            <Col span={6}>
+              <AlertErrorMessage name="text" type="error" />
             </Col>
           </DRow>
           {questionTypesWithOptions.includes(values.question_type) && (

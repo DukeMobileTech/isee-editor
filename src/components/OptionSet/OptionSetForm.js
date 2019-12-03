@@ -85,7 +85,7 @@ const OptionSetForm = props => {
         if (values.id) {
           updateOptionSet(values.id, optionSet)
             .then(response => {
-              if (response.status === 204) {
+              if (response.status === 200) {
                 props.fetchOptionSet(values.id);
               }
             })
@@ -228,7 +228,7 @@ const OptionSetForm = props => {
                 type="primary"
                 onClick={() => setImportOption(!importOption)}
               >
-                <Icon type="import" /> IMPORT EXISTING
+                <Icon type="import" /> Import Option
               </Button>
             </Col>
             <Col span={18}>
@@ -243,7 +243,7 @@ const OptionSetForm = props => {
           </DRow>
           <DRow>
             <Button type="primary" onClick={() => setShowNewOptionForm(true)}>
-              <Icon type="plus" /> ADD NEW
+              <Icon type="plus" /> Create Option
             </Button>
             <NewOption
               showNewOptionForm={showNewOptionForm}
