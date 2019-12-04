@@ -5,7 +5,7 @@ import {
   getFolderQuestions
 } from "../../utils/api/question";
 
-import { AddButton } from "../../utils/Utils";
+import { AddButton, customExpandIcon } from "../../utils/Utils";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import ExpandedQuestion from "../utils/ExpandedQuestion";
 import Question from "./Question";
@@ -85,6 +85,7 @@ const FolderQuestions = props => {
           expandedRowRender={question => (
             <ExpandedQuestion question={question} />
           )}
+          expandIcon={props => customExpandIcon(props)}
         >
           <Column
             title="Identifier"

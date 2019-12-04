@@ -25,6 +25,7 @@ import { getDisplay } from "../../utils/api/display";
 import { modalWidth } from "../../utils/Constants";
 import { reorderInstrumentQuestions } from "../../utils/api/instrument";
 import TableQuestions from "./TableQuestions";
+import { customExpandIcon } from "../../utils/Utils";
 
 const { Column } = Table;
 const { TabPane } = Tabs;
@@ -221,21 +222,6 @@ const Display = props => {
       );
     } else {
       return <InstrumentQuestionList />;
-    }
-  };
-
-  const customExpandIcon = props => {
-    if (props.expanded) {
-      return (
-        <Icon type="caret-up" onClick={e => props.onExpand(props.record, e)} />
-      );
-    } else {
-      return (
-        <Icon
-          type="caret-down"
-          onClick={e => props.onExpand(props.record, e)}
-        />
-      );
     }
   };
 

@@ -128,3 +128,15 @@ export const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? "lightblue" : "lightgray",
   padding: padding
 });
+
+export const customExpandIcon = props => {
+  if (props.expanded) {
+    return (
+      <Icon type="caret-up" onClick={e => props.onExpand(props.record, e)} />
+    );
+  } else {
+    return (
+      <Icon type="caret-down" onClick={e => props.onExpand(props.record, e)} />
+    );
+  }
+};

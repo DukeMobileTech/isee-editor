@@ -3,16 +3,8 @@ import { instance } from "./api";
 /**
  * OptionSet
  */
-export const getOptionSets = (page, perPage) => {
-  if (page && perPage)
-    return instance.get("/option_sets", {
-      params: { page: page, per_page: perPage }
-    });
-  else return instance.get("/option_sets");
-};
-
-export const getOptionSetCount = () => {
-  return instance.get("/option_sets/total");
+export const getOptionSets = () => {
+  return instance.get("/option_sets");
 };
 
 export const getOptionSet = id => {
