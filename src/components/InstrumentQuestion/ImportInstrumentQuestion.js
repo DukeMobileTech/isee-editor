@@ -54,7 +54,7 @@ const ImportInstrumentQuestion = props => {
 
   const onSaveSelection = () => {
     const instrument_questions = [];
-    let position = props.position;
+    let position = props.position + 1;
     for (const question of selectedQuestions) {
       instrument_questions.push({
         question_id: question.id,
@@ -81,7 +81,7 @@ const ImportInstrumentQuestion = props => {
     <Fragment>
       <CenteredH4>Import Questions from Question Banks</CenteredH4>
       <Spin spinning={loadingSets || loadingQuestions}>
-        <Tree checkable onCheck={onCheck}>
+        <Tree checkable onCheck={onCheck} autoExpandParent={false}>
           {questionSets.map(questionSet => {
             return (
               <TreeNode
@@ -93,7 +93,7 @@ const ImportInstrumentQuestion = props => {
                   return (
                     <TreeNode
                       title={folder.title}
-                      key={`${folder.title}-${folder.id}`}
+                      key={`${folder.title}-${folder.id}-${folder.question_set_id}`}
                     >
                       {questions
                         .filter(qst => qst.folder_id === folder.id)
@@ -104,6 +104,7 @@ const ImportInstrumentQuestion = props => {
                               checkable
                               title={question.question_identifier}
                               key={`${question.question_identifier}`}
+                              isLeaf={true}
                             />
                           );
                         })}

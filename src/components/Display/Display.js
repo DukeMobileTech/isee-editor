@@ -112,7 +112,7 @@ const Display = props => {
     ) {
       return display.instrument_questions.slice(-1)[0].number_in_instrument;
     } else {
-      return 1;
+      return display.instrument_question_count;
     }
   };
 
