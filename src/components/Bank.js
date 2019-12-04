@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, Icon } from "antd";
 import QuestionSets from "./QuestionSet/QuestionSets";
 import OptionSets from "./OptionSet/OptionSets";
@@ -11,15 +11,13 @@ import Options from "./Option/Options";
 
 const { TabPane } = Tabs;
 
-const Bank = () => {
-  const [selectedKey, setSelectedKey] = useState("1");
-
+const Bank = ({ match, history }) => {
   const onTabSelection = key => {
-    setSelectedKey(key);
+    history.push(`/banks/${key}`);
   };
 
   return (
-    <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
+    <Tabs defaultActiveKey={match.params.tab} onChange={onTabSelection}>
       <TabPane
         tab={
           <span>
@@ -27,7 +25,7 @@ const Bank = () => {
             Question Sets
           </span>
         }
-        key="1"
+        key="question_sets"
       >
         <QuestionSetProvider>
           <OptionSetProvider>
@@ -44,7 +42,7 @@ const Bank = () => {
             Option Sets
           </span>
         }
-        key="2"
+        key="option_sets"
       >
         <OptionSets />
       </TabPane>
@@ -55,7 +53,7 @@ const Bank = () => {
             Options
           </span>
         }
-        key="3"
+        key="options"
       >
         <Options />
       </TabPane>
@@ -66,7 +64,7 @@ const Bank = () => {
             Instructions
           </span>
         }
-        key="4"
+        key="instructions"
       >
         <Instructions />
       </TabPane>
@@ -77,7 +75,7 @@ const Bank = () => {
             Validations
           </span>
         }
-        key="5"
+        key="validations"
       >
         <Validations />
       </TabPane>

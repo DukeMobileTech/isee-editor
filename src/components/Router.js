@@ -23,7 +23,7 @@ const Router = () => {
           component={ScoreScheme}
           exact
         />
-        <Route path="/banks" component={Bank} exact />
+        <Route path="/banks/:tab?" component={Bank} exact />
         <Route path="/surveys" component={Survey} exact />
         <Route
           path="/surveys/:survey_id/responses"
