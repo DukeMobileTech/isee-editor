@@ -25,7 +25,7 @@ export const CenteredSubmitButton = props => {
 export const RightSubmitButton = () => {
   return (
     <Col offset={22}>
-      <Button type="primary" htmlType="submit">
+      <Button type="primary" title="Submit" htmlType="submit">
         <Icon type="save" />
       </Button>
     </Col>
@@ -35,7 +35,7 @@ export const RightSubmitButton = () => {
 export const RightSaveButton = props => {
   return (
     <Col offset={22}>
-      <Button type="primary" onClick={props.handleClick}>
+      <Button type="primary" title="Save" onClick={props.handleClick}>
         <Icon type="save" />
       </Button>
     </Col>
@@ -45,7 +45,7 @@ export const RightSaveButton = props => {
 export const LeftCancelButton = props => {
   return (
     <Col span={2}>
-      <Button onClick={props.handleClick}>
+      <Button title="Back" onClick={props.handleClick}>
         <Icon type="rollback" />
       </Button>
     </Col>
@@ -55,7 +55,7 @@ export const LeftCancelButton = props => {
 export const FolderAddButton = props => {
   return (
     <Col offset={22}>
-      <Button type="primary" onClick={props.handleClick}>
+      <Button type="primary" title="New" onClick={props.handleClick}>
         <Icon type="folder-add" />
       </Button>
     </Col>
@@ -65,7 +65,7 @@ export const FolderAddButton = props => {
 export const AddButton = props => {
   return (
     <Col offset={22}>
-      <Button type="primary" onClick={props.handleClick}>
+      <Button type="primary" title="New" onClick={props.handleClick}>
         <Icon type="plus" />
       </Button>
     </Col>
@@ -74,7 +74,7 @@ export const AddButton = props => {
 
 export const EditButton = props => {
   return (
-    <Button type="primary" onClick={props.handleClick}>
+    <Button type="primary" title="Edit" onClick={props.handleClick}>
       <Icon type="edit" />
     </Button>
   );
@@ -82,7 +82,7 @@ export const EditButton = props => {
 
 export const DeleteButton = props => {
   return (
-    <Button type="danger" onClick={props.handleClick}>
+    <Button type="danger" title="Delete" onClick={props.handleClick}>
       <Icon type="delete" />
     </Button>
   );

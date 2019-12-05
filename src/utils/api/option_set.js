@@ -11,6 +11,10 @@ export const getOptionSet = id => {
   return instance.get(`/option_sets/${id}`);
 };
 
+export const copyOptionSet = id => {
+  return instance.get(`/option_sets/${id}/copy`);
+};
+
 export const createOptionSet = optionSet => {
   return instance.post("/option_sets", optionSet);
 };

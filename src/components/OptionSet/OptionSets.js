@@ -3,7 +3,8 @@ import React, { useEffect, useState, Fragment } from "react";
 import {
   getOptionSets,
   getOptionSet,
-  deleteOptionSet
+  deleteOptionSet,
+  copyOptionSet
 } from "../../utils/api/option_set";
 
 import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
@@ -60,6 +61,13 @@ const OptionSets = () => {
   const handleShowTranslations = os => {
     setOptionSet(os);
     setShowTranslations(true);
+  };
+
+  const handleCopyOptionSet = os => {
+    copyOptionSet(os.id).then(response => {
+      optionSets.unshift(response.data);
+      setOptionSets([...optionSets]);
+    });
   };
 
   const optionsToString = array => {
@@ -160,7 +168,7 @@ const OptionSets = () => {
       ? {
           title: "Instructions",
           dataIndex: "instructions",
-          width: "25%",
+          width: "20%",
           ...getColumnSearchProps("instructions"),
           render: (text, os) => (
             <span
@@ -199,13 +207,24 @@ const OptionSets = () => {
     {
       title: "Actions",
       dataIndex: "actions",
-      width: "20%",
+      width: "25%",
       render: (text, record) => (
         <Row gutter={8} type="flex" justify="space-around" align="middle">
-          <Button type="primary" onClick={() => handleShowTranslations(record)}>
+          <Button
+            type="primary"
+            title="Translations"
+            onClick={() => handleShowTranslations(record)}
+          >
             <Icon type="global" />
           </Button>
           <EditButton handleClick={() => handleEditOptionSet(record)} />
+          <Button
+            type="primary"
+            title="Copy"
+            onClick={() => handleCopyOptionSet(record)}
+          >
+            <Icon type="copy" />
+          </Button>
           <DeleteButton
             handleClick={() => {
               if (
