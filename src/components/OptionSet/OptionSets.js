@@ -34,11 +34,11 @@ const OptionSets = () => {
   };
 
   const fetchOptionSet = async id => {
-    setShowEdit(false);
     const result = await getOptionSet(id);
     let index = optionSets.indexOf(optionSet);
     optionSets.splice(index, 1, result.data);
     setOptionSets([...optionSets]);
+    setShowEdit(false);
   };
 
   const handleNewOptionSet = () => {

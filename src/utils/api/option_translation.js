@@ -10,11 +10,15 @@ export const getOptionTranslations = language => {
 };
 
 export const createOptionTranslation = translation => {
-  return instance.post("/option_translations", translation);
+  return instance.post("/option_translations", {
+    option_translation: translation
+  });
 };
 
 export const updateOptionTranslation = (id, translation) => {
-  return instance.put(`/option_translations/${id}`, translation);
+  return instance.put(`/option_translations/${id}`, {
+    option_translation: translation
+  });
 };
 
 export const deleteOptionTranslation = id => {

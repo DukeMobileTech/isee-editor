@@ -12,14 +12,14 @@ export const getScoreUnits = (instrument, scoreSchemeId, subdomainId) => {
 export const createScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
   return instance.post(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units`,
-    scoreUnit
+    { score_unit: scoreUnit }
   );
 };
 
 export const updateScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
   return instance.put(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units/${scoreUnit.id}`,
-    scoreUnit
+    { score_unit: scoreUnit }
   );
 };
 

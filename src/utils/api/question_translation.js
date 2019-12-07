@@ -12,11 +12,15 @@ export const getQuestionTranslations = language => {
 };
 
 export const createQuestionTranslation = translation => {
-  return instance.post("/question_translations", translation);
+  return instance.post("/question_translations", {
+    question_translation: translation
+  });
 };
 
 export const updateQuestionTranslation = (id, translation) => {
-  return instance.put(`/question_translations/${id}`, translation);
+  return instance.put(`/question_translations/${id}`, {
+    question_translation: translation
+  });
 };
 
 export const deleteQuestionTranslation = id => {

@@ -18,14 +18,14 @@ export const getDomain = (projectId, instrumentId, scoreSchemeId, id) => {
 export const createDomain = (instrument, domain) => {
   return instance.post(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains`,
-    domain
+    { domain: domain }
   );
 };
 
 export const updateDomain = (instrument, domain) => {
   return instance.put(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}`,
-    domain
+    { domain: domain }
   );
 };
 

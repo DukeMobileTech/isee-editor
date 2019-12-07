@@ -18,14 +18,14 @@ export const getSection = (projectId, instrumentId, id) => {
 export const createSection = (projectId, instrumentId, section) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/sections`,
-    section
+    { section: section }
   );
 };
 
 export const updateSection = (projectId, instrumentId, id, section) => {
   return instance.put(
     `/projects/${projectId}/instruments/${instrumentId}/sections/${id}`,
-    section
+    { section: section }
   );
 };
 

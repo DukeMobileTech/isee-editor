@@ -8,11 +8,11 @@ export const getOptions = () => {
 };
 
 export const createOption = option => {
-  return instance.post("/options", option);
+  return instance.post("/options", { option: option });
 };
 
 export const updateOption = (id, option) => {
-  return instance.put(`/options/${id}`, option);
+  return instance.put(`/options/${id}`, { option: option });
 };
 
 export const deleteOption = id => {

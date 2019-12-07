@@ -15,7 +15,7 @@ export const createDisplayInstruction = (
 ) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${displayId}/display_instructions`,
-    di
+    { display_instruction: di }
   );
 };
 
@@ -27,7 +27,7 @@ export const updateDisplayInstruction = (
 ) => {
   return instance.put(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${displayId}/display_instructions/${di.id}`,
-    di
+    { display_instruction: di }
   );
 };
 

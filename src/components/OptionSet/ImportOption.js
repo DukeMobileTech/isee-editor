@@ -37,6 +37,7 @@ const ImportOption = props => {
                   number_in_question:
                     optionSet.option_in_option_sets.length + 1,
                   special: false,
+                  allow_text_entry: false,
                   option: option
                 });
                 props.resetForm({

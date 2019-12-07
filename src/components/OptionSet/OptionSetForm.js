@@ -99,7 +99,7 @@ const OptionSetForm = props => {
         } else {
           createOptionSet(optionSet)
             .then(response => {
-              if (response.status === 201) {
+              if (response.status === 200) {
                 props.fetchOptionSet(response.data.id);
               }
             })
@@ -178,13 +178,19 @@ const OptionSetForm = props => {
             </Col>
           </DRow>
           <DRow gutter={16}>
-            <Col span={6}>
+            <Col span={4}>
               <Text strong>Position</Text>
             </Col>
-            <Col span={12}>
+            <Col span={6}>
               <Text strong>Text</Text>
             </Col>
             <Col span={6}>
+              <Text strong>Pop-up Instruction</Text>
+            </Col>
+            <Col span={4}>
+              <Text strong>Allow Text Entry</Text>
+            </Col>
+            <Col span={4}>
               <Text strong>Action</Text>
             </Col>
           </DRow>
@@ -195,7 +201,7 @@ const OptionSetForm = props => {
                 gutter={16}
                 style={{ marginBottom: 8 }}
               >
-                <Col span={6}>
+                <Col span={4}>
                   <Field
                     className="ant-input-number"
                     name={`option_in_option_sets.${index}.number_in_question`}
@@ -207,8 +213,58 @@ const OptionSetForm = props => {
                     type="error"
                   />
                 </Col>
-                <Col span={12}>{oios.option.text}</Col>
+                <Col span={6}>{oios.option.text}</Col>
                 <Col span={6}>
+                  <Field
+                    name={`option_in_option_sets.${index}.instruction_id`}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        showSearch
+                        optionFilterProp="children"
+                        onChange={value =>
+                          setFieldValue(
+                            `option_in_option_sets.${index}.instruction_id`,
+                            value
+                          )
+                        }
+                        filterOption={(input, option) =>
+                          option.props.children &&
+                          option.props.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                        }
+                      >
+                        <Option value=""></Option>
+                        {instructions.map(instruction => {
+                          return (
+                            <Option
+                              key={instruction.id}
+                              name={`option_in_option_sets.${index}.instruction_id`}
+                              value={instruction.id}
+                            >
+                              {instruction.title.replace(/<[^>]+>/g, "")}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    )}
+                  />
+                </Col>
+                <Col span={4}>
+                  <Field
+                    name={`option_in_option_sets.${index}.allow_text_entry`}
+                    type="checkbox"
+                    checked={
+                      values.option_in_option_sets[index].allow_text_entry
+                    }
+                  />
+                  <AlertErrorMessage
+                    name={`option_in_option_sets.${index}.allow_text_entry`}
+                    type="error"
+                  />
+                </Col>
+                <Col span={4}>
                   <DeleteButton
                     handleClick={() => {
                       if (

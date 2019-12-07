@@ -8,7 +8,11 @@ import {
   createFolderQuestion,
   updateFolderQuestion
 } from "../../utils/api/question";
-import { questionTypes, questionTypesWithOptions } from "../../utils/Constants";
+import {
+  questionTypes,
+  questionTypesWithOptions,
+  pdfResponseHeights
+} from "../../utils/Constants";
 
 import { InstructionContext } from "../../context/InstructionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
@@ -44,6 +48,10 @@ const QuestionForm = props => {
   const [instructions, setInstructions] = useContext(InstructionContext);
   // eslint-disable-next-line no-unused-vars
   const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
+  const showOnPdf =
+    question === null || (question && question.pdf_print_options === null)
+      ? true
+      : question.pdf_print_options;
 
   return (
     <Formik
@@ -58,6 +66,9 @@ const QuestionForm = props => {
           "",
         question_identifier: (question && question.question_identifier) || "",
         question_type: (question && question.question_type) || "",
+        pdf_response_height: (question && question.pdf_response_height) || "",
+        pdf_print_options: showOnPdf,
+        pop_up_instruction: (question && question.pop_up_instruction) || false,
         text: (question && question.text) || "",
         identifies_survey: (question && question.identifies_survey) || false,
         option_set_id: (question && question.option_set_id) || "",
@@ -76,7 +87,10 @@ const QuestionForm = props => {
           identifies_survey: values.identifies_survey,
           instruction_id: values.instruction_id,
           option_set_id: values.option_set_id,
-          special_option_set_id: values.special_option_set_id
+          special_option_set_id: values.special_option_set_id,
+          pdf_response_height: values.pdf_response_height,
+          pdf_print_options: values.pdf_print_options,
+          pop_up_instruction: values.pop_up_instruction
         };
         if (question && question.id) {
           editQuestion.id = question.id;
@@ -198,6 +212,36 @@ const QuestionForm = props => {
               <AlertErrorMessage name="question_type" type="error" />
             </Col>
           </DRow>
+          {values.question_type === "FREE_RESPONSE" && (
+            <DRow>
+              <Col span={4}>
+                <Text strong>PDF Response Height</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="pdf_response_height"
+                  component="select"
+                >
+                  <option></option>
+                  {pdfResponseHeights.map(height => {
+                    return (
+                      <option
+                        key={height}
+                        name="pdf_response_height"
+                        value={height}
+                      >
+                        {height}
+                      </option>
+                    );
+                  })}
+                </Field>
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="pdf_response_height" type="error" />
+              </Col>
+            </DRow>
+          )}
           <DRow>
             <Col span={4}>
               <Text strong>Instructions</Text>
@@ -235,6 +279,20 @@ const QuestionForm = props => {
               />
             </Col>
           </DRow>
+          {values.instruction_id && (
+            <DRow>
+              <Col span={4}>
+                <Text strong>Show Instructions As Pop-up</Text>
+              </Col>
+              <Col span={20}>
+                <Field
+                  name="pop_up_instruction"
+                  type="checkbox"
+                  checked={values.pop_up_instruction}
+                />
+              </Col>
+            </DRow>
+          )}
           <DRow>
             <Col span={4}>
               <Text strong>Text</Text>
@@ -292,6 +350,20 @@ const QuestionForm = props => {
               </Col>
               <Col span={6}>
                 <AlertErrorMessage name="option_set_id" type="error" />
+              </Col>
+            </DRow>
+          )}
+          {values.option_set_id && (
+            <DRow>
+              <Col span={4}>
+                <Text strong>Print Options On PDF</Text>
+              </Col>
+              <Col span={20}>
+                <Field
+                  name="pdf_print_options"
+                  type="checkbox"
+                  checked={values.pdf_print_options}
+                />
               </Col>
             </DRow>
           )}

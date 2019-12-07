@@ -47,3 +47,5 @@ export const languages = [
 ];
 
 export const modalWidth = window.innerWidth * 0.8;
+
+export const pdfResponseHeights = [50, 100, 150, 200];

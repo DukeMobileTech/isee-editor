@@ -10,11 +10,15 @@ export const getInstructionTranslations = language => {
 };
 
 export const createInstructionTranslation = translation => {
-  return instance.post("/instruction_translations", translation);
+  return instance.post("/instruction_translations", {
+    instruction_translation: translation
+  });
 };
 
 export const updateInstructionTranslation = (id, translation) => {
-  return instance.put(`/instruction_translations/${id}`, translation);
+  return instance.put(`/instruction_translations/${id}`, {
+    instruction_translation: translation
+  });
 };
 
 export const deleteInstructionTranslation = id => {

@@ -17,20 +17,19 @@ export const createLoopQuestion = (
 ) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${lqId}/loop_questions`,
-    loopQuestion
+    { loop_question: loopQuestion }
   );
 };
 
 export const updateLoopQuestion = (projectId, instrumentId, loopQuestion) => {
   return instance.put(
     `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${loopQuestion.instrument_question_id}/loop_questions/${loopQuestion.id}`,
-    loopQuestion
+    { loop_question: loopQuestion }
   );
 };
 
 export const deleteLoopQuestion = (projectId, instrumentId, loopQuestion) => {
   return instance.delete(
-    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${loopQuestion.instrument_question_id}/loop_questions/${loopQuestion.id}`,
-    loopQuestion
+    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${loopQuestion.instrument_question_id}/loop_questions/${loopQuestion.id}`
   );
 };

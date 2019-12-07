@@ -25,11 +25,15 @@ export const getInstrumentPdf = (instrument, language) => {
 };
 
 export const createInstrument = (projectId, instrument) => {
-  return instance.post(`/projects/${projectId}/instruments`, instrument);
+  return instance.post(`/projects/${projectId}/instruments`, {
+    instrument: instrument
+  });
 };
 
 export const updateInstrument = (projectId, id, instrument) => {
-  return instance.put(`/projects/${projectId}/instruments/${id}`, instrument);
+  return instance.put(`/projects/${projectId}/instruments/${id}`, {
+    instrument: instrument
+  });
 };
 
 export const deleteInstrument = (projectId, id) => {

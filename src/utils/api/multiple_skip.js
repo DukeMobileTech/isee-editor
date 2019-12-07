@@ -17,20 +17,19 @@ export const createMultipleSkip = (
 ) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${iqId}/multiple_skips`,
-    multipleSkip
+    { multiple_skip: multipleSkip }
   );
 };
 
 export const updateMultipleSkip = (projectId, instrumentId, multipleSkip) => {
   return instance.put(
     `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${multipleSkip.instrument_question_id}/multiple_skips/${multipleSkip.id}`,
-    multipleSkip
+    { multiple_skip: multipleSkip }
   );
 };
 
 export const deleteMultipleSkip = (projectId, instrumentId, multipleSkip) => {
   return instance.delete(
-    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${multipleSkip.instrument_question_id}/multiple_skips/${multipleSkip.id}`,
-    multipleSkip
+    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${multipleSkip.instrument_question_id}/multiple_skips/${multipleSkip.id}`
   );
 };

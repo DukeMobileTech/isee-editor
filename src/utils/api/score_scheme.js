@@ -12,14 +12,14 @@ export const getScoreSchemes = (projectId, instrumentId) => {
 export const createScoreScheme = (projectId, instrumentId, scheme) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/score_schemes`,
-    scheme
+    { score_scheme: scheme }
   );
 };
 
 export const updateScoreScheme = (projectId, instrumentId, id, scheme) => {
   return instance.put(
     `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${id}`,
-    scheme
+    { score_scheme: scheme }
   );
 };
 

@@ -13,20 +13,19 @@ export const getInstrumentQuestions = (projectId, instrumentId) => {
 export const createInstrumentQuestion = (projectId, instrumentId, iQ) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/instrument_questions`,
-    iQ
+    { instrument_question: iQ }
   );
 };
 
-export const updateInstrumentQuestion = (projectId, instrumentQuestion) => {
+export const updateInstrumentQuestion = (projectId, iQ) => {
   return instance.put(
-    `/projects/${projectId}/instruments/${instrumentQuestion.instrument_id}/instrument_questions/${instrumentQuestion.id}`,
-    instrumentQuestion
+    `/projects/${projectId}/instruments/${iQ.instrument_id}/instrument_questions/${iQ.id}`,
+    { instrument_question: iQ }
   );
 };
 
-export const deleteInstrumentQuestion = (projectId, instrumentQuestion) => {
+export const deleteInstrumentQuestion = (projectId, iQ) => {
   return instance.delete(
-    `/projects/${projectId}/instruments/${instrumentQuestion.instrument_id}/instrument_questions/${instrumentQuestion.id}`,
-    instrumentQuestion
+    `/projects/${projectId}/instruments/${iQ.instrument_id}/instrument_questions/${iQ.id}`
   );
 };

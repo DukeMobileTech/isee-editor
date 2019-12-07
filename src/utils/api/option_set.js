@@ -16,11 +16,11 @@ export const copyOptionSet = id => {
 };
 
 export const createOptionSet = optionSet => {
-  return instance.post("/option_sets", optionSet);
+  return instance.post("/option_sets", { option_set: optionSet });
 };
 
 export const updateOptionSet = (id, optionSet) => {
-  return instance.put(`/option_sets/${id}`, optionSet);
+  return instance.put(`/option_sets/${id}`, { option_set: optionSet });
 };
 
 export const deleteOptionSet = id => {

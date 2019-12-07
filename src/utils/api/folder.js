@@ -8,11 +8,15 @@ export const getFolders = questionSetId => {
 };
 
 export const createFolder = (questionSetId, folder) => {
-  return instance.post(`/question_sets/${questionSetId}/folders`, folder);
+  return instance.post(`/question_sets/${questionSetId}/folders`, {
+    folder: folder
+  });
 };
 
 export const updateFolder = (questionSetId, id, folder) => {
-  return instance.put(`/question_sets/${questionSetId}/folders/${id}`, folder);
+  return instance.put(`/question_sets/${questionSetId}/folders/${id}`, {
+    folder: folder
+  });
 };
 
 export const deleteFolder = (questionSetId, id) => {

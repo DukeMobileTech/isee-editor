@@ -16,11 +16,11 @@ export const getQuestionSetCount = () => {
 };
 
 export const createQuestionSet = questionSet => {
-  return instance.post("/question_sets", questionSet);
+  return instance.post("/question_sets", { question_set: questionSet });
 };
 
 export const updateQuestionSet = (id, questionSet) => {
-  return instance.put(`/question_sets/${id}`, questionSet);
+  return instance.put(`/question_sets/${id}`, { question_set: questionSet });
 };
 
 export const deleteQuestionSet = id => {

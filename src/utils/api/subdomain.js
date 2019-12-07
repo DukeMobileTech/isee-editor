@@ -6,14 +6,14 @@ import { instance } from "./api";
 export const createSubdomain = (instrument, scoreSchemeId, subdomain) => {
   return instance.post(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains`,
-    subdomain
+    { subdomain: subdomain }
   );
 };
 
 export const updateSubdomain = (instrument, scoreSchemeId, subdomain) => {
   return instance.put(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${subdomain.id}`,
-    subdomain
+    { subdomain: subdomain }
   );
 };
 

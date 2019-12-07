@@ -12,14 +12,14 @@ export const getDisplay = (projectId, instrumentId, id) => {
 export const createDisplay = (projectId, instrumentId, display) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/displays`,
-    display
+    { display: display }
   );
 };
 
 export const updateDisplay = (projectId, instrumentId, id, display) => {
   return instance.put(
     `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`,
-    display
+    { display: display }
   );
 };
 
