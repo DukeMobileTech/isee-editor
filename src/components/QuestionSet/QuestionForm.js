@@ -69,6 +69,8 @@ const QuestionForm = props => {
         pdf_response_height: (question && question.pdf_response_height) || "",
         pdf_print_options: showOnPdf,
         pop_up_instruction: (question && question.pop_up_instruction) || false,
+        instruction_after_text:
+          (question && question.instruction_after_text) || false,
         text: (question && question.text) || "",
         identifies_survey: (question && question.identifies_survey) || false,
         option_set_id: (question && question.option_set_id) || "",
@@ -90,7 +92,8 @@ const QuestionForm = props => {
           special_option_set_id: values.special_option_set_id,
           pdf_response_height: values.pdf_response_height,
           pdf_print_options: values.pdf_print_options,
-          pop_up_instruction: values.pop_up_instruction
+          pop_up_instruction: values.pop_up_instruction,
+          instruction_after_text: values.instruction_after_text
         };
         if (question && question.id) {
           editQuestion.id = question.id;
@@ -289,6 +292,20 @@ const QuestionForm = props => {
                   name="pop_up_instruction"
                   type="checkbox"
                   checked={values.pop_up_instruction}
+                />
+              </Col>
+            </DRow>
+          )}
+          {values.instruction_id && (
+            <DRow>
+              <Col span={4}>
+                <Text strong>Show Instructions After Text</Text>
+              </Col>
+              <Col span={20}>
+                <Field
+                  name="instruction_after_text"
+                  type="checkbox"
+                  checked={values.instruction_after_text}
                 />
               </Col>
             </DRow>
