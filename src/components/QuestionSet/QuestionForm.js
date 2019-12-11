@@ -11,7 +11,8 @@ import {
 import {
   questionTypes,
   questionTypesWithOptions,
-  pdfResponseHeights
+  pdfResponseHeights,
+  questionTypesWithDefaultResponses
 } from "../../utils/Constants";
 
 import { InstructionContext } from "../../context/InstructionContext";
@@ -76,7 +77,8 @@ const QuestionForm = props => {
         option_set_id: (question && question.option_set_id) || "",
         instruction_id: (question && question.instruction_id) || "",
         special_option_set_id:
-          (question && question.special_option_set_id) || ""
+          (question && question.special_option_set_id) || "",
+        default_response: (question && question.default_response) || ""
       }}
       validationSchema={QuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -93,7 +95,8 @@ const QuestionForm = props => {
           pdf_response_height: values.pdf_response_height,
           pdf_print_options: values.pdf_print_options,
           pop_up_instruction: values.pop_up_instruction,
-          instruction_after_text: values.instruction_after_text
+          instruction_after_text: values.instruction_after_text,
+          default_response: values.default_response
         };
         if (question && question.id) {
           editQuestion.id = question.id;
@@ -328,6 +331,21 @@ const QuestionForm = props => {
               <AlertErrorMessage name="text" type="error" />
             </Col>
           </DRow>
+          {questionTypesWithDefaultResponses.includes(values.question_type) && (
+            <DRow>
+              <Col span={4}>
+                <Text strong>Default Response</Text>
+              </Col>
+              <Col span={20}>
+                <Field
+                  className="ant-input"
+                  placeholder="Enter default response"
+                  name="default_response"
+                  component="textarea"
+                />
+              </Col>
+            </DRow>
+          )}
           {questionTypesWithOptions.includes(values.question_type) && (
             <DRow>
               <Col span={4}>

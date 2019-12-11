@@ -49,3 +49,9 @@ export const languages = [
 export const modalWidth = window.innerWidth * 0.8;
 
 export const pdfResponseHeights = [50, 100, 150, 200];
+
+export const questionTypesWithDefaultResponses = [
+  "FREE_RESPONSE",
+  "INTEGER",
+  "DECIMAL_NUMBER"
+];

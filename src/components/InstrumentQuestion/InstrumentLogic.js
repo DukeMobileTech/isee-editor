@@ -1,10 +1,8 @@
-import { Collapse, Icon, Tabs, Typography, Spin } from "antd";
-import React, { useState, useContext, useEffect } from "react";
+import { Collapse, Icon, Tabs, Typography } from "antd";
+import React, { useState, Fragment } from "react";
 
 import ExpandedQuestion from "../utils/ExpandedQuestion";
 import NextQuestion from "../NextQuestion/NextQuestion";
-import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
-import { getInstrumentQuestions } from "../../utils/api/instrument_question";
 import MultipleSkip from "../MultipleSkip/MultipleSkip";
 import LoopQuestion from "../LoopQuestion/LoopQuestion";
 
@@ -13,32 +11,13 @@ const { TabPane } = Tabs;
 const InstrumentLogic = props => {
   const instrumentQuestion = props.instrumentQuestion;
   const [selectedKey, setSelectedKey] = useState("1");
-  const [loading, setLoading] = useState(true);
-  // eslint-disable-next-line no-unused-vars
-  const [instrumentQuestions, setInstrumentQuestions] = useContext(
-    InstrumentQuestionContext
-  );
-
-  useEffect(() => {
-    const fetchInstrumentQuestions = () => {
-      getInstrumentQuestions(
-        props.projectId,
-        instrumentQuestion.instrument_id
-      ).then(results => {
-        setInstrumentQuestions(results.data);
-        setLoading(false);
-      });
-    };
-    fetchInstrumentQuestions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onTabSelection = key => {
     setSelectedKey(key);
   };
 
   return (
-    <Spin spinning={loading}>
+    <Fragment>
       <Collapse>
         <Collapse.Panel header="Question Details" key="1">
           <Typography.Paragraph>
@@ -102,7 +81,7 @@ const InstrumentLogic = props => {
           />
         </TabPane>
       </Tabs>
-    </Spin>
+    </Fragment>
   );
 };
 

@@ -15,6 +15,8 @@ import { getInstrument } from "../../utils/api/instrument";
 import { getOptionSets } from "../../utils/api/option_set";
 import { getQuestionSets } from "../../utils/api/question_set";
 import PdfDownload from "./PdfDownload";
+import { getInstrumentQuestions } from "../../utils/api/instrument_question";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -34,6 +36,10 @@ const Instrument = ({ match }) => {
   const [instructions, setInstructions] = useContext(InstructionContext);
   // eslint-disable-next-line no-unused-vars
   const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
+  // eslint-disable-next-line no-unused-vars
+  const [instrumentQuestions, setInstrumentQuestions] = useContext(
+    InstrumentQuestionContext
+  );
 
   useEffect(() => {
     const fetchQuestionSets = async () => {
@@ -69,6 +75,17 @@ const Instrument = ({ match }) => {
       setInstrument(result.data);
     };
     fetchInstrument();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchInstrumentQuestions = () => {
+      getInstrumentQuestions(projectId, instrumentId).then(results => {
+        setInstrumentQuestions(results.data);
+        setLoading(false);
+      });
+    };
+    fetchInstrumentQuestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
