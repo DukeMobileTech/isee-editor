@@ -197,7 +197,9 @@ const OptionSets = () => {
                 <Typography.Text strong>
                   {`${oios.number_in_question})`}
                 </Typography.Text>
-                <Typography.Text code>{oios.option.text}</Typography.Text>
+                <Typography.Text code>
+                  {oios.option && oios.option.text}
+                </Typography.Text>
               </span>
             );
           })}

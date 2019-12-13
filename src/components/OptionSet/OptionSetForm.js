@@ -213,7 +213,7 @@ const OptionSetForm = props => {
                     type="error"
                   />
                 </Col>
-                <Col span={6}>{oios.option.text}</Col>
+                <Col span={6}>{oios.option && oios.option.text}</Col>
                 <Col span={6}>
                   <Field
                     name={`option_in_option_sets.${index}.instruction_id`}
@@ -269,7 +269,8 @@ const OptionSetForm = props => {
                     handleClick={() => {
                       if (
                         window.confirm(
-                          `Are you sure you want to remove ${oios.option.text} from the set?`
+                          `Are you sure you want to remove ${oios.option &&
+                            oios.option.text} from the set?`
                         )
                       )
                         handleDeleteOption(oios);
