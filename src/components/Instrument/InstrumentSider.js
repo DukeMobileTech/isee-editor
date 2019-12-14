@@ -60,15 +60,13 @@ const InstrumentSider = props => {
               openKeys={openKeys}
               onOpenChange={onOpenChange}
             >
-              <SubMenu
-                key={`${section.id}`}
-                title={`${section.position}: ${section.title}`}
-              >
+              <SubMenu key={`${section.id}`} title={section.title}>
                 {section.displays.map(display => {
                   return (
-                    <Menu.Item
-                      key={`${display.id}`}
-                    >{`${display.position}: ${display.title}`}</Menu.Item>
+                    <Menu.Item key={`${display.id}`}>
+                      <strong>{`${display.position}) `}</strong>
+                      {display.title}
+                    </Menu.Item>
                   );
                 })}
               </SubMenu>

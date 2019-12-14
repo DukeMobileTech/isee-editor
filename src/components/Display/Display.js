@@ -16,7 +16,6 @@ import DisplayInstructions from "./DisplayInstructions";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import ExpandedQuestion from "../utils/ExpandedQuestion";
 import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
-import InstrumentLogic from "../InstrumentQuestion/InstrumentLogic";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
 import QuestionForm from "../QuestionSet/QuestionForm";
@@ -41,7 +40,6 @@ const Display = props => {
   const [selectedKey, setSelectedKey] = useState("1");
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [instrumentQuestion, setInstrumentQuestion] = useState(null);
-  const [showLogicModal, setShowLogicModal] = useState(false);
   const [showTables, setShowTables] = useState(false);
 
   useEffect(() => {
@@ -124,7 +122,6 @@ const Display = props => {
 
   const handleCancelQuestion = () => {
     setShowQuestionModal(false);
-    setShowLogicModal(false);
     setInstrumentQuestion(null);
   };
 
@@ -135,11 +132,6 @@ const Display = props => {
   const handleQuestionClick = question => {
     setInstrumentQuestion(question);
     setShowQuestionModal(true);
-  };
-
-  const handleLogicClick = question => {
-    setInstrumentQuestion(question);
-    setShowLogicModal(true);
   };
 
   const tabulateQuestions = () => {
@@ -192,22 +184,6 @@ const Display = props => {
             question={instrumentQuestion.question}
             folder={null}
             fetchQuestions={handleCancelQuestion}
-          />
-        </Modal>
-      );
-    } else if (showLogicModal) {
-      return (
-        <Modal
-          title={instrumentQuestion.question.question_identifier}
-          visible={true}
-          footer={null}
-          destroyOnClose={true}
-          onCancel={handleCancelQuestion}
-          width={modalWidth}
-        >
-          <InstrumentLogic
-            instrumentQuestion={instrumentQuestion}
-            projectId={projectId}
           />
         </Modal>
       );
@@ -264,15 +240,6 @@ const Display = props => {
               expandIcon={props => customExpandIcon(props)}
             >
               <Column title="Position" dataIndex="number_in_instrument" />
-              <Column
-                title="Logic"
-                dataIndex="identifier"
-                render={(text, iq) => (
-                  <Button type="link" onClick={() => handleLogicClick(iq)}>
-                    {iq.identifier}
-                  </Button>
-                )}
-              />
               <Column
                 title="Question"
                 dataIndex="type"
