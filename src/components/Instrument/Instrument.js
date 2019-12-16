@@ -40,6 +40,8 @@ const Instrument = ({ match }) => {
   const [instrumentQuestions, setInstrumentQuestions] = useContext(
     InstrumentQuestionContext
   );
+  const [showDisplays, setShowDisplays] = useState(false);
+  const [section, setSection] = useState(null);
 
   useEffect(() => {
     const fetchQuestionSets = async () => {
@@ -70,20 +72,21 @@ const Instrument = ({ match }) => {
 
   useEffect(() => {
     const fetchInstrument = async () => {
+      setLoading(true);
       const result = await getInstrument(projectId, instrumentId);
-      setLoading(false);
       setInstrument(result.data);
+      setLoading(false);
     };
     fetchInstrument();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const fetchInstrumentQuestions = () => {
-      getInstrumentQuestions(projectId, instrumentId).then(results => {
-        setInstrumentQuestions(results.data);
-        setLoading(false);
-      });
+    const fetchInstrumentQuestions = async () => {
+      setLoading(true);
+      const results = await getInstrumentQuestions(projectId, instrumentId);
+      setInstrumentQuestions(results.data);
+      setLoading(false);
     };
     fetchInstrumentQuestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,6 +101,12 @@ const Instrument = ({ match }) => {
     setDisplay(display);
   };
 
+  const handleOpenSection = section => {
+    setSelectedKey("1");
+    setSection(section);
+    setShowDisplays(true);
+  };
+
   const InstrumentView = () => {
     return (
       <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
@@ -110,47 +119,49 @@ const Instrument = ({ match }) => {
           }
           key="1"
         >
-          <Sections instrument={instrument} showQuestions={showQuestions} />
+          <Sections
+            instrument={instrument}
+            showQuestions={showQuestions}
+            handleOpenSection={handleOpenSection}
+            section={section}
+            setSection={setSection}
+            showDisplays={showDisplays}
+            setShowDisplays={setShowDisplays}
+          />
         </TabPane>
-        {sections.length > 0 && (
-          <TabPane
-            tab={
-              <span>
-                <Icon type="project" />
-                Questions
-              </span>
-            }
-            key="2"
-          >
-            <Display projectId={projectId} display={display} />
-          </TabPane>
-        )}
-        {sections.length > 0 && (
-          <TabPane
-            tab={
-              <span>
-                <Icon type="check-square" />
-                Scoring Schemes
-              </span>
-            }
-            key="3"
-          >
-            <ScoreSchemes instrument={instrument} />
-          </TabPane>
-        )}
-        {sections.length > 0 && (
-          <TabPane
-            tab={
-              <span>
-                <Icon type="layout" />
-                PDF
-              </span>
-            }
-            key="4"
-          >
-            <PdfDownload instrument={instrument} />
-          </TabPane>
-        )}
+        <TabPane
+          tab={
+            <span>
+              <Icon type="project" />
+              Questions
+            </span>
+          }
+          key="2"
+        >
+          <Display projectId={projectId} display={display} />
+        </TabPane>
+        <TabPane
+          tab={
+            <span>
+              <Icon type="check-square" />
+              Scoring Schemes
+            </span>
+          }
+          key="3"
+        >
+          <ScoreSchemes instrument={instrument} />
+        </TabPane>
+        <TabPane
+          tab={
+            <span>
+              <Icon type="layout" />
+              PDF
+            </span>
+          }
+          key="4"
+        >
+          <PdfDownload instrument={instrument} />
+        </TabPane>
       </Tabs>
     );
   };
@@ -163,6 +174,7 @@ const Instrument = ({ match }) => {
           projectId={projectId}
           instrumentId={instrumentId}
           showQuestions={showQuestions}
+          handleOpenSection={handleOpenSection}
         />
         <Content style={{ padding: "10px" }}>
           <Spin spinning={loading}>

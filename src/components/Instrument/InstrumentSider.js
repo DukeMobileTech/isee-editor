@@ -29,9 +29,13 @@ const InstrumentSider = props => {
   }, []);
 
   const handleDisplayClick = items => {
-    props.showQuestions(
-      displays.find(display => display.id === Number(items.key))
-    );
+    const display = displays.find(dis => dis.id === Number(items.key));
+    props.showQuestions(display);
+  };
+
+  const handleSectionClick = items => {
+    const section = sections.find(sec => sec.id === Number(items.key));
+    props.handleOpenSection(section);
   };
 
   const onOpenChange = openKeys => {
@@ -60,7 +64,11 @@ const InstrumentSider = props => {
               openKeys={openKeys}
               onOpenChange={onOpenChange}
             >
-              <SubMenu key={`${section.id}`} title={section.title}>
+              <SubMenu
+                key={`${section.id}`}
+                title={section.title}
+                onTitleClick={handleSectionClick}
+              >
                 {section.displays.map(display => {
                   return (
                     <Menu.Item key={`${display.id}`}>

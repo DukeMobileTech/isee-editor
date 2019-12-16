@@ -22,8 +22,6 @@ const Sections = props => {
   const instrument = props.instrument;
   const [sections, setSections] = useContext(InstrumentSectionContext);
   const [showForm, setShowForm] = useState(false);
-  const [showDisplays, setShowDisplays] = useState(false);
-  const [section, setSection] = useState(null);
 
   const fetchSections = async () => {
     setShowForm(false);
@@ -42,23 +40,18 @@ const Sections = props => {
   };
 
   const handleEditSection = section => {
-    setSection(section);
+    props.setSection(section);
     setShowForm(true);
   };
 
   const handleNewSection = () => {
-    setSection(null);
+    props.setSection(null);
     setShowForm(true);
   };
 
   const handleCancel = () => {
     setShowForm(false);
-    setShowDisplays(false);
-  };
-
-  const handleOpenSection = section => {
-    setSection(section);
-    setShowDisplays(true);
+    props.setShowDisplays(false);
   };
 
   const onDragEnd = async result => {
@@ -85,16 +78,16 @@ const Sections = props => {
     return (
       <SectionForm
         instrument={instrument}
-        section={section}
+        section={props.section}
         handleCancel={handleCancel}
         fetchSections={fetchSections}
         maxCount={sections.length + 1}
       />
     );
-  } else if (showDisplays) {
+  } else if (props.showDisplays) {
     return (
       <Subsections
-        section={section}
+        section={props.section}
         instrument={instrument}
         sections={sections}
         handleCancel={handleCancel}
@@ -138,15 +131,15 @@ const Sections = props => {
                               {section.position}
                             </Typography.Text>
                           </Col>
-                          <Col span={16}>
+                          <Col span={14}>
                             <Button
                               type="link"
-                              onClick={() => handleOpenSection(section)}
+                              onClick={() => props.handleOpenSection(section)}
                             >
                               {section.title}
                             </Button>
                           </Col>
-                          <Col span={4}>
+                          <Col span={6}>
                             <EditButton
                               handleClick={() => handleEditSection(section)}
                             />
