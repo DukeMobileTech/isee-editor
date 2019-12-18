@@ -64,11 +64,38 @@ export const FolderAddButton = props => {
 
 export const AddButton = props => {
   return (
-    <Col offset={22}>
-      <Button type="primary" title="New" onClick={props.handleClick}>
+    <Row style={{ margin: "3px" }}>
+      <Button
+        style={{ float: "right" }}
+        type="primary"
+        title="New"
+        onClick={props.handleClick}
+      >
         <Icon type="plus" />
       </Button>
-    </Col>
+    </Row>
+  );
+};
+
+export const TranslationAddButtons = props => {
+  return (
+    <Row style={{ margin: "3px" }}>
+      <Button
+        title="Show Translations"
+        type="primary"
+        onClick={props.handleTranslationClick}
+      >
+        <Icon type="global" />
+      </Button>
+      <Button
+        style={{ float: "right" }}
+        type="primary"
+        title="Add New"
+        onClick={props.handleAddClick}
+      >
+        <Icon type="plus" />
+      </Button>
+    </Row>
   );
 };
 

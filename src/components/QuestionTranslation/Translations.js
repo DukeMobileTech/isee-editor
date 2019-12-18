@@ -143,6 +143,7 @@ const QuestionTranslationsTable = props => {
       rowKey={question => question.id}
       columns={columns}
       size="small"
+      pagination={{ defaultPageSize: 25 }}
     />
   );
 };

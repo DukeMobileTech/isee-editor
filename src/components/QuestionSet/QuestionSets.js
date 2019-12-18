@@ -2,79 +2,29 @@ import { Button, Divider, Icon, Pagination, Row, Spin, Col } from "antd";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import {
   deleteQuestionSet,
-  getQuestionSetCount,
   getQuestionSets
 } from "../../utils/api/question_set";
 
 import { FolderAddButton } from "../../utils/Utils";
 import FolderForm from "./FolderForm";
-import { InstructionContext } from "../../context/InstructionContext";
-import { OptionSetContext } from "../../context/OptionSetContext";
 import QuestionSet from "./QuestionSet";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
 import QuestionSetForm from "./QuestionSetForm";
-import { getInstructions } from "../../utils/api/instruction";
-import { getOptionSets } from "../../utils/api/option_set";
 import Translations from "../QuestionTranslation/Translations";
 
 const QuestionSets = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showQsForm, setShowQsForm] = useState(false);
   const [showFolderForm, setShowFolderForm] = useState(false);
   const [questionSet, setQuestionSet] = useState(null);
-  const [questionSets, setQuestionSets] = useState([]);
-  const [current, setCurrent] = useState(1);
-  // eslint-disable-next-line no-unused-vars
-  const [perPage, setPerPage] = useState(5);
-  const [total, setTotal] = useState(1);
-  // eslint-disable-next-line no-unused-vars
-  const [optionSets, setOptionSets] = useContext(OptionSetContext);
-  // eslint-disable-next-line no-unused-vars
-  const [instructions, setInstructions] = useContext(InstructionContext);
-  // eslint-disable-next-line no-unused-vars
-  const [sets, setSets] = useContext(QuestionSetContext);
+  const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
   const [showTranslations, setShowTranslations] = useState(false);
 
-  useEffect(() => {
-    const fetchSets = async () => {
-      const results = await getQuestionSets();
-      setSets(results.data);
-    };
-    fetchSets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const fetchOptionSets = async () => {
-      const results = await getOptionSets();
-      setOptionSets(results.data);
-    };
-    fetchOptionSets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const fetchInstructions = async () => {
-      const results = await getInstructions();
-      setInstructions(results.data);
-    };
-    fetchInstructions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    getQuestionSetCount().then(res => setTotal(res.data));
-  }, []);
-
-  useEffect(() => {
-    fetchQuestionSets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current, perPage]);
-
   const fetchQuestionSets = async () => {
+    setLoading(true);
     setShowQsForm(false);
     setShowFolderForm(false);
-    const results = await getQuestionSets(current, perPage);
+    const results = await getQuestionSets();
     setQuestionSets(results.data);
     setLoading(false);
   };
@@ -113,10 +63,6 @@ const QuestionSets = () => {
   const handleTranslations = questionSet => {
     setQuestionSet(questionSet);
     setShowTranslations(true);
-  };
-
-  const onChange = page => {
-    setCurrent(page);
   };
 
   if (showQsForm) {
@@ -221,19 +167,6 @@ const QuestionSets = () => {
             </Fragment>
           );
         })}
-        <Row
-          style={{ marginTop: 10 }}
-          type="flex"
-          justify="space-around"
-          align="middle"
-        >
-          <Pagination
-            current={current}
-            onChange={onChange}
-            total={total}
-            defaultPageSize={perPage}
-          />
-        </Row>
       </Spin>
     );
   }

@@ -7,6 +7,10 @@ export const getAllQuestions = () => {
   return instance.get("/questions");
 };
 
+export const copyQuestion = id => {
+  return instance.get(`/questions/${id}/copy`);
+};
+
 export const getFolderQuestions = folder => {
   return instance.get(
     `/question_sets/${folder.question_set_id}/folders/${folder.id}/questions`
