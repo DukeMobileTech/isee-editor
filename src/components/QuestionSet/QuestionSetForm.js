@@ -11,9 +11,9 @@ import {
   updateQuestionSet
 } from "../../utils/api/question_set";
 
-import { Form as AntForm } from "antd";
-import { CenteredH3 } from "../../utils/Styles";
+import { Form as AntForm, Modal } from "antd";
 import React from "react";
+import { modalWidth } from "../../utils/Constants";
 
 const FormItem = AntForm.Item;
 
@@ -28,63 +28,71 @@ const QuestionSetForm = props => {
     : "New Question Set";
 
   return (
-    <Formik
-      initialValues={{
-        id: (questionSet && questionSet.id) || null,
-        title: (questionSet && questionSet.title) || ""
-      }}
-      validationSchema={QuestionSetSchema}
-      onSubmit={(values, { setErrors }) => {
-        const questionSet = {
-          title: values.title
-        };
-        if (values.id) {
-          updateQuestionSet(values.id, questionSet)
-            .then(response => {
-              if (response.status === 204) {
-                props.fetchQuestionSets();
-              }
-            })
-            .catch(error => {
-              for (const err of error.response.data.errors) {
-                if (err.includes("Title")) {
-                  setErrors({ title: err });
+    <Modal
+      title={title}
+      visible={true}
+      footer={null}
+      destroyOnClose={true}
+      onCancel={props.handleCancel}
+      width={modalWidth}
+    >
+      <Formik
+        initialValues={{
+          id: (questionSet && questionSet.id) || null,
+          title: (questionSet && questionSet.title) || ""
+        }}
+        validationSchema={QuestionSetSchema}
+        onSubmit={(values, { setErrors }) => {
+          const questionSet = {
+            title: values.title
+          };
+          if (values.id) {
+            updateQuestionSet(values.id, questionSet)
+              .then(response => {
+                if (response.status === 204) {
+                  props.fetchQuestionSets();
                 }
-              }
-            });
-        } else {
-          createQuestionSet(questionSet)
-            .then(response => {
-              if (response.status === 201) {
-                props.fetchQuestionSets();
-              }
-            })
-            .catch(error => {
-              for (const err of error.response.data.errors) {
-                if (err.includes("Title")) {
-                  setErrors({ title: err });
+              })
+              .catch(error => {
+                for (const err of error.response.data.errors) {
+                  if (err.includes("Title")) {
+                    setErrors({ title: err });
+                  }
                 }
-              }
-            });
-        }
-      }}
-      render={({ values }) => (
-        <Form>
-          <CenteredH3>{title}</CenteredH3>
-          <FormItem>
-            <Field
-              className="ant-input"
-              name="title"
-              placeholder="Enter title"
-              type="text"
-            />
-            <AlertErrorMessage name="title" type="error" />
-          </FormItem>
-          <LeftCancelButton handleClick={props.handleCancel} />
-          <RightSubmitButton />
-        </Form>
-      )}
-    />
+              });
+          } else {
+            createQuestionSet(questionSet)
+              .then(response => {
+                if (response.status === 201) {
+                  props.fetchQuestionSets();
+                }
+              })
+              .catch(error => {
+                for (const err of error.response.data.errors) {
+                  if (err.includes("Title")) {
+                    setErrors({ title: err });
+                  }
+                }
+              });
+          }
+        }}
+        render={({ values }) => (
+          <Form>
+            <FormItem>
+              <Field
+                className="ant-input"
+                name="title"
+                placeholder="Enter title"
+                type="text"
+              />
+              <AlertErrorMessage name="title" type="error" />
+            </FormItem>
+            <LeftCancelButton handleClick={props.handleCancel} />
+            <RightSubmitButton />
+          </Form>
+        )}
+      />
+    </Modal>
   );
 };
 

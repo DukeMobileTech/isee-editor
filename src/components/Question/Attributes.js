@@ -5,8 +5,11 @@ import { InstructionContext } from "../../context/InstructionContext";
 const { Text } = Typography;
 
 const Attributes = ({ question }) => {
+  // eslint-disable-next-line no-unused-vars
   const [options, setOptions] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [specialOptions, setSpecialOptions] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [instructions, setInstructions] = useContext(InstructionContext);
 
   return (

@@ -54,6 +54,14 @@ const Bank = ({ match, history }) => {
     history.push(`/banks/${key}`);
   };
 
+  const questionSubset = (folder, questionSet) => {
+    history.push({
+      pathname: "/banks/questions",
+      state: { folder, questionSet }
+    });
+    window.location.reload(false);
+  };
+
   return (
     <Tabs defaultActiveKey={match.params.tab} onChange={onTabSelection}>
       <TabPane
@@ -65,7 +73,7 @@ const Bank = ({ match, history }) => {
         }
         key="question_sets"
       >
-        <QuestionSets />
+        <QuestionSets questionSubset={questionSubset} />
       </TabPane>
       <TabPane
         tab={

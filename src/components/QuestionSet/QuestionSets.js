@@ -1,24 +1,25 @@
-import { Button, Divider, Icon, Pagination, Row, Spin, Col } from "antd";
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import { Button, Divider, Icon, Row, Spin, Typography } from "antd";
+import React, { Fragment, useContext, useState } from "react";
 import {
   deleteQuestionSet,
   getQuestionSets
 } from "../../utils/api/question_set";
 
-import { FolderAddButton } from "../../utils/Utils";
+import { TranslationAddButtons } from "../../utils/Utils";
 import FolderForm from "./FolderForm";
 import QuestionSet from "./QuestionSet";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
 import QuestionSetForm from "./QuestionSetForm";
 import Translations from "../QuestionTranslation/Translations";
 
-const QuestionSets = () => {
+const QuestionSets = props => {
   const [loading, setLoading] = useState(false);
   const [showQsForm, setShowQsForm] = useState(false);
   const [showFolderForm, setShowFolderForm] = useState(false);
   const [questionSet, setQuestionSet] = useState(null);
   const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
   const [showTranslations, setShowTranslations] = useState(false);
+  const [folder, setFolder] = useState(null);
 
   const fetchQuestionSets = async () => {
     setLoading(true);
@@ -62,7 +63,82 @@ const QuestionSets = () => {
 
   const handleTranslations = questionSet => {
     setQuestionSet(questionSet);
+    setFolder(null);
     setShowTranslations(true);
+  };
+
+  const handleFolderTranslations = folder => {
+    setFolder(folder);
+    setQuestionSet(null);
+    setShowTranslations(true);
+  };
+
+  const QuestionSetActions = ({ qSet }) => {
+    return (
+      <Row justify="center" type="flex">
+        <Typography.Title level={4}>{qSet.title}</Typography.Title>
+        <span style={{ padding: 5 }}>
+          <Button
+            title={`Edit ${qSet.title}`}
+            type="link"
+            onClick={event => {
+              event.stopPropagation();
+              handleEditQuestionSet(qSet);
+            }}
+          >
+            <Icon type="edit" />
+          </Button>
+          <Divider type="vertical" />
+          <Button
+            title={`Add folder to ${qSet.title}`}
+            type="link"
+            onClick={event => {
+              event.stopPropagation();
+              handleNewFolder(qSet);
+            }}
+          >
+            <Icon type="folder-add" />
+          </Button>
+          <Divider type="vertical" />
+          <Button
+            title={`Show questions for ${qSet.title}`}
+            type="link"
+            onClick={event => {
+              event.stopPropagation();
+              props.questionSubset(null, qSet);
+            }}
+          >
+            <Icon type="database" />
+          </Button>
+          <Divider type="vertical" />
+          <Button
+            title={`Show question translations for ${qSet.title}`}
+            type="link"
+            onClick={event => {
+              event.stopPropagation();
+              handleTranslations(qSet);
+            }}
+          >
+            <Icon type="global" />
+          </Button>
+          <Divider type="vertical" />
+          <Button
+            style={{ color: "red" }}
+            title={`Delete ${qSet.title}`}
+            type="link"
+            onClick={event => {
+              event.stopPropagation();
+              if (
+                window.confirm(`Are you sure you want to delete ${qSet.title}?`)
+              )
+                handleDeleteQuestionSet(qSet);
+            }}
+          >
+            <Icon type="delete" />
+          </Button>
+        </span>
+      </Row>
+    );
   };
 
   if (showQsForm) {
@@ -79,6 +155,7 @@ const QuestionSets = () => {
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
         questionSet={questionSet}
+        folder={folder}
       />
     );
   } else if (showFolderForm) {
@@ -93,77 +170,19 @@ const QuestionSets = () => {
   } else {
     return (
       <Spin spinning={loading}>
-        <Row>
-          <Col span={2}>
-            <Button
-              type="primary"
-              onClick={() => setShowTranslations(!showTranslations)}
-            >
-              <Icon type="global" />
-            </Button>
-          </Col>
-          <FolderAddButton handleClick={handleNewQuestionSet} />
-        </Row>
+        <TranslationAddButtons
+          handleTranslationClick={() => setShowTranslations(!showTranslations)}
+          handleAddClick={handleNewQuestionSet}
+        />
         {questionSets.map(qs => {
           return (
             <Fragment key={`${qs.id}`}>
-              <div style={{ margin: 5 }}>
-                <span style={{ padding: 5 }}>
-                  <strong>{qs.title}</strong>
-                </span>
-                <span style={{ padding: 5 }}>
-                  <Button
-                    title={`Edit ${qs.title}`}
-                    type="link"
-                    onClick={event => {
-                      event.stopPropagation();
-                      handleEditQuestionSet(qs);
-                    }}
-                  >
-                    <Icon type="edit" />
-                  </Button>
-                  <Divider type="vertical" />
-                  <Button
-                    style={{ color: "red" }}
-                    title={`Delete ${qs.title}`}
-                    type="link"
-                    onClick={event => {
-                      event.stopPropagation();
-                      if (
-                        window.confirm(
-                          `Are you sure you want to delete ${qs.title}?`
-                        )
-                      )
-                        handleDeleteQuestionSet(qs);
-                    }}
-                  >
-                    <Icon type="delete" />
-                  </Button>
-                  <Divider type="vertical" />
-                  <Button
-                    title={`Add folder to ${qs.title}`}
-                    type="link"
-                    onClick={event => {
-                      event.stopPropagation();
-                      handleNewFolder(qs);
-                    }}
-                  >
-                    <Icon type="folder-add" />
-                  </Button>
-                  <Divider type="vertical" />
-                  <Button
-                    title={`Show translations ${qs.title}`}
-                    type="link"
-                    onClick={event => {
-                      event.stopPropagation();
-                      handleTranslations(qs);
-                    }}
-                  >
-                    <Icon type="global" />
-                  </Button>
-                </span>
-              </div>
-              <QuestionSet questionSet={qs} />
+              <QuestionSetActions qSet={qs} />
+              <QuestionSet
+                questionSet={qs}
+                questionSubset={props.questionSubset}
+                handleFolderTranslations={handleFolderTranslations}
+              />
             </Fragment>
           );
         })}

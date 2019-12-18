@@ -15,7 +15,8 @@ import Highlighter from "react-highlight-words";
 import { getQuestionTranslations } from "../../utils/api/question_translation";
 import {
   getAllQuestions,
-  getQuestionSetQuestions
+  getQuestionSetQuestions,
+  getFolderQuestions
 } from "../../utils/api/question";
 import QuestionTranslations from "./QuestionTranslations";
 
@@ -162,6 +163,10 @@ const Translations = props => {
         setLoading(true);
         if (props.questionSet) {
           const results = await getQuestionSetQuestions(props.questionSet.id);
+          setQuestions(results.data);
+          setLoading(false);
+        } else if (props.folder) {
+          const results = await getFolderQuestions(props.folder);
           setQuestions(results.data);
           setLoading(false);
         } else {

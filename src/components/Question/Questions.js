@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import {
   getAllQuestions,
   copyQuestion,
-  deleteFolderQuestion
+  deleteFolderQuestion,
+  getFolderQuestions,
+  getQuestionSetQuestions
 } from "../../utils/api/question";
 import Highlighter from "react-highlight-words";
 import {
@@ -15,6 +17,7 @@ import {
 import Question from "../QuestionSet/Question";
 import Translations from "../QuestionTranslation/Translations";
 import Attributes from "./Attributes";
+import { useLocation } from "react-router-dom";
 
 const Questions = () => {
   const [loading, setLoading] = useState(false);
@@ -26,6 +29,7 @@ const Questions = () => {
   const [showQuestionTranslations, setShowQuestionTranslations] = useState(
     false
   );
+  const location = useLocation();
 
   useEffect(() => {
     fetchQuestions();
@@ -35,9 +39,21 @@ const Questions = () => {
   const fetchQuestions = async () => {
     setVisible(false);
     setLoading(true);
-    const results = await getAllQuestions();
-    setQuestions(results.data);
-    setLoading(false);
+    if (location && location.state && location.state.folder) {
+      const results = await getFolderQuestions(location.state.folder);
+      setQuestions(results.data);
+      setLoading(false);
+    } else if (location && location.state && location.state.questionSet) {
+      const results = await getQuestionSetQuestions(
+        location.state.questionSet.id
+      );
+      setQuestions(results.data);
+      setLoading(false);
+    } else {
+      const results = await getAllQuestions();
+      setQuestions(results.data);
+      setLoading(false);
+    }
   };
 
   const getColumnSearchProps = dataIndex => ({
@@ -224,6 +240,7 @@ const Questions = () => {
       <Translations
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
+        questions={questions}
       />
     );
   } else if (showQuestionTranslations) {

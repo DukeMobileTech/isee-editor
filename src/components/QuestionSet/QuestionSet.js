@@ -1,12 +1,9 @@
-import { Collapse, Divider, Icon } from "antd";
+import { Icon, Row, Button, Table } from "antd";
 import { DeleteButton, EditButton } from "../../utils/Utils";
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { deleteFolder, getFolders } from "../../utils/api/folder";
 
 import FolderForm from "./FolderForm";
-import FolderQuestions from "./FolderQuestions";
-
-const { Panel } = Collapse;
 
 const QuestionSet = props => {
   const questionSet = props.questionSet;
@@ -42,72 +39,66 @@ const QuestionSet = props => {
       });
   };
 
-  const genExtra = folder => (
-    <Fragment>
-      <EditButton
-        handleClick={event => {
-          event.stopPropagation();
-          handleEditFolder(folder);
-        }}
-      />
-      <Divider type="vertical" />
-      <DeleteButton
-        handleClick={event => {
-          event.stopPropagation();
-          if (
-            window.confirm(`Are you sure you want to delete ${folder.title}?`)
-          )
-            handleDeleteFolder(folder);
-        }}
-      />
-    </Fragment>
-  );
-
-  const View = () => {
-    if (showForm) {
-      return (
-        <FolderForm
-          folder={folder}
-          questionSet={questionSet}
-          fetchFolders={fetchFolders}
-          handleCancel={handleCancel}
-        />
-      );
-    } else {
-      return <CollapseView />;
-    }
-  };
-
-  const CollapseView = () => {
+  if (showForm) {
     return (
-      <Fragment>
-        <Collapse
-          accordion
-          expandIcon={({ isActive }) => (
-            <Icon type="caret-right" rotate={isActive ? 90 : 0} />
-          )}
-        >
-          {folders.map(folder => {
-            return (
-              <Panel
-                header={folder.title}
-                key={`${folder.id}`}
-                extra={genExtra(folder)}
-              >
-                <FolderQuestions folder={folder} />
-              </Panel>
-            );
-          })}
-        </Collapse>
-      </Fragment>
+      <FolderForm
+        folder={folder}
+        questionSet={questionSet}
+        fetchFolders={fetchFolders}
+        handleCancel={handleCancel}
+      />
     );
-  };
-
-  return (
-    <Fragment>
-      <View />
-    </Fragment>
-  );
+  } else {
+    return (
+      <Table size="small" dataSource={folders} rowKey={folder => folder.id}>
+        <Table.Column title="Folder Title" dataIndex="title" />
+        <Table.Column
+          title="Actions"
+          dataIndex="actions"
+          render={(text, folder) => (
+            <Row
+              type="flex"
+              justify="space-around"
+              align="middle"
+              key={`${folder.id}`}
+            >
+              <EditButton
+                handleClick={event => {
+                  event.stopPropagation();
+                  handleEditFolder(folder);
+                }}
+              />
+              <Button
+                type="primary"
+                title="Questions"
+                onClick={() => props.questionSubset(folder, null)}
+              >
+                <Icon type="database" />
+              </Button>
+              <Button
+                type="primary"
+                title="Translations"
+                onClick={() => props.handleFolderTranslations(folder)}
+              >
+                <Icon type="global" />
+              </Button>
+              <DeleteButton
+                handleClick={event => {
+                  event.stopPropagation();
+                  if (
+                    window.confirm(
+                      `Are you sure you want to delete ${folder.title}?`
+                    )
+                  )
+                    handleDeleteFolder(folder);
+                }}
+              />
+            </Row>
+          )}
+        />
+      </Table>
+    );
+  }
 };
 
 export default QuestionSet;
