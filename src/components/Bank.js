@@ -12,6 +12,8 @@ import { getInstructions } from "../utils/api/instruction";
 import { getOptionSets } from "../utils/api/option_set";
 import { OptionSetContext } from "../context/OptionSetContext";
 import { InstructionContext } from "../context/InstructionContext";
+import { getOptions } from "../utils/api/option";
+import { OptionContext } from "../context/OptionContext";
 
 const { TabPane } = Tabs;
 
@@ -22,6 +24,8 @@ const Bank = ({ match, history }) => {
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
   // eslint-disable-next-line no-unused-vars
   const [instructions, setInstructions] = useContext(InstructionContext);
+  // eslint-disable-next-line no-unused-vars
+  const [options, setOptions] = useContext(OptionContext);
 
   useEffect(() => {
     const fetchQuestionSets = async () => {
@@ -47,6 +51,15 @@ const Bank = ({ match, history }) => {
       setInstructions(results.data);
     };
     fetchInstructions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      const results = await getOptions();
+      setOptions(results.data);
+    };
+    fetchOptions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

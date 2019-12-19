@@ -8,14 +8,14 @@ import {
 } from "../../utils/Utils";
 import { Button, Col, Icon, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import { createOptionSet, updateOptionSet } from "../../utils/api/option_set";
 
 import ImportOption from "./ImportOption";
 import NewOption from "./NewOption";
 import { deleteOptionInOptionSet } from "../../utils/api/option_in_option_set";
-import { getInstructions } from "../../utils/api/instruction";
-import { getOptions } from "../../utils/api/option";
+import { OptionContext } from "../../context/OptionContext";
+import { InstructionContext } from "../../context/InstructionContext";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -25,30 +25,12 @@ const OptionSetSchema = Yup.object().shape({
 
 const OptionSetForm = props => {
   const optionSet = props.optionSet;
-  const [options, setOptions] = useState([]);
-  const [instructions, setInstructions] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [options, setOptions] = useContext(OptionContext);
+  // eslint-disable-next-line no-unused-vars
+  const [instructions, setInstructions] = useContext(InstructionContext);
   const [showNewOptionForm, setShowNewOptionForm] = useState(false);
   const [importOption, setImportOption] = useState(false);
-
-  useEffect(() => {
-    fetchOptions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetchInstructions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchOptions = async () => {
-    const results = await getOptions();
-    setOptions(results.data);
-  };
-
-  const fetchInstructions = async () => {
-    const results = await getInstructions();
-    setInstructions(results.data);
-  };
 
   const handleDeleteOption = oios => {
     if (oios.id) {

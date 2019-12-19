@@ -5,15 +5,13 @@ import {
   Icon,
   Input,
   Popconfirm,
-  Spin,
   Table,
   Row
 } from "antd";
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import {
   createInstruction,
   deleteInstruction,
-  getInstructions,
   updateInstruction
 } from "../../utils/api/instruction";
 import Highlighter from "react-highlight-words";
@@ -21,6 +19,7 @@ import Highlighter from "react-highlight-words";
 import { FolderAddButton } from "../../utils/Utils";
 import ReactQuill from "react-quill";
 import Translations from "./Translations";
+import { InstructionContext } from "../../context/InstructionContext";
 
 const EditableContext = React.createContext();
 
@@ -321,20 +320,9 @@ const EditableCell = props => {
 };
 
 const Instructions = () => {
-  const [loading, setLoading] = useState(true);
-  const [instructions, setInstructions] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [instructions, setInstructions] = useContext(InstructionContext);
   const [showTranslations, setShowTranslations] = useState(false);
-
-  useEffect(() => {
-    fetchInstructions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchInstructions = async () => {
-    const results = await getInstructions();
-    setLoading(false);
-    setInstructions(results.data);
-  };
 
   const TranslationButton = () => {
     if (showTranslations) {
@@ -362,10 +350,10 @@ const Instructions = () => {
   } else {
     const EditableFormTable = Form.create()(EditableTable);
     return (
-      <Spin spinning={loading}>
+      <Fragment>
         <TranslationButton />
         <EditableFormTable instructions={instructions} />
-      </Spin>
+      </Fragment>
     );
   }
 };

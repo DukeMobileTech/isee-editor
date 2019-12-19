@@ -6,7 +6,7 @@ import {
   RightSubmitButton
 } from "../../utils/Utils";
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import {
   createDisplayInstruction,
   updateDisplayInstruction
@@ -14,7 +14,7 @@ import {
 
 import { Form as AntForm } from "antd";
 import { CenteredH4 } from "../../utils/Styles";
-import { getInstructions } from "../../utils/api/instruction";
+import { InstructionContext } from "../../context/InstructionContext";
 
 const FormItem = AntForm.Item;
 
@@ -27,17 +27,8 @@ const DisplayInstructionForm = props => {
   const projectId = props.projectId;
   const displayInstruction = props.displayInstruction;
   const display = props.display;
-  const [instructions, setInstructions] = useState([]);
-
-  useEffect(() => {
-    fetchInstructions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchInstructions = async () => {
-    const results = await getInstructions();
-    setInstructions(results.data);
-  };
+  // eslint-disable-next-line no-unused-vars
+  const [instructions, setInstructions] = useContext(InstructionContext);
 
   return (
     <Formik

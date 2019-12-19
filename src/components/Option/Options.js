@@ -1,24 +1,15 @@
-import {
-  Button,
-  Divider,
-  Form,
-  Icon,
-  Input,
-  Popconfirm,
-  Spin,
-  Table
-} from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Divider, Form, Icon, Input, Popconfirm, Table } from "antd";
+import React, { useState, useContext, Fragment } from "react";
 import {
   createOption,
   deleteOption,
-  getOptions,
   updateOption
 } from "../../utils/api/option";
 
 import { FolderAddButton } from "../../utils/Utils";
 import Highlighter from "react-highlight-words";
 import Translations from "./Translations";
+import { OptionContext } from "../../context/OptionContext";
 
 const EditableContext = React.createContext();
 
@@ -288,20 +279,9 @@ const EditableCell = props => {
 };
 
 const Options = () => {
-  const [options, setOptions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [options, setOptions] = useContext(OptionContext);
   const [showTranslations, setShowTranslations] = useState(false);
-
-  useEffect(() => {
-    fetchOptions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchOptions = async () => {
-    const results = await getOptions();
-    setLoading(false);
-    setOptions(results.data);
-  };
 
   const OptionsTable = () => {
     const EditableFormTable = Form.create()(EditableTable);
@@ -338,10 +318,10 @@ const Options = () => {
   };
 
   return (
-    <Spin spinning={loading}>
+    <Fragment>
       <TButton />
       <View />
-    </Spin>
+    </Fragment>
   );
 };
 
