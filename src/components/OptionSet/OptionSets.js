@@ -6,18 +6,20 @@ import {
   copyOptionSet
 } from "../../utils/api/option_set";
 
-import { FolderAddButton, EditButton, DeleteButton } from "../../utils/Utils";
-import NewOptionSet from "./NewOptionSet";
+import {
+  EditButton,
+  DeleteButton,
+  TranslationAddButtons
+} from "../../utils/Utils";
 import Highlighter from "react-highlight-words";
-import EditOptionSet from "./EditOptionSet";
 import OptionSetTranslations from "./OptionSetTranslations";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
+import OptionSetForm from "./OptionSetForm";
 
 const OptionSets = () => {
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
   const [visible, setVisible] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [optionSet, setOptionSet] = useState(null);
   const [showTranslations, setShowTranslations] = useState(false);
@@ -25,20 +27,18 @@ const OptionSets = () => {
   const [instructions, setInstructions] = useContext(InstructionContext);
 
   const fetchOptionSet = async id => {
-    const result = await getOptionSet(id);
-    let index = optionSets.indexOf(optionSet);
-    optionSets.splice(index, 1, result.data);
-    setOptionSets([...optionSets]);
-    setShowEdit(false);
+    if (id) {
+      const result = await getOptionSet(id);
+      let index = optionSets.indexOf(optionSet);
+      optionSets.splice(index, 1, result.data);
+      setOptionSets([...optionSets]);
+    }
+    setVisible(false);
   };
 
-  const handleNewOptionSet = () => {
-    setVisible(true);
-  };
-
-  const handleEditOptionSet = os => {
+  const handleOptionSetForm = os => {
     setOptionSet(os);
-    setShowEdit(true);
+    setVisible(true);
   };
 
   const handleDeleteOptionSet = os => {
@@ -53,6 +53,8 @@ const OptionSets = () => {
     setOptionSet(os);
     setShowTranslations(true);
   };
+
+  const handleTranslationsClick = () => {};
 
   const handleCopyOptionSet = os => {
     copyOptionSet(os.id).then(response => {
@@ -213,7 +215,7 @@ const OptionSets = () => {
       width: "25%",
       render: (text, record) => (
         <Row gutter={8} type="flex" justify="space-around" align="middle">
-          <EditButton handleClick={() => handleEditOptionSet(record)} />
+          <EditButton handleClick={() => handleOptionSetForm(record)} />
           <Button
             type="primary"
             title="Translations"
@@ -251,25 +253,23 @@ const OptionSets = () => {
         showTranslations={showTranslations}
       />
     );
-  } else if (showEdit) {
+  } else if (visible) {
     return (
-      <EditOptionSet
-        visible={showEdit}
+      <OptionSetForm
+        visible={visible}
         optionSet={optionSet}
-        setVisible={setShowEdit}
+        setVisible={setVisible}
         fetchOptionSet={fetchOptionSet}
       />
     );
   } else {
     return (
       <Fragment>
-        <Row style={{ marginBottom: "5px" }}>
-          <FolderAddButton handleClick={handleNewOptionSet} />
-        </Row>
-        <NewOptionSet
-          visible={visible}
-          setVisible={setVisible}
-          fetchOptionSet={fetchOptionSet}
+        <TranslationAddButtons
+          handleTranslationClick={handleTranslationsClick}
+          handleAddClick={() =>
+            handleOptionSetForm({ option_in_option_sets: [] })
+          }
         />
         <Table columns={columns} dataSource={optionSets} rowKey={os => os.id} />
       </Fragment>
