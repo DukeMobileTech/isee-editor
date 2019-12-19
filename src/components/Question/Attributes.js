@@ -1,4 +1,4 @@
-import { Tag, Typography } from "antd";
+import { Tag, Typography, Row, Col } from "antd";
 
 import React, { useState, useContext, Fragment } from "react";
 import { InstructionContext } from "../../context/InstructionContext";
@@ -14,21 +14,27 @@ const Attributes = ({ question }) => {
 
   return (
     <Fragment>
-      <p style={{ margin: 1 }}>
-        <Text strong>Type: </Text>
-        {question.question_type}
-      </p>
+      <Row>
+        <Col span={6}>
+          <Typography.Text strong>Type:</Typography.Text>
+        </Col>
+        <Col span={18}>{question.question_type}</Col>
+      </Row>
       {question.instruction_id && (
-        <p style={{ margin: 1 }}>
-          <Text strong>Instructions: </Text>
-          <span
-            dangerouslySetInnerHTML={{
-              __html: instructions.find(
-                ins => ins.id === Number(question.instruction_id)
-              ).text
-            }}
-          />
-        </p>
+        <Row>
+          <Col span={6}>
+            <Typography.Text strong>Instructions: {} </Typography.Text>
+          </Col>
+          <Col span={18}>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: instructions.find(
+                  ins => ins.id === Number(question.instruction_id)
+                ).text
+              }}
+            />
+          </Col>
+        </Row>
       )}
       {options.length > 0 && (
         <p style={{ margin: 1 }}>

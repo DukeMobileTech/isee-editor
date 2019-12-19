@@ -169,6 +169,7 @@ const Questions = () => {
       width: "20%",
       render: (text, question) => (
         <Row gutter={8} type="flex" justify="space-around" align="middle">
+          <EditButton handleClick={() => handleEditQuestion(question)} />
           <Button
             type="primary"
             title="Translations"
@@ -176,7 +177,6 @@ const Questions = () => {
           >
             <Icon type="global" />
           </Button>
-          <EditButton handleClick={() => handleEditQuestion(question)} />
           <Button
             type="primary"
             title="Copy"

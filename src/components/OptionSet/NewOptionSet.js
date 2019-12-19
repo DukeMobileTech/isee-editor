@@ -11,9 +11,9 @@ const NewOptionSet = props => {
     option_in_option_sets: []
   };
 
-  const fetchOptionSet = () => {
+  const fetchOptionSet = id => {
     props.setVisible(false);
-    props.fetchOptionSets();
+    props.fetchOptionSet(id);
   };
 
   const onCancel = () => {

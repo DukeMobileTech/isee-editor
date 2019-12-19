@@ -1,7 +1,6 @@
-import { Row, Spin, Table, Typography, Icon, Input, Button } from "antd";
-import React, { useEffect, useState, Fragment } from "react";
+import { Row, Table, Typography, Icon, Input, Button } from "antd";
+import React, { useState, Fragment, useContext } from "react";
 import {
-  getOptionSets,
   getOptionSet,
   deleteOptionSet,
   copyOptionSet
@@ -12,26 +11,18 @@ import NewOptionSet from "./NewOptionSet";
 import Highlighter from "react-highlight-words";
 import EditOptionSet from "./EditOptionSet";
 import OptionSetTranslations from "./OptionSetTranslations";
+import { OptionSetContext } from "../../context/OptionSetContext";
+import { InstructionContext } from "../../context/InstructionContext";
 
 const OptionSets = () => {
-  const [loading, setLoading] = useState(true);
-  const [optionSets, setOptionSets] = useState([]);
+  const [optionSets, setOptionSets] = useContext(OptionSetContext);
   const [visible, setVisible] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [optionSet, setOptionSet] = useState(null);
   const [showTranslations, setShowTranslations] = useState(false);
-
-  useEffect(() => {
-    fetchOptionSets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchOptionSets = async () => {
-    const results = await getOptionSets();
-    setLoading(false);
-    setOptionSets(results.data);
-  };
+  // eslint-disable-next-line no-unused-vars
+  const [instructions, setInstructions] = useContext(InstructionContext);
 
   const fetchOptionSet = async id => {
     const result = await getOptionSet(id);
@@ -121,11 +112,11 @@ const OptionSets = () => {
           .toString()
           .toLowerCase()
           .includes(value.toLowerCase());
-      } else if (dataIndex === "instructions") {
+      } else if (dataIndex === "instruction_id") {
         if (record[dataIndex] === null) {
           return false;
         } else {
-          return record[dataIndex]
+          return instruction(record[dataIndex])
             .toString()
             .toLowerCase()
             .includes(value.toLowerCase());
@@ -157,6 +148,11 @@ const OptionSets = () => {
     setSearchText("");
   };
 
+  const instruction = id => {
+    const inst = instructions.find(ins => ins.id === Number(id));
+    return inst ? inst.text : "";
+  };
+
   const columns = [
     {
       title: "Title",
@@ -167,22 +163,27 @@ const OptionSets = () => {
     searchText === ""
       ? {
           title: "Instructions",
-          dataIndex: "instructions",
+          dataIndex: "instruction_id",
           width: "20%",
-          ...getColumnSearchProps("instructions"),
-          render: (text, os) => (
-            <span
-              dangerouslySetInnerHTML={{
-                __html: os.instructions
-              }}
-            />
-          )
+          ...getColumnSearchProps("instruction_id"),
+          render: (text, os) => {
+            return (
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: instruction(os.instruction_id)
+                }}
+              />
+            );
+          }
         }
       : {
           title: "Instructions",
-          dataIndex: "instructions",
+          dataIndex: "instruction_id",
           width: "25%",
-          ...getColumnSearchProps("instructions")
+          ...getColumnSearchProps("instruction_id"),
+          render: (text, os) => {
+            return <span>{instruction(os.instruction_id)}</span>;
+          }
         },
     {
       title: "Options",
@@ -212,6 +213,7 @@ const OptionSets = () => {
       width: "25%",
       render: (text, record) => (
         <Row gutter={8} type="flex" justify="space-around" align="middle">
+          <EditButton handleClick={() => handleEditOptionSet(record)} />
           <Button
             type="primary"
             title="Translations"
@@ -219,7 +221,6 @@ const OptionSets = () => {
           >
             <Icon type="global" />
           </Button>
-          <EditButton handleClick={() => handleEditOptionSet(record)} />
           <Button
             type="primary"
             title="Copy"
@@ -261,17 +262,17 @@ const OptionSets = () => {
     );
   } else {
     return (
-      <Spin spinning={loading}>
+      <Fragment>
         <Row style={{ marginBottom: "5px" }}>
           <FolderAddButton handleClick={handleNewOptionSet} />
         </Row>
         <NewOptionSet
           visible={visible}
           setVisible={setVisible}
-          fetchOptionSets={fetchOptionSets}
+          fetchOptionSet={fetchOptionSet}
         />
         <Table columns={columns} dataSource={optionSets} rowKey={os => os.id} />
-      </Spin>
+      </Fragment>
     );
   }
 };
