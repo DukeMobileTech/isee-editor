@@ -1,21 +1,21 @@
 import { Button, Divider, Form, Icon, Input, Popconfirm, Table } from "antd";
-import React, { useState, useContext, Fragment } from "react";
+import React, { useState, useContext } from "react";
 import {
   createOption,
   deleteOption,
   updateOption
 } from "../../utils/api/option";
 
-import { FolderAddButton } from "../../utils/Utils";
+import { TranslationAddButtons } from "../../utils/Utils";
 import Highlighter from "react-highlight-words";
-import Translations from "./Translations";
+import Translations from "../OptionTranslation/Translations";
 import { OptionContext } from "../../context/OptionContext";
 
 const EditableContext = React.createContext();
 
 const EditableTable = props => {
   const newId = "new";
-  const [data, setData] = useState(props.options);
+  const [options, setOptions] = useState(props.options);
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
 
@@ -147,7 +147,7 @@ const EditableTable = props => {
       if (error) {
         return;
       }
-      const newData = [...data];
+      const newData = [...options];
       const index = newData.findIndex(item => record.id === item.id);
       if (index > -1) {
         const item = newData[index];
@@ -158,7 +158,7 @@ const EditableTable = props => {
               ...result.data
             });
             setEditingKey("");
-            setData(newData);
+            setOptions(newData);
           });
         } else {
           newData.splice(index, 1, {
@@ -167,13 +167,13 @@ const EditableTable = props => {
           });
           updateOption(record.id, row).then(result => {
             setEditingKey("");
-            setData(newData);
+            setOptions(newData);
           });
         }
       } else {
         newData.push(row);
         setEditingKey("");
-        setData(newData);
+        setOptions(newData);
       }
     });
   };
@@ -205,13 +205,13 @@ const EditableTable = props => {
 
   const handleAdd = () => {
     setEditingKey(newId);
-    setData([{ id: newId, title: "", text: "" }, ...data]);
+    setOptions([{ id: newId, title: "", text: "" }, ...options]);
   };
 
   const handleDelete = record => {
     deleteOption(record.id).then(res => {
-      const dataSource = [...data];
-      setData(dataSource.filter(item => item.id !== record.id));
+      const dataSource = [...options];
+      setOptions(dataSource.filter(item => item.id !== record.id));
     });
   };
 
@@ -227,15 +227,21 @@ const EditableTable = props => {
 
   return (
     <EditableContext.Provider value={props.form}>
-      <FolderAddButton handleClick={handleAdd} /> <br />
+      <TranslationAddButtons
+        handleTranslationClick={() =>
+          props.setShowTranslations(!props.showTranslations)
+        }
+        handleAddClick={handleAdd}
+      />
       <Table
         components={components}
         bordered
-        dataSource={data}
-        rowKey={instruction => instruction.id}
+        dataSource={options}
+        rowKey={option => option.id}
         columns={tableColumns}
         pagination={{
-          onChange: cancel
+          onChange: cancel,
+          defaultPageSize: 25
         }}
       />
     </EditableContext.Provider>
@@ -283,46 +289,24 @@ const Options = () => {
   const [options, setOptions] = useContext(OptionContext);
   const [showTranslations, setShowTranslations] = useState(false);
 
-  const OptionsTable = () => {
+  if (showTranslations) {
+    return (
+      <Translations
+        options={options}
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+      />
+    );
+  } else {
     const EditableFormTable = Form.create()(EditableTable);
-    return <EditableFormTable options={options} />;
-  };
-
-  const View = () => {
-    if (showTranslations) {
-      return (
-        <Translations
-          options={options}
-          setShowTranslations={setShowTranslations}
-          showTranslations={showTranslations}
-        />
-      );
-    } else {
-      return <OptionsTable />;
-    }
-  };
-
-  const TButton = () => {
-    if (showTranslations) {
-      return null;
-    } else {
-      return (
-        <Button
-          type="primary"
-          onClick={() => setShowTranslations(!showTranslations)}
-        >
-          <Icon type="global" />
-        </Button>
-      );
-    }
-  };
-
-  return (
-    <Fragment>
-      <TButton />
-      <View />
-    </Fragment>
-  );
+    return (
+      <EditableFormTable
+        options={options}
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+      />
+    );
+  }
 };
 
 export default Options;

@@ -139,6 +139,9 @@ const InstructionsTranslationsTable = props => {
       rowKey={instruction => instruction.id}
       columns={columns}
       size="small"
+      pagination={{
+        defaultPageSize: 25
+      }}
     />
   );
 };

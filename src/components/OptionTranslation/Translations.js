@@ -12,9 +12,9 @@ import React, { useEffect, useState } from "react";
 
 import { DRow } from "../../utils/Utils";
 import Highlighter from "react-highlight-words";
-import OptionTranslations from "./OptionTranslations";
 import { getOptionTranslations } from "../../utils/api/option_translation";
 import { languages } from "../../utils/Constants";
+import OptionTranslations from "./OptionTranslations";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -128,6 +128,7 @@ const OptionsTable = props => {
       rowKey={option => option.id}
       columns={columns}
       size="small"
+      pagination={{ defaultPageSize: 25 }}
     />
   );
 };

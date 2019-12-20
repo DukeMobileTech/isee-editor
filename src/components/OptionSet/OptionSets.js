@@ -12,10 +12,11 @@ import {
   TranslationAddButtons
 } from "../../utils/Utils";
 import Highlighter from "react-highlight-words";
-import OptionSetTranslations from "./OptionSetTranslations";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
 import OptionSetForm from "./OptionSetForm";
+import Translations from "../OptionTranslation/Translations";
+import { OptionContext } from "../../context/OptionContext";
 
 const OptionSets = () => {
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
@@ -25,6 +26,9 @@ const OptionSets = () => {
   const [showTranslations, setShowTranslations] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [instructions, setInstructions] = useContext(InstructionContext);
+  // eslint-disable-next-line no-unused-vars
+  const [options, setOptions] = useContext(OptionContext);
+  const [optionsToTranslate, setOptionsToTranslate] = useState([]);
 
   const fetchOptionSet = async id => {
     if (id) {
@@ -49,12 +53,16 @@ const OptionSets = () => {
     });
   };
 
-  const handleShowTranslations = os => {
+  const handleShowOptionSetTranslations = os => {
     setOptionSet(os);
+    setOptionsToTranslate(os.option_in_option_sets.map(oios => oios.option));
     setShowTranslations(true);
   };
 
-  const handleTranslationsClick = () => {};
+  const handleShowAllTranslations = () => {
+    setOptionsToTranslate(options);
+    setShowTranslations(true);
+  };
 
   const handleCopyOptionSet = os => {
     copyOptionSet(os.id).then(response => {
@@ -219,7 +227,7 @@ const OptionSets = () => {
           <Button
             type="primary"
             title="Translations"
-            onClick={() => handleShowTranslations(record)}
+            onClick={() => handleShowOptionSetTranslations(record)}
           >
             <Icon type="global" />
           </Button>
@@ -247,8 +255,8 @@ const OptionSets = () => {
 
   if (showTranslations) {
     return (
-      <OptionSetTranslations
-        optionSet={optionSet}
+      <Translations
+        options={optionsToTranslate}
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
       />
@@ -266,12 +274,17 @@ const OptionSets = () => {
     return (
       <Fragment>
         <TranslationAddButtons
-          handleTranslationClick={handleTranslationsClick}
+          handleTranslationClick={handleShowAllTranslations}
           handleAddClick={() =>
             handleOptionSetForm({ option_in_option_sets: [] })
           }
         />
-        <Table columns={columns} dataSource={optionSets} rowKey={os => os.id} />
+        <Table
+          columns={columns}
+          dataSource={optionSets}
+          rowKey={os => os.id}
+          pagination={{ defaultPageSize: 25 }}
+        />
       </Fragment>
     );
   }

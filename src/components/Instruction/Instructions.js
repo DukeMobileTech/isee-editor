@@ -1,14 +1,5 @@
-import {
-  Button,
-  Divider,
-  Form,
-  Icon,
-  Input,
-  Popconfirm,
-  Table,
-  Row
-} from "antd";
-import React, { useState, Fragment, useContext } from "react";
+import { Button, Divider, Form, Icon, Input, Popconfirm, Table } from "antd";
+import React, { useState, useContext } from "react";
 import {
   createInstruction,
   deleteInstruction,
@@ -16,7 +7,7 @@ import {
 } from "../../utils/api/instruction";
 import Highlighter from "react-highlight-words";
 
-import { FolderAddButton } from "../../utils/Utils";
+import { TranslationAddButtons } from "../../utils/Utils";
 import ReactQuill from "react-quill";
 import Translations from "./Translations";
 import { InstructionContext } from "../../context/InstructionContext";
@@ -252,9 +243,12 @@ const EditableTable = props => {
 
   return (
     <EditableContext.Provider value={props.form}>
-      <Row style={{ marginBottom: "2px" }}>
-        <FolderAddButton handleClick={handleAdd} />
-      </Row>
+      <TranslationAddButtons
+        handleTranslationClick={() =>
+          props.setShowTranslations(!props.showTranslations)
+        }
+        handleAddClick={handleAdd}
+      />
       <Table
         components={components}
         bordered
@@ -262,7 +256,8 @@ const EditableTable = props => {
         rowKey={instruction => instruction.id}
         columns={tableColumns}
         pagination={{
-          onChange: cancel
+          onChange: cancel,
+          defaultPageSize: 25
         }}
       />
     </EditableContext.Provider>
@@ -324,21 +319,6 @@ const Instructions = () => {
   const [instructions, setInstructions] = useContext(InstructionContext);
   const [showTranslations, setShowTranslations] = useState(false);
 
-  const TranslationButton = () => {
-    if (showTranslations) {
-      return <Fragment />;
-    } else {
-      return (
-        <Button
-          type="primary"
-          onClick={() => setShowTranslations(!showTranslations)}
-        >
-          <Icon type="global" />
-        </Button>
-      );
-    }
-  };
-
   if (showTranslations) {
     return (
       <Translations
@@ -350,10 +330,11 @@ const Instructions = () => {
   } else {
     const EditableFormTable = Form.create()(EditableTable);
     return (
-      <Fragment>
-        <TranslationButton />
-        <EditableFormTable instructions={instructions} />
-      </Fragment>
+      <EditableFormTable
+        instructions={instructions}
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+      />
     );
   }
 };
