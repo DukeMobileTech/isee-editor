@@ -1,11 +1,6 @@
 import { Button, Col, Divider, Icon, List, Typography } from "antd";
-import {
-  DeleteButton,
-  EditButton,
-  FolderAddButton,
-  getItemStyle,
-  getListStyle
-} from "../../utils/Utils";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
+import { getItemStyle, getListStyle } from "../../utils/Utils";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import React, { useContext, useState } from "react";
 import {

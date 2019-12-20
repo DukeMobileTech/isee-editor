@@ -7,7 +7,7 @@ import {
 } from "../../utils/api/instruction";
 import Highlighter from "react-highlight-words";
 
-import { TranslationAddButtons } from "../../utils/Utils";
+import { TranslationAddButtons, TranslationButton } from "../../utils/Buttons";
 import ReactQuill from "react-quill";
 import Translations from "./Translations";
 import { InstructionContext } from "../../context/InstructionContext";
@@ -16,7 +16,7 @@ const EditableContext = React.createContext();
 
 const EditableTable = props => {
   const newId = "new";
-  const [data, setData] = useState(props.instructions);
+  const [instructions, setInstructions] = useState(props.instructions);
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
 
@@ -138,6 +138,10 @@ const EditableTable = props => {
               <Icon type="edit" />
             </Button>
             <Divider type="vertical" />
+            <TranslationButton
+              handleClick={() => handleShowInstructionTranslations(record)}
+            />
+            <Divider type="vertical" />
             <Popconfirm
               title={`Sure to delete ${record.title}?`}
               onConfirm={() => handleDelete(record)}
@@ -173,7 +177,7 @@ const EditableTable = props => {
       if (error) {
         return;
       }
-      const newData = [...data];
+      const newData = [...instructions];
       const index = newData.findIndex(item => record.id === item.id);
       if (index > -1) {
         const item = newData[index];
@@ -184,7 +188,7 @@ const EditableTable = props => {
               ...result.data
             });
             setEditingKey("");
-            setData(newData);
+            setInstructions(newData);
           });
         } else {
           newData.splice(index, 1, {
@@ -193,13 +197,13 @@ const EditableTable = props => {
           });
           updateInstruction(record.id, row).then(result => {
             setEditingKey("");
-            setData(newData);
+            setInstructions(newData);
           });
         }
       } else {
         newData.push(row);
         setEditingKey("");
-        setData(newData);
+        setInstructions(newData);
       }
     });
   };
@@ -231,28 +235,36 @@ const EditableTable = props => {
 
   const handleAdd = () => {
     setEditingKey(newId);
-    setData([{ id: newId, title: "", text: "" }, ...data]);
+    setInstructions([{ id: newId, title: "", text: "" }, ...instructions]);
   };
 
   const handleDelete = record => {
     deleteInstruction(record.id).then(res => {
-      const dataSource = [...data];
-      setData(dataSource.filter(item => item.id !== record.id));
+      const dataSource = [...instructions];
+      setInstructions(dataSource.filter(item => item.id !== record.id));
     });
+  };
+
+  const handleShowInstructionTranslations = record => {
+    props.setInstructionsToTranslate([record]);
+    props.setShowTranslations(!props.showTranslations);
+  };
+
+  const handleShowAllTranslations = () => {
+    props.setInstructionsToTranslate(instructions);
+    props.setShowTranslations(!props.showTranslations);
   };
 
   return (
     <EditableContext.Provider value={props.form}>
       <TranslationAddButtons
-        handleTranslationClick={() =>
-          props.setShowTranslations(!props.showTranslations)
-        }
+        handleTranslationClick={handleShowAllTranslations}
         handleAddClick={handleAdd}
       />
       <Table
         components={components}
         bordered
-        dataSource={data}
+        dataSource={instructions}
         rowKey={instruction => instruction.id}
         columns={tableColumns}
         pagination={{
@@ -318,11 +330,12 @@ const Instructions = () => {
   // eslint-disable-next-line no-unused-vars
   const [instructions, setInstructions] = useContext(InstructionContext);
   const [showTranslations, setShowTranslations] = useState(false);
+  const [instructionsToTranslate, setInstructionsToTranslate] = useState([]);
 
   if (showTranslations) {
     return (
       <Translations
-        instructions={instructions}
+        instructions={instructionsToTranslate}
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
       />
@@ -334,6 +347,7 @@ const Instructions = () => {
         instructions={instructions}
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
+        setInstructionsToTranslate={setInstructionsToTranslate}
       />
     );
   }

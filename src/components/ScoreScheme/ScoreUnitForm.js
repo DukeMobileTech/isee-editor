@@ -1,10 +1,7 @@
 import * as Yup from "yup";
 
-import {
-  AlertErrorMessage,
-  LeftCancelButton,
-  RightSubmitButton
-} from "../../utils/Utils";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import { AlertErrorMessage } from "../../utils/Utils";
 import { Form as AntForm, Col, Row, Select } from "antd";
 import { CenteredH3, CenteredH4 } from "../../utils/Styles";
 import { Field, FieldArray, Form, Formik } from "formik";

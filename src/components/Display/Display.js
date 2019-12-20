@@ -1,14 +1,4 @@
-import {
-  Button,
-  Col,
-  Icon,
-  Modal,
-  Row,
-  Spin,
-  Table,
-  Tabs,
-  Typography
-} from "antd";
+import { Button, Col, Icon, Row, Spin, Table, Tabs, Typography } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 
 import { CenteredH2 } from "../../utils/Styles";
@@ -18,10 +8,9 @@ import ExpandedQuestion from "../utils/ExpandedQuestion";
 import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
-import QuestionForm from "../QuestionSet/QuestionForm";
+import QuestionForm from "../Question/QuestionForm";
 import { deleteInstrumentQuestion } from "../../utils/api/instrument_question";
 import { getDisplay } from "../../utils/api/display";
-import { modalWidth } from "../../utils/Constants";
 import { reorderInstrumentQuestions } from "../../utils/api/instrument";
 import TableQuestions from "./TableQuestions";
 import { customExpandIcon } from "../../utils/Utils";
@@ -172,20 +161,13 @@ const Display = props => {
       );
     } else if (showQuestionModal) {
       return (
-        <Modal
-          title={instrumentQuestion.question.question_identifier}
-          visible={true}
-          footer={null}
-          destroyOnClose={true}
-          onCancel={handleCancelQuestion}
-          width={modalWidth}
-        >
-          <QuestionForm
-            question={instrumentQuestion.question}
-            folder={null}
-            fetchQuestions={handleCancelQuestion}
-          />
-        </Modal>
+        <QuestionForm
+          question={instrumentQuestion.question}
+          folder={null}
+          fetchQuestions={handleCancelQuestion}
+          visible={showQuestionModal}
+          setVisible={setShowQuestionModal}
+        />
       );
     } else if (showTables) {
       return (

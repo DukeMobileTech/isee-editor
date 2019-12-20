@@ -1,14 +1,8 @@
-import { Modal } from "antd";
-import QuestionForm from "../QuestionSet/QuestionForm";
+import QuestionForm from "../Question/QuestionForm";
 import React from "react";
 import { createInstrumentQuestion } from "../../utils/api/instrument_question";
-import { modalWidth } from "../../utils/Constants";
 
 const NewInstrumentQuestion = props => {
-  const onCancel = () => {
-    props.handleCancel();
-  };
-
   const onCreateQuestion = question => {
     const instrument_questions = [];
     instrument_questions.push({
@@ -30,21 +24,14 @@ const NewInstrumentQuestion = props => {
   };
 
   return (
-    <Modal
-      title="New Question"
+    <QuestionForm
       visible={props.visible}
-      footer={null}
-      destroyOnClose={true}
-      onCancel={onCancel}
-      width={modalWidth}
-    >
-      <QuestionForm
-        question={null}
-        folder={null}
-        fetchQuestions={onCreateQuestion}
-        returnValue={true}
-      />
-    </Modal>
+      setVisible={props.handleCancel}
+      question={null}
+      folder={null}
+      fetchQuestions={onCreateQuestion}
+      returnValue={true}
+    />
   );
 };
 

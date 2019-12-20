@@ -1,5 +1,5 @@
 import { Collapse, Divider } from "antd";
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Utils";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
 import React, { Fragment, useState } from "react";
 
 import ScoreUnits from "./ScoreUnits";

@@ -6,7 +6,7 @@ import {
   updateOption
 } from "../../utils/api/option";
 
-import { TranslationAddButtons } from "../../utils/Utils";
+import { TranslationAddButtons, TranslationButton } from "../../utils/Buttons";
 import Highlighter from "react-highlight-words";
 import Translations from "../OptionTranslation/Translations";
 import { OptionContext } from "../../context/OptionContext";
@@ -122,6 +122,10 @@ const EditableTable = props => {
               <Icon type="edit" />
             </Button>
             <Divider type="vertical" />
+            <TranslationButton
+              handleClick={() => handleShowOptionTranslations(record)}
+            />
+            <Divider type="vertical" />
             <Popconfirm
               title={`Sure to delete ${record.title}?`}
               onConfirm={() => handleDelete(record)}
@@ -225,12 +229,20 @@ const EditableTable = props => {
     setSearchText("");
   };
 
+  const handleShowOptionTranslations = record => {
+    props.setOptionsToTranslate([record]);
+    props.setShowTranslations(!props.showTranslations);
+  };
+
+  const handleShowAllTranslations = () => {
+    props.setOptionsToTranslate(options);
+    props.setShowTranslations(!props.showTranslations);
+  };
+
   return (
     <EditableContext.Provider value={props.form}>
       <TranslationAddButtons
-        handleTranslationClick={() =>
-          props.setShowTranslations(!props.showTranslations)
-        }
+        handleTranslationClick={handleShowAllTranslations}
         handleAddClick={handleAdd}
       />
       <Table
@@ -288,11 +300,12 @@ const Options = () => {
   // eslint-disable-next-line no-unused-vars
   const [options, setOptions] = useContext(OptionContext);
   const [showTranslations, setShowTranslations] = useState(false);
+  const [optionsToTranslate, setOptionsToTranslate] = useState([]);
 
   if (showTranslations) {
     return (
       <Translations
-        options={options}
+        options={optionsToTranslate}
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
       />
@@ -304,6 +317,7 @@ const Options = () => {
         options={options}
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
+        setOptionsToTranslate={setOptionsToTranslate}
       />
     );
   }

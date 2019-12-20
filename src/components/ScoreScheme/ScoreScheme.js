@@ -1,6 +1,6 @@
 import { CenteredH1, CenteredH3 } from "../../utils/Styles";
 import { Collapse, Divider } from "antd";
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Utils";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
 import React, { Fragment, useEffect, useState } from "react";
 import { deleteDomain, getDomains } from "../../utils/api/domain";
 

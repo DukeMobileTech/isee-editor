@@ -1,10 +1,6 @@
 import * as Yup from "yup";
 
-import {
-  AlertErrorMessage,
-  LeftCancelButton,
-  RightSubmitButton
-} from "../../../utils/Utils";
+import { LeftCancelButton, RightSubmitButton } from "../../../utils/Buttons";
 import { Field, Form, Formik } from "formik";
 import React, { useContext } from "react";
 import { createDisplay, updateDisplay } from "../../../utils/api/display";
@@ -12,6 +8,7 @@ import { createDisplay, updateDisplay } from "../../../utils/api/display";
 import { Form as AntForm } from "antd";
 import { CenteredH4 } from "../../../utils/Styles";
 import { InstrumentSectionContext } from "../../../context/InstrumentSectionContext";
+import { AlertErrorMessage } from "../../../utils/Utils";
 
 const FormItem = AntForm.Item;
 

@@ -5,7 +5,7 @@ import {
   getQuestionSets
 } from "../../utils/api/question_set";
 
-import { TranslationAddButtons } from "../../utils/Utils";
+import { TranslationAddButtons } from "../../utils/Buttons";
 import FolderForm from "./FolderForm";
 import QuestionSet from "./QuestionSet";
 import { QuestionSetContext } from "../../context/QuestionSetContext";

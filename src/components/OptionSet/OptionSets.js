@@ -9,8 +9,10 @@ import {
 import {
   EditButton,
   DeleteButton,
-  TranslationAddButtons
-} from "../../utils/Utils";
+  TranslationAddButtons,
+  TranslationButton,
+  CopyButton
+} from "../../utils/Buttons";
 import Highlighter from "react-highlight-words";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
@@ -224,20 +226,10 @@ const OptionSets = () => {
       render: (text, record) => (
         <Row gutter={8} type="flex" justify="space-around" align="middle">
           <EditButton handleClick={() => handleOptionSetForm(record)} />
-          <Button
-            type="primary"
-            title="Translations"
-            onClick={() => handleShowOptionSetTranslations(record)}
-          >
-            <Icon type="global" />
-          </Button>
-          <Button
-            type="primary"
-            title="Copy"
-            onClick={() => handleCopyOptionSet(record)}
-          >
-            <Icon type="copy" />
-          </Button>
+          <TranslationButton
+            handleClick={() => handleShowOptionSetTranslations(record)}
+          />
+          <CopyButton handleClick={() => handleCopyOptionSet(record)} />
           <DeleteButton
             handleClick={() => {
               if (

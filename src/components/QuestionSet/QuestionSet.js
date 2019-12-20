@@ -1,5 +1,9 @@
 import { Icon, Row, Button, Table } from "antd";
-import { DeleteButton, EditButton } from "../../utils/Utils";
+import {
+  DeleteButton,
+  EditButton,
+  TranslationButton
+} from "../../utils/Buttons";
 import React, { useState } from "react";
 import { deleteFolder, getFolders } from "../../utils/api/folder";
 
@@ -75,13 +79,9 @@ const QuestionSet = props => {
               >
                 <Icon type="database" />
               </Button>
-              <Button
-                type="primary"
-                title="Translations"
-                onClick={() => props.handleFolderTranslations(folder)}
-              >
-                <Icon type="global" />
-              </Button>
+              <TranslationButton
+                handleClick={() => props.handleFolderTranslations(folder)}
+              />
               <DeleteButton
                 handleClick={event => {
                   event.stopPropagation();

@@ -1,4 +1,4 @@
-import { EditButton, DeleteButton } from "../../utils/Utils";
+import { EditButton, DeleteButton } from "../../utils/Buttons";
 import React, { Fragment } from "react";
 import { Divider } from "antd";
 

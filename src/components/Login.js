@@ -5,7 +5,8 @@ import AppFooter from "./AppFooter";
 import AppHeader from "./AppHeader";
 import { Layout, Form as AntForm } from "antd";
 import { MainContent, CenteredH2 } from "../utils/Styles";
-import { AlertErrorMessage, CenteredSubmitButton } from "../utils/Utils";
+import { CenteredSubmitButton } from "../utils/Buttons";
+import { AlertErrorMessage } from "../utils/Utils";
 import axios from "axios";
 
 const { Content } = Layout;

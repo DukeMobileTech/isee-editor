@@ -12,12 +12,14 @@ import {
   TranslationAddButtons,
   EditButton,
   DeleteButton,
-  customExpandIcon
-} from "../../utils/Utils";
-import Question from "../QuestionSet/Question";
+  TranslationButton,
+  CopyButton
+} from "../../utils/Buttons";
+import { customExpandIcon } from "../../utils/Utils";
 import Translations from "../QuestionTranslation/Translations";
 import Attributes from "./Attributes";
 import { useLocation } from "react-router-dom";
+import QuestionForm from "./QuestionForm";
 
 const Questions = () => {
   const [loading, setLoading] = useState(false);
@@ -170,20 +172,10 @@ const Questions = () => {
       render: (text, question) => (
         <Row gutter={8} type="flex" justify="space-around" align="middle">
           <EditButton handleClick={() => handleEditQuestion(question)} />
-          <Button
-            type="primary"
-            title="Translations"
-            onClick={() => handleShowTranslations(question)}
-          >
-            <Icon type="global" />
-          </Button>
-          <Button
-            type="primary"
-            title="Copy"
-            onClick={() => handleCopyQuestion(question)}
-          >
-            <Icon type="copy" />
-          </Button>
+          <TranslationButton
+            handleClick={() => handleShowTranslations(question)}
+          />
+          <CopyButton handleClick={() => handleCopyQuestion(question)} />
           <DeleteButton
             handleClick={() => {
               if (
@@ -235,7 +227,17 @@ const Questions = () => {
     setShowTranslations(!showTranslations);
   };
 
-  if (showTranslations) {
+  if (visible) {
+    return (
+      <QuestionForm
+        visible={visible}
+        setVisible={setVisible}
+        question={question}
+        folder={null}
+        fetchQuestions={fetchQuestions}
+      />
+    );
+  } else if (showTranslations) {
     return (
       <Translations
         setShowTranslations={setShowTranslations}
@@ -254,13 +256,6 @@ const Questions = () => {
   } else {
     return (
       <Spin spinning={loading}>
-        <Question
-          visible={visible}
-          setVisible={setVisible}
-          question={question}
-          folder={null}
-          fetchQuestions={fetchQuestions}
-        />
         <TranslationAddButtons
           handleTranslationClick={handleTranslationsClick}
           handleAddClick={handleQuestionAdd}

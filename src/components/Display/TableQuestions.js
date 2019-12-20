@@ -4,10 +4,9 @@ import {
   LeftCancelButton,
   AddButton,
   RightSubmitButton,
-  AlertErrorMessage,
-  DeleteButton,
-  DRow
-} from "../../utils/Utils";
+  DeleteButton
+} from "../../utils/Buttons";
+import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Modal, Form as AntForm, Table, Col, Typography } from "antd";
 import { modalWidth } from "../../utils/Constants";
 import { Field, Form, Formik } from "formik";

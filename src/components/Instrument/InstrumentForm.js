@@ -1,10 +1,7 @@
 import * as Yup from "yup";
 
-import {
-  AlertErrorMessage,
-  LeftCancelButton,
-  RightSubmitButton
-} from "../../utils/Utils";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import { AlertErrorMessage } from "../../utils/Utils";
 import { Field, Form, Formik } from "formik";
 import React, { useContext } from "react";
 import { createInstrument, updateInstrument } from "../../utils/api/instrument";
@@ -80,7 +77,12 @@ const InstrumentForm = props => {
             <AlertErrorMessage name="title" type="error" />
           </FormItem>
           <FormItem>
-            <Field className="ant-input" name="language" component="select">
+            <Field
+              className="ant-input"
+              name="language"
+              placeholder="Select language"
+              component="select"
+            >
               <option></option>
               {languages.map(language => {
                 return (
@@ -97,7 +99,12 @@ const InstrumentForm = props => {
             <AlertErrorMessage name="language" type="error" />
           </FormItem>
           <FormItem>
-            <Field className="ant-input" name="project_id" component="select">
+            <Field
+              className="ant-input"
+              name="project_id"
+              placeholder="Select project"
+              component="select"
+            >
               <option></option>
               {projects.map(project => {
                 return (

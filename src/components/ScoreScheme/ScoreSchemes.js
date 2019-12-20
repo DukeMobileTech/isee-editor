@@ -1,4 +1,4 @@
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Utils";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
 import { Divider, Table } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import {

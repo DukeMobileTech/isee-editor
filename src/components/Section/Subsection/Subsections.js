@@ -4,7 +4,7 @@ import {
   EditButton,
   FolderAddButton,
   LeftCancelButton
-} from "../../../utils/Utils";
+} from "../../../utils/Buttons";
 import React, { Fragment, useContext, useState } from "react";
 
 import { CenteredH3 } from "../../../utils/Styles";

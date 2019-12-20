@@ -1,11 +1,7 @@
 import * as Yup from "yup";
 
-import {
-  AlertErrorMessage,
-  DRow,
-  DeleteButton,
-  RightSubmitButton
-} from "../../utils/Utils";
+import { DeleteButton, RightSubmitButton } from "../../utils/Buttons";
+import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Button, Col, Icon, Select, Typography, Modal } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useState, useContext } from "react";

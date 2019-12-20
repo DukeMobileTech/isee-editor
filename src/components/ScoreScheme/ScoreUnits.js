@@ -1,4 +1,4 @@
-import { DeleteButton, FolderAddButton, ViewButton } from "../../utils/Utils";
+import { DeleteButton, FolderAddButton, ViewButton } from "../../utils/Buttons";
 import { Divider, Table } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import { deleteScoreUnit, getScoreUnits } from "../../utils/api/score_unit";
