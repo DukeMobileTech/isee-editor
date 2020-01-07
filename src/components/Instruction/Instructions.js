@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Icon, Input, Popconfirm, Table } from "antd";
+import { Button, Form, Icon, Input } from "antd";
 import React, { useState, useContext } from "react";
 import {
   createInstruction,
@@ -6,13 +6,9 @@ import {
   updateInstruction
 } from "../../utils/api/instruction";
 import Highlighter from "react-highlight-words";
-
-import { TranslationAddButtons, TranslationButton } from "../../utils/Buttons";
-import ReactQuill from "react-quill";
-import Translations from "./Translations";
+import { CellActions, EditableProvider } from "../utils/EditableCell";
+import Translations from "../InstructionTranslation/Translations";
 import { InstructionContext } from "../../context/InstructionContext";
-
-const EditableContext = React.createContext();
 
 const EditableTable = props => {
   const newId = "new";
@@ -106,53 +102,18 @@ const EditableTable = props => {
     {
       title: "Actions",
       dataIndex: "actions",
-      render: (text, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <EditableContext.Consumer>
-              {form => (
-                <Button
-                  type="primary"
-                  onClick={() => save(form, record)}
-                  style={{ marginRight: 8 }}
-                >
-                  Save
-                </Button>
-              )}
-            </EditableContext.Consumer>
-            <Popconfirm
-              title="Sure to cancel?"
-              onConfirm={() => cancel(record.id)}
-            >
-              <Button>Cancel</Button>
-            </Popconfirm>
-          </span>
-        ) : (
-          <span>
-            <Button
-              type="primary"
-              disabled={editingKey !== ""}
-              onClick={() => edit(record.id)}
-            >
-              <Icon type="edit" />
-            </Button>
-            <Divider type="vertical" />
-            <TranslationButton
-              handleClick={() => handleShowInstructionTranslations(record)}
-            />
-            <Divider type="vertical" />
-            <Popconfirm
-              title={`Sure to delete ${record.title}?`}
-              onConfirm={() => handleDelete(record)}
-            >
-              <Button type="danger">
-                <Icon type="delete" />
-              </Button>
-            </Popconfirm>
-          </span>
-        );
-      }
+      render: (text, record) => (
+        <CellActions
+          record={record}
+          editingKey={editingKey}
+          isEditing={isEditing}
+          save={save}
+          cancel={cancel}
+          edit={edit}
+          handleDelete={handleDelete}
+          handleTranslations={handleShowInstructionTranslations}
+        />
+      )
     }
   ];
 
@@ -212,27 +173,6 @@ const EditableTable = props => {
     setEditingKey(key);
   };
 
-  const components = {
-    body: {
-      cell: EditableCell
-    }
-  };
-
-  const tableColumns = columns.map(col => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: record => ({
-        record,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record)
-      })
-    };
-  });
-
   const handleAdd = () => {
     setEditingKey(newId);
     setInstructions([{ id: newId, title: "", text: "" }, ...instructions]);
@@ -256,74 +196,16 @@ const EditableTable = props => {
   };
 
   return (
-    <EditableContext.Provider value={props.form}>
-      <TranslationAddButtons
-        handleTranslationClick={handleShowAllTranslations}
-        handleAddClick={handleAdd}
-      />
-      <Table
-        components={components}
-        bordered
-        dataSource={instructions}
-        rowKey={instruction => instruction.id}
-        columns={tableColumns}
-        pagination={{
-          onChange: cancel,
-          defaultPageSize: 25
-        }}
-      />
-    </EditableContext.Provider>
+    <EditableProvider
+      form={props.form}
+      columns={columns}
+      data={instructions}
+      isEditing={isEditing}
+      handleShowAllTranslations={handleShowAllTranslations}
+      handleAdd={handleAdd}
+      cancel={cancel}
+    />
   );
-};
-
-const EditableCell = props => {
-  const renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      index,
-      children,
-      ...restProps
-    } = props;
-
-    return (
-      <td {...restProps}>
-        {editing ? (
-          dataIndex === "title" ? (
-            <Form.Item style={{ margin: 0 }}>
-              {getFieldDecorator(dataIndex, {
-                rules: [
-                  {
-                    required: true,
-                    message: `Please Input ${title}!`
-                  }
-                ],
-                initialValue: record[dataIndex]
-              })(<Input.TextArea />)}
-            </Form.Item>
-          ) : (
-            <Form.Item style={{ margin: 0 }}>
-              {getFieldDecorator(dataIndex, {
-                rules: [
-                  {
-                    required: true,
-                    message: `Please Input ${title}!`
-                  }
-                ],
-                initialValue: record[dataIndex]
-              })(<ReactQuill value={record[dataIndex]} />)}
-            </Form.Item>
-          )
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
 };
 
 const Instructions = () => {

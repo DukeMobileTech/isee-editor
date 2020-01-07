@@ -1,23 +1,10 @@
-import {
-  Button,
-  Col,
-  Icon,
-  Input,
-  Select,
-  Spin,
-  Table,
-  Typography
-} from "antd";
+import { Button, Icon, Input, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
-import { DRow } from "../../utils/Utils";
 import Highlighter from "react-highlight-words";
 import { getOptionTranslations } from "../../utils/api/option_translation";
-import { languages } from "../../utils/Constants";
 import OptionTranslations from "./OptionTranslations";
-
-const { Option } = Select;
-const { Text } = Typography;
+import { TranslationsHeader } from "../utils/TranslationsHeader";
 
 const OptionsTable = props => {
   const options = props.options;
@@ -85,13 +72,28 @@ const OptionsTable = props => {
       editable: true,
       ...getColumnSearchProps("identifier")
     },
-    {
-      title: "Text",
-      dataIndex: "text",
-      width: "30%",
-      editable: true,
-      ...getColumnSearchProps("text")
-    },
+    searchText === ""
+      ? {
+          title: "Text",
+          dataIndex: "text",
+          width: "30%",
+          editable: true,
+          ...getColumnSearchProps("text"),
+          render: (text, option) => (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: option.text
+              }}
+            />
+          )
+        }
+      : {
+          title: "Text",
+          dataIndex: "text",
+          width: "30%",
+          editable: true,
+          ...getColumnSearchProps("text")
+        },
     {
       title: "Translations",
       dataIndex: "translations",
@@ -155,34 +157,10 @@ const Translations = props => {
 
   return (
     <Spin spinning={loading}>
-      <DRow>
-        <Col span={12}>
-          <Button
-            type="primary"
-            onClick={() => props.setShowTranslations(!props.showTranslations)}
-          >
-            <Icon type="rollback" />
-          </Button>
-        </Col>
-        <Col span={6}>
-          <Text strong>Translation Language</Text>
-        </Col>
-        <Col span={6}>
-          <Select style={{ width: 120 }} onChange={handleChange}>
-            {languages.map(language => {
-              return (
-                <Option
-                  key={language.code}
-                  name="language"
-                  value={language.code}
-                >
-                  {language.name}
-                </Option>
-              );
-            })}
-          </Select>
-        </Col>
-      </DRow>
+      <TranslationsHeader
+        handleClick={() => props.setShowTranslations(!props.showTranslations)}
+        handleChange={handleChange}
+      />
       <OptionsTable
         options={options}
         translations={translations}

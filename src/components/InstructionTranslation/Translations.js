@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  Spin,
-  Col,
-  Button,
-  Icon,
-  Select,
-  Typography,
-  Table,
-  Input
-} from "antd";
-import { DRow } from "../../utils/Utils";
-import { languages } from "../../utils/Constants";
+import { Spin, Button, Icon, Table, Input } from "antd";
 import { getInstructionTranslations } from "../../utils/api/instruction_translation";
 import Highlighter from "react-highlight-words";
-import InstructionTranslations from "./InstructionsTranslations";
+import InstructionTranslations from "./InstructionTranslations";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
 
-const InstructionsTranslationsTable = props => {
+const InstructionsTable = props => {
   const instructions = props.instructions;
   const translations = props.translations;
   const [searchText, setSearchText] = useState("");
@@ -77,7 +67,7 @@ const InstructionsTranslationsTable = props => {
     {
       title: "Title",
       dataIndex: "title",
-      width: "20%",
+      width: "15%",
       editable: true,
       ...getColumnSearchProps("title")
     },
@@ -106,7 +96,7 @@ const InstructionsTranslationsTable = props => {
     {
       title: "Translations",
       dataIndex: "translations",
-      width: "50%",
+      width: "55%",
       render: (text, instruction) => {
         const instructionTranslations = translations.filter(
           translation => translation.instruction_id === instruction.id
@@ -168,35 +158,11 @@ const Translations = props => {
 
   return (
     <Spin spinning={loading}>
-      <DRow>
-        <Col span={12}>
-          <Button
-            type="primary"
-            onClick={() => props.setShowTranslations(!props.showTranslations)}
-          >
-            <Icon type="rollback" />
-          </Button>
-        </Col>
-        <Col span={6}>
-          <Typography.Text strong>Translation Language</Typography.Text>
-        </Col>
-        <Col span={6}>
-          <Select style={{ width: 120 }} onChange={handleChange}>
-            {languages.map(language => {
-              return (
-                <Select.Option
-                  key={language.code}
-                  name="language"
-                  value={language.code}
-                >
-                  {language.name}
-                </Select.Option>
-              );
-            })}
-          </Select>
-        </Col>
-      </DRow>
-      <InstructionsTranslationsTable
+      <TranslationsHeader
+        handleClick={() => props.setShowTranslations(!props.showTranslations)}
+        handleChange={handleChange}
+      />
+      <InstructionsTable
         instructions={instructions}
         translations={translations}
         language={language}

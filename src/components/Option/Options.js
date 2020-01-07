@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Icon, Input, Popconfirm, Table } from "antd";
+import { Button, Form, Icon, Input } from "antd";
 import React, { useState, useContext } from "react";
 import {
   createOption,
@@ -6,12 +6,10 @@ import {
   updateOption
 } from "../../utils/api/option";
 
-import { TranslationAddButtons, TranslationButton } from "../../utils/Buttons";
 import Highlighter from "react-highlight-words";
 import Translations from "../OptionTranslation/Translations";
 import { OptionContext } from "../../context/OptionContext";
-
-const EditableContext = React.createContext();
+import { CellActions, EditableProvider } from "../utils/EditableCell";
 
 const EditableTable = props => {
   const newId = "new";
@@ -80,63 +78,43 @@ const EditableTable = props => {
       editable: true,
       ...getColumnSearchProps("identifier")
     },
-    {
-      title: "Text",
-      dataIndex: "text",
-      width: "55%",
-      editable: true,
-      ...getColumnSearchProps("text")
-    },
+    searchText === ""
+      ? {
+          title: "Text",
+          dataIndex: "text",
+          width: "55%",
+          editable: true,
+          ...getColumnSearchProps("text"),
+          render: (text, option) => (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: option.text
+              }}
+            />
+          )
+        }
+      : {
+          title: "Text",
+          dataIndex: "text",
+          width: "55%",
+          editable: true,
+          ...getColumnSearchProps("text")
+        },
     {
       title: "Actions",
       dataIndex: "actions",
-      render: (text, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <EditableContext.Consumer>
-              {form => (
-                <Button
-                  type="primary"
-                  onClick={() => save(form, record)}
-                  style={{ marginRight: 8 }}
-                >
-                  Save
-                </Button>
-              )}
-            </EditableContext.Consumer>
-            <Popconfirm
-              title="Sure to cancel?"
-              onConfirm={() => cancel(record.id)}
-            >
-              <Button>Cancel</Button>
-            </Popconfirm>
-          </span>
-        ) : (
-          <span>
-            <Button
-              type="primary"
-              disabled={editingKey !== ""}
-              onClick={() => edit(record.id)}
-            >
-              <Icon type="edit" />
-            </Button>
-            <Divider type="vertical" />
-            <TranslationButton
-              handleClick={() => handleShowOptionTranslations(record)}
-            />
-            <Divider type="vertical" />
-            <Popconfirm
-              title={`Sure to delete ${record.title}?`}
-              onConfirm={() => handleDelete(record)}
-            >
-              <Button type="danger">
-                <Icon type="delete" />
-              </Button>
-            </Popconfirm>
-          </span>
-        );
-      }
+      render: (text, record) => (
+        <CellActions
+          record={record}
+          editingKey={editingKey}
+          isEditing={isEditing}
+          save={save}
+          cancel={cancel}
+          edit={edit}
+          handleDelete={handleDelete}
+          handleTranslations={handleShowOptionTranslations}
+        />
+      )
     }
   ];
 
@@ -186,27 +164,6 @@ const EditableTable = props => {
     setEditingKey(key);
   };
 
-  const components = {
-    body: {
-      cell: EditableCell
-    }
-  };
-
-  const tableColumns = columns.map(col => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: record => ({
-        record,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record)
-      })
-    };
-  });
-
   const handleAdd = () => {
     setEditingKey(newId);
     setOptions([{ id: newId, title: "", text: "" }, ...options]);
@@ -240,60 +197,16 @@ const EditableTable = props => {
   };
 
   return (
-    <EditableContext.Provider value={props.form}>
-      <TranslationAddButtons
-        handleTranslationClick={handleShowAllTranslations}
-        handleAddClick={handleAdd}
-      />
-      <Table
-        components={components}
-        bordered
-        dataSource={options}
-        rowKey={option => option.id}
-        columns={tableColumns}
-        pagination={{
-          onChange: cancel,
-          defaultPageSize: 25
-        }}
-      />
-    </EditableContext.Provider>
+    <EditableProvider
+      form={props.form}
+      columns={columns}
+      data={options}
+      isEditing={isEditing}
+      handleShowAllTranslations={handleShowAllTranslations}
+      handleAdd={handleAdd}
+      cancel={cancel}
+    />
   );
-};
-
-const EditableCell = props => {
-  const renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      index,
-      children,
-      ...restProps
-    } = props;
-
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`
-                }
-              ],
-              initialValue: record[dataIndex]
-            })(<Input.TextArea />)}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
 };
 
 const Options = () => {

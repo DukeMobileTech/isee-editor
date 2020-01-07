@@ -1,10 +1,10 @@
 import { Form } from "antd";
 import React, { useState } from "react";
 import {
-  createOptionTranslation,
-  deleteOptionTranslation,
-  updateOptionTranslation
-} from "../../utils/api/option_translation";
+  createInstructionTranslation,
+  updateInstructionTranslation,
+  deleteInstructionTranslation
+} from "../../utils/api/instruction_translation";
 import {
   CellActions,
   EditableTranslationsProvider
@@ -12,7 +12,7 @@ import {
 
 const EditableTable = props => {
   const language = props.language;
-  const option = props.option;
+  const instruction = props.instruction;
   const [translations, setTranslations] = useState(props.translations);
   const [editingKey, setEditingKey] = useState("");
   const newId = "new";
@@ -63,9 +63,9 @@ const EditableTable = props => {
       if (index > -1) {
         const item = newData[index];
         if (record.id === newId) {
-          row.option_id = option.id;
+          row.instruction_id = instruction.id;
           row.language = language;
-          createOptionTranslation(row).then(result => {
+          createInstructionTranslation(row).then(result => {
             newData.splice(index, 1, {
               ...item,
               ...result.data
@@ -78,7 +78,7 @@ const EditableTable = props => {
             ...item,
             ...row
           });
-          updateOptionTranslation(record.id, row).then(result => {
+          updateInstructionTranslation(record.id, row).then(result => {
             setEditingKey("");
             setTranslations(newData);
           });
@@ -105,7 +105,7 @@ const EditableTable = props => {
       translations.splice(translations.indexOf(record), 1);
       setTranslations([...translations]);
     } else {
-      deleteOptionTranslation(record.id).then(res => {
+      deleteInstructionTranslation(record.id).then(res => {
         const dataSource = [...translations];
         setTranslations(dataSource.filter(item => item.id !== record.id));
       });
@@ -124,15 +124,15 @@ const EditableTable = props => {
   );
 };
 
-const OptionTranslations = props => {
+const InstructionTranslations = props => {
   const EditableFormTable = Form.create()(EditableTable);
   return (
     <EditableFormTable
-      option={props.option}
+      instruction={props.instruction}
       translations={props.translations}
       language={props.language}
     />
   );
 };
 
-export default OptionTranslations;
+export default InstructionTranslations;
