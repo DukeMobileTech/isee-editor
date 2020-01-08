@@ -160,8 +160,14 @@ const OptionSetForm = props => {
                     <Select
                       {...field}
                       showSearch
+                      allowClear
                       optionFilterProp="children"
-                      onChange={value => setFieldValue("instruction_id", value)}
+                      onChange={value => {
+                        if (value === undefined) {
+                          value = null;
+                        }
+                        setFieldValue("instruction_id", value);
+                      }}
                       filterOption={(input, option) =>
                         option.props.children &&
                         option.props.children

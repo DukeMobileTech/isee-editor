@@ -281,8 +281,14 @@ const QuestionForm = props => {
                     <Select
                       {...field}
                       showSearch
+                      allowClear
                       optionFilterProp="children"
-                      onChange={value => setFieldValue("instruction_id", value)}
+                      onChange={value => {
+                        if (value === undefined) {
+                          value = null;
+                        }
+                        setFieldValue("instruction_id", value);
+                      }}
                       filterOption={(input, option) =>
                         option.props.children &&
                         option.props.children
@@ -290,7 +296,6 @@ const QuestionForm = props => {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      <Option value=""></Option>
                       {instructions.map(instruction => {
                         return (
                           <Option
