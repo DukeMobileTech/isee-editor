@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Spin,
-  Col,
-  Button,
-  Icon,
-  Select,
-  Typography,
-  Table,
-  Input
-} from "antd";
-import { DRow } from "../../utils/Utils";
-import { languages } from "../../utils/Constants";
-import Highlighter from "react-highlight-words";
+import { Spin, Table } from "antd";
 import { getQuestionTranslations } from "../../utils/api/question_translation";
 import {
   getAllQuestions,
@@ -19,64 +7,13 @@ import {
   getFolderQuestions
 } from "../../utils/api/question";
 import QuestionTranslations from "./QuestionTranslations";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
 
 const QuestionTranslationsTable = props => {
   const questions = props.questions;
   const translations = props.translations;
   const [searchText, setSearchText] = useState("");
-
-  const getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    render: text => (
-      <Highlighter
-        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-        searchWords={[searchText]}
-        autoEscape
-        textToHighlight={text ? text.toString() : ""}
-      />
-    )
-  });
 
   const columns = [
     {
@@ -84,7 +21,7 @@ const QuestionTranslationsTable = props => {
       dataIndex: "question_identifier",
       width: "20%",
       editable: true,
-      ...getColumnSearchProps("question_identifier")
+      ...getColumnSearchProps("question_identifier", searchText, setSearchText)
     },
     searchText === ""
       ? {
@@ -92,7 +29,7 @@ const QuestionTranslationsTable = props => {
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text"),
+          ...getColumnSearchProps("text", searchText, setSearchText),
           render: (text, question) => (
             <span
               dangerouslySetInnerHTML={{
@@ -106,7 +43,7 @@ const QuestionTranslationsTable = props => {
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text")
+          ...getColumnSearchProps("text", searchText, setSearchText)
         },
     {
       title: "Translations",
@@ -126,16 +63,6 @@ const QuestionTranslationsTable = props => {
       }
     }
   ];
-
-  const handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-  };
-
-  const handleReset = clearFilters => {
-    clearFilters();
-    setSearchText("");
-  };
 
   return (
     <Table
@@ -196,34 +123,10 @@ const Translations = props => {
 
   return (
     <Spin spinning={loading}>
-      <DRow>
-        <Col span={12}>
-          <Button
-            type="primary"
-            onClick={() => props.setShowTranslations(!props.showTranslations)}
-          >
-            <Icon type="rollback" />
-          </Button>
-        </Col>
-        <Col span={6}>
-          <Typography.Text strong>Translation Language</Typography.Text>
-        </Col>
-        <Col span={6}>
-          <Select style={{ width: 120 }} onChange={handleChange}>
-            {languages.map(language => {
-              return (
-                <Select.Option
-                  key={language.code}
-                  name="language"
-                  value={language.code}
-                >
-                  {language.name}
-                </Select.Option>
-              );
-            })}
-          </Select>
-        </Col>
-      </DRow>
+      <TranslationsHeader
+        handleClick={() => props.setShowTranslations(!props.showTranslations)}
+        handleChange={handleChange}
+      />
       <QuestionTranslationsTable
         questions={questions}
         translations={translations}

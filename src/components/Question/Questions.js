@@ -1,4 +1,4 @@
-import { Row, Spin, Table, Icon, Input, Button } from "antd";
+import { Row, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   getAllQuestions,
@@ -7,7 +7,6 @@ import {
   getFolderQuestions,
   getQuestionSetQuestions
 } from "../../utils/api/question";
-import Highlighter from "react-highlight-words";
 import {
   TranslationAddButtons,
   EditButton,
@@ -20,6 +19,7 @@ import Translations from "../QuestionTranslation/Translations";
 import Attributes from "./Attributes";
 import { useLocation } from "react-router-dom";
 import QuestionForm from "./QuestionForm";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
 
 const Questions = () => {
   const [loading, setLoading] = useState(false);
@@ -58,76 +58,12 @@ const Questions = () => {
     }
   };
 
-  const getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilter: (value, record) => {
-      return record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase());
-    },
-    render: text => (
-      <Highlighter
-        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-        searchWords={[searchText]}
-        autoEscape
-        textToHighlight={text ? text.toString() : ""}
-      />
-    )
-  });
-
-  const handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-  };
-
-  const handleReset = clearFilters => {
-    clearFilters();
-    setSearchText("");
-  };
-
   const columns = [
     {
       title: "Question Set",
       dataIndex: "question_set_title",
       width: "15%",
-      ...getColumnSearchProps("question_set_title"),
+      ...getColumnSearchProps("question_set_title", searchText, setSearchText),
       sortDirections: ["descend", "ascend"],
       sorter: (a, b) => a.question_set_title.localeCompare(b.question_set_title)
     },
@@ -135,7 +71,7 @@ const Questions = () => {
       title: "Folder",
       dataIndex: "folder_title",
       width: "15%",
-      ...getColumnSearchProps("folder_title"),
+      ...getColumnSearchProps("folder_title", searchText, setSearchText),
       sortDirections: ["descend", "ascend"],
       sorter: (a, b) => a.folder_title.localeCompare(b.folder_title)
     },
@@ -143,14 +79,14 @@ const Questions = () => {
       title: "Identifier",
       dataIndex: "question_identifier",
       width: "10%",
-      ...getColumnSearchProps("question_identifier")
+      ...getColumnSearchProps("question_identifier", searchText, setSearchText)
     },
     searchText === ""
       ? {
           title: "Text",
           dataIndex: "text",
           width: "40%",
-          ...getColumnSearchProps("text"),
+          ...getColumnSearchProps("text", searchText, setSearchText),
           render: (text, question) => (
             <span
               dangerouslySetInnerHTML={{
@@ -163,7 +99,7 @@ const Questions = () => {
           title: "Text",
           dataIndex: "text",
           width: "40%",
-          ...getColumnSearchProps("text")
+          ...getColumnSearchProps("text", searchText, setSearchText)
         },
     {
       title: "Actions",

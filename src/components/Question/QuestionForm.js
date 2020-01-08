@@ -20,9 +20,7 @@ import {
 import { InstructionContext } from "../../context/InstructionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
-import { EditorState, ContentState, convertFromHTML } from "draft-js";
-import { RichEditor } from "../../utils/RichEditor";
-import { stateToHTML } from "draft-js-export-html";
+import ReactQuill from "react-quill";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -61,13 +59,6 @@ const QuestionForm = props => {
     ? props.question.question_identifier
     : "New Question";
 
-  const blocksFromHTML = convertFromHTML((question && question.text) || "");
-  const textState = ContentState.createFromBlockArray(
-    blocksFromHTML.contentBlocks,
-    blocksFromHTML.entityMap
-  );
-  const editorState = EditorState.createWithContent(textState);
-
   return (
     <Modal
       title={title}
@@ -95,7 +86,7 @@ const QuestionForm = props => {
             (question && question.pop_up_instruction) || false,
           instruction_after_text:
             (question && question.instruction_after_text) || false,
-          text: editorState,
+          text: (question && question.text) || "",
           identifies_survey: (question && question.identifies_survey) || false,
           option_set_id: (question && question.option_set_id) || "",
           instruction_id: (question && question.instruction_id) || "",
@@ -110,7 +101,7 @@ const QuestionForm = props => {
             folder_id: values.folder_id,
             question_set_id: values.question_set_id,
             question_type: values.question_type,
-            text: stateToHTML(values.text.getCurrentContent()),
+            text: values.text,
             identifies_survey: values.identifies_survey,
             instruction_id: values.instruction_id,
             option_set_id: values.option_set_id,
@@ -351,10 +342,9 @@ const QuestionForm = props => {
               <Col span={14}>
                 <Field name="text">
                   {({ field }) => (
-                    <RichEditor
-                      editorState={values.text}
-                      onChange={setFieldValue}
-                      fieldName="text"
+                    <ReactQuill
+                      value={field.value}
+                      onChange={field.onChange(field.name)}
                     />
                   )}
                 </Field>

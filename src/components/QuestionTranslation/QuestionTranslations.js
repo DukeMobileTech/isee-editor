@@ -1,23 +1,14 @@
-import {
-  Button,
-  Col,
-  ConfigProvider,
-  Divider,
-  Form,
-  Icon,
-  Popconfirm,
-  Row,
-  Table
-} from "antd";
+import { Form } from "antd";
 import React, { useState } from "react";
 import {
   createQuestionTranslation,
   updateQuestionTranslation,
   deleteQuestionTranslation
 } from "../../utils/api/question_translation";
-import ReactQuill from "react-quill";
-
-const EditableContext = React.createContext();
+import {
+  CellActions,
+  EditableTranslationsProvider
+} from "../utils/EditableCell";
 
 const EditableTable = props => {
   const language = props.language;
@@ -42,49 +33,17 @@ const EditableTable = props => {
     {
       title: "Actions",
       dataIndex: "actions",
-      render: (text, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <EditableContext.Consumer>
-              {form => (
-                <Button
-                  type="primary"
-                  onClick={() => save(form, record)}
-                  style={{ marginRight: 8 }}
-                >
-                  Save
-                </Button>
-              )}
-            </EditableContext.Consumer>
-            <Popconfirm
-              title="Sure to cancel?"
-              onConfirm={() => cancel(record.id)}
-            >
-              <Button>Cancel</Button>
-            </Popconfirm>
-          </span>
-        ) : (
-          <span>
-            <Button
-              type="primary"
-              disabled={editingKey !== ""}
-              onClick={() => edit(record.id)}
-            >
-              <Icon type="edit" />
-            </Button>
-            <Divider type="vertical" />
-            <Popconfirm
-              title={`Sure to delete ${record.text}?`}
-              onConfirm={() => handleDelete(record)}
-            >
-              <Button type="danger">
-                <Icon type="delete" />
-              </Button>
-            </Popconfirm>
-          </span>
-        );
-      }
+      render: (text, record) => (
+        <CellActions
+          record={record}
+          editingKey={editingKey}
+          isEditing={isEditing}
+          save={save}
+          cancel={cancel}
+          edit={edit}
+          handleDelete={handleDelete}
+        />
+      )
     }
   ];
 
@@ -136,27 +95,6 @@ const EditableTable = props => {
     setEditingKey(key);
   };
 
-  const components = {
-    body: {
-      cell: EditableCell
-    }
-  };
-
-  const tableColumns = columns.map(col => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: record => ({
-        record,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record)
-      })
-    };
-  });
-
   const handleAdd = () => {
     setEditingKey(newId);
     setTranslations([{ id: newId, text: "" }, ...translations]);
@@ -174,76 +112,16 @@ const EditableTable = props => {
     }
   };
 
-  const customizeRenderEmpty = () => {
-    if (language) {
-      return (
-        <p style={{ textAlign: "center" }}>No translations for language</p>
-      );
-    } else {
-      return <p style={{ textAlign: "center" }}>Select Translation Language</p>;
-    }
-  };
-
   return (
-    <EditableContext.Provider value={props.form}>
-      <Row gutter={8} type="flex" justify="space-around" align="middle">
-        <Col span={22}>
-          <ConfigProvider renderEmpty={true && customizeRenderEmpty}>
-            <Table
-              components={components}
-              bordered
-              dataSource={translations}
-              rowKey={translation => translation.id}
-              columns={tableColumns}
-              pagination={false}
-              size="small"
-            />
-          </ConfigProvider>
-        </Col>
-        <Col span={2}>
-          <Button type="primary" onClick={handleAdd}>
-            <Icon type="plus" />
-          </Button>
-        </Col>
-      </Row>
-    </EditableContext.Provider>
+    <EditableTranslationsProvider
+      form={props.form}
+      columns={columns}
+      language={language}
+      translations={translations}
+      isEditing={isEditing}
+      handleAdd={handleAdd}
+    />
   );
-};
-
-const EditableCell = props => {
-  const renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      index,
-      children,
-      ...restProps
-    } = props;
-
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`
-                }
-              ],
-              initialValue: record[dataIndex]
-            })(<ReactQuill value={record[dataIndex]} />)}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
 };
 
 const QuestionTranslations = props => {

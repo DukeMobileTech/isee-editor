@@ -1,6 +1,5 @@
 import "antd/dist/antd.css";
 import "react-quill/dist/quill.snow.css";
-import "draft-js/dist/Draft.css";
 import "./index.css";
 
 import * as serviceWorker from "./serviceWorker";
