@@ -1,14 +1,14 @@
-import { Button, Form, Icon, Input } from "antd";
+import { Form } from "antd";
 import React, { useState, useContext } from "react";
 import {
   createInstruction,
   deleteInstruction,
   updateInstruction
 } from "../../utils/api/instruction";
-import Highlighter from "react-highlight-words";
 import { CellActions, EditableProvider } from "../utils/EditableCell";
 import Translations from "../InstructionTranslation/Translations";
 import { InstructionContext } from "../../context/InstructionContext";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
 
 const EditableTable = props => {
   const newId = "new";
@@ -16,66 +16,13 @@ const EditableTable = props => {
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
 
-  const getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    render: text => (
-      <Highlighter
-        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-        searchWords={[searchText]}
-        autoEscape
-        textToHighlight={text ? text.toString() : ""}
-      />
-    )
-  });
-
   const columns = [
     {
       title: "Title",
       dataIndex: "title",
       width: "25%",
       editable: true,
-      ...getColumnSearchProps("title")
+      ...getColumnSearchProps("title", searchText, setSearchText)
     },
     searchText === ""
       ? {
@@ -83,7 +30,7 @@ const EditableTable = props => {
           dataIndex: "text",
           width: "55%",
           editable: true,
-          ...getColumnSearchProps("text"),
+          ...getColumnSearchProps("text", searchText, setSearchText),
           render: (text, instruction) => (
             <span
               dangerouslySetInnerHTML={{
@@ -97,7 +44,7 @@ const EditableTable = props => {
           dataIndex: "text",
           width: "55%",
           editable: true,
-          ...getColumnSearchProps("text")
+          ...getColumnSearchProps("text", searchText, setSearchText)
         },
     {
       title: "Actions",
@@ -116,16 +63,6 @@ const EditableTable = props => {
       )
     }
   ];
-
-  const handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-  };
-
-  const handleReset = clearFilters => {
-    clearFilters();
-    setSearchText("");
-  };
 
   const isEditing = record => record.id === editingKey;
 

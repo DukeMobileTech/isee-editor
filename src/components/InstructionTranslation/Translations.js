@@ -1,67 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Spin, Button, Icon, Table, Input } from "antd";
+import { Spin, Table } from "antd";
 import { getInstructionTranslations } from "../../utils/api/instruction_translation";
-import Highlighter from "react-highlight-words";
 import InstructionTranslations from "./InstructionTranslations";
 import { TranslationsHeader } from "../utils/TranslationsHeader";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
 
 const InstructionsTable = props => {
   const instructions = props.instructions;
   const translations = props.translations;
   const [searchText, setSearchText] = useState("");
-
-  const getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    render: text => (
-      <Highlighter
-        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-        searchWords={[searchText]}
-        autoEscape
-        textToHighlight={text ? text.toString() : ""}
-      />
-    )
-  });
 
   const columns = [
     {
@@ -69,7 +16,7 @@ const InstructionsTable = props => {
       dataIndex: "title",
       width: "15%",
       editable: true,
-      ...getColumnSearchProps("title")
+      ...getColumnSearchProps("title", searchText, setSearchText)
     },
     searchText === ""
       ? {
@@ -77,7 +24,7 @@ const InstructionsTable = props => {
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text"),
+          ...getColumnSearchProps("text", searchText, setSearchText),
           render: (text, instruction) => (
             <span
               dangerouslySetInnerHTML={{
@@ -91,7 +38,7 @@ const InstructionsTable = props => {
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text")
+          ...getColumnSearchProps("text", searchText, setSearchText)
         },
     {
       title: "Translations",
@@ -111,16 +58,6 @@ const InstructionsTable = props => {
       }
     }
   ];
-
-  const handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-  };
-
-  const handleReset = clearFilters => {
-    clearFilters();
-    setSearchText("");
-  };
 
   return (
     <Table
