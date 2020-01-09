@@ -13,7 +13,8 @@ import { getColumnSearchProps } from "../utils/ColumnSearch";
 
 const EditableTable = props => {
   const newId = "new";
-  const [options, setOptions] = useState(props.options);
+  // eslint-disable-next-line no-unused-vars
+  const [options, setOptions] = useContext(OptionContext);
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
 
@@ -147,8 +148,6 @@ const EditableTable = props => {
 };
 
 const Options = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [options, setOptions] = useContext(OptionContext);
   const [showTranslations, setShowTranslations] = useState(false);
   const [optionsToTranslate, setOptionsToTranslate] = useState([]);
 
@@ -164,7 +163,6 @@ const Options = () => {
     const EditableFormTable = Form.create()(EditableTable);
     return (
       <EditableFormTable
-        options={options}
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}
         setOptionsToTranslate={setOptionsToTranslate}

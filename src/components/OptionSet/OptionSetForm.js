@@ -62,7 +62,7 @@ const OptionSetForm = props => {
 
   const AddOptionIcon = () => {
     if (addOptions) {
-      return <Icon type="close" />;
+      return <Icon type="close" style={{ color: "red" }} />;
     } else {
       return <Icon type="plus" />;
     }
@@ -240,7 +240,15 @@ const OptionSetForm = props => {
                       type="error"
                     />
                   </Col>
-                  <Col span={6}>{oios.option && oios.option.text}</Col>
+                  <Col span={6}>
+                    {oios.option && (
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: oios.option.text
+                        }}
+                      />
+                    )}
+                  </Col>
                   <Col span={6}>
                     <Field
                       name={`option_in_option_sets.${index}.instruction_id`}

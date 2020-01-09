@@ -36,8 +36,12 @@ const OptionSets = () => {
     if (id) {
       const result = await getOptionSet(id);
       let index = optionSets.indexOf(optionSet);
-      optionSets.splice(index, 1, result.data);
-      setOptionSets([...optionSets]);
+      if (index === -1) {
+        setOptionSets([result.data, ...optionSets]);
+      } else {
+        optionSets.splice(index, 1, result.data);
+        setOptionSets([...optionSets]);
+      }
     }
     setVisible(false);
   };
@@ -211,7 +215,7 @@ const OptionSets = () => {
                   {`${oios.number_in_question})`}
                 </Typography.Text>
                 <Typography.Text code>
-                  {oios.option && oios.option.text}
+                  {oios.option && oios.option.text.replace(/<[^>]+>/g, "")}
                 </Typography.Text>
               </span>
             );

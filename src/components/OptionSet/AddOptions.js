@@ -133,7 +133,7 @@ const AddOptions = props => {
         options.map(option => {
           return (
             <Option key={`${option.identifier}`}>
-              {`${option.identifier} - ${option.text}`}
+              {`${option.identifier} - ${option.text.replace(/<[^>]+>/g, "")}`}
             </Option>
           );
         })}
