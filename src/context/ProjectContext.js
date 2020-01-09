@@ -6,6 +6,9 @@ export const ProjectContext = createContext();
 
 export const ProjectProvider = props => {
   const [projects, setProjects] = useState([]);
+  const [currentProjectId, setCurrentProjectId] = useState(
+    sessionStorage.getItem("projectId")
+  );
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -19,7 +22,9 @@ export const ProjectProvider = props => {
   }, []);
 
   return (
-    <ProjectContext.Provider value={projects}>
+    <ProjectContext.Provider
+      value={[projects, currentProjectId, setCurrentProjectId]}
+    >
       {props.children}
     </ProjectContext.Provider>
   );

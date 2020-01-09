@@ -1,17 +1,27 @@
-import { DeleteButton, EditButton, FolderAddButton } from "../utils/Buttons";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
 import { Divider, Table } from "antd";
-import React, { Fragment, useEffect, useState } from "react";
-import { deleteInstrument, getInstruments } from "../utils/api/instrument";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import { deleteInstrument, getInstruments } from "../../utils/api/instrument";
 
-import InstrumentForm from "./Instrument/InstrumentForm";
+import InstrumentForm from "../Instrument/InstrumentForm";
 import { Link } from "react-router-dom";
+import { ProjectContext } from "../../context/ProjectContext";
+import { ProjectHeader } from "../Headers";
 
 const { Column } = Table;
 
-const Project = () => {
+const Project = ({ match }) => {
+  const projectId = match.params.project_id;
   const [instruments, setInstruments] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [instrument, setInstrument] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [projects, currentProject, setCurrentProject] = useContext(
+    ProjectContext
+  );
+  sessionStorage.setItem("projectId", projectId);
+  setCurrentProject(projectId);
+  const project = projects.find(project => project.id === Number(projectId));
 
   useEffect(() => {
     fetchInstruments();
@@ -20,7 +30,7 @@ const Project = () => {
 
   const fetchInstruments = async () => {
     setShowForm(false);
-    const results = await getInstruments();
+    const results = await getInstruments(projectId);
     setInstruments(results.data);
   };
 
@@ -61,6 +71,7 @@ const Project = () => {
   } else {
     return (
       <Fragment>
+        <ProjectHeader project={project} />
         <Table dataSource={instruments} rowKey={instrument => instrument.id}>
           <Column
             title="Title"

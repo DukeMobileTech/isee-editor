@@ -1,7 +1,6 @@
 import { Icon, Layout, Spin, Tabs } from "antd";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 
-import { CenteredH1 } from "../../utils/Styles";
 import Display from "../Display/Display";
 import { InstructionContext } from "../../context/InstructionContext";
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
@@ -17,12 +16,16 @@ import { getQuestionSets } from "../../utils/api/question_set";
 import PdfDownload from "./PdfDownload";
 import { getInstrumentQuestions } from "../../utils/api/instrument_question";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { ProjectContext } from "../../context/ProjectContext";
+import { ProjectHeader, InstrumentHeader } from "../Headers";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
 const Instrument = ({ match }) => {
   const projectId = match.params.project_id;
+  const projects = useContext(ProjectContext);
+  const project = projects.find(project => project.id === Number(projectId));
   const instrumentId = match.params.id;
   const [loading, setLoading] = useState(true);
   const [instrument, setInstrument] = useState({});
@@ -168,7 +171,8 @@ const Instrument = ({ match }) => {
 
   return (
     <Fragment>
-      <CenteredH1>{instrument.title}</CenteredH1>
+      <ProjectHeader project={project} />
+      <InstrumentHeader instrument={instrument} />
       <Layout>
         <InstrumentSider
           projectId={projectId}

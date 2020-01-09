@@ -1,5 +1,5 @@
 import AppFooter from "./components/AppFooter";
-import AppHeader from "./components/AppHeader";
+import { AppHeader } from "./components/Headers";
 import { Layout } from "antd";
 import Login from "./components/Login";
 import { MainContent } from "./utils/Styles";

@@ -2,7 +2,7 @@ import React from "react";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import AppFooter from "./AppFooter";
-import AppHeader from "./AppHeader";
+import { AppHeader } from "./Headers";
 import { Layout, Form as AntForm } from "antd";
 import { MainContent, CenteredH2 } from "../utils/Styles";
 import { CenteredSubmitButton } from "../utils/Buttons";

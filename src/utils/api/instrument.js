@@ -3,8 +3,8 @@ import { instance } from "./api";
 /*
 Instrument
 */
-export const getInstruments = () => {
-  return instance.get("/instruments");
+export const getInstruments = projectId => {
+  return instance.get(`/projects/${projectId}/instruments`);
 };
 
 export const getInstrument = (projectId, id) => {
