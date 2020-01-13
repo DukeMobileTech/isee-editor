@@ -4,14 +4,14 @@ import {
   EditButton,
   FolderAddButton,
   LeftCancelButton
-} from "../../../utils/Buttons";
+} from "../../utils/Buttons";
 import React, { Fragment, useContext, useState } from "react";
 
-import { CenteredH3 } from "../../../utils/Styles";
-import { InstrumentSectionContext } from "../../../context/InstrumentSectionContext";
+import { CenteredH3 } from "../../utils/Styles";
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import SubsectionForm from "./SubsectionForm";
-import { deleteDisplay } from "../../../utils/api/display";
-import { getSections } from "../../../utils/api/section";
+import { deleteDisplay } from "../../utils/api/display";
+import { getSections } from "../../utils/api/section";
 
 const Subsections = props => {
   const section = props.section;

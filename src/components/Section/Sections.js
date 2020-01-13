@@ -1,8 +1,8 @@
-import { Button, Col, Divider, Icon, List, Typography } from "antd";
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
+import { Button, Col, Divider, Icon, List, Typography, Row } from "antd";
+import { DeleteButton, EditButton } from "../../utils/Buttons";
 import { getItemStyle, getListStyle } from "../../utils/Utils";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, Fragment } from "react";
 import {
   deleteSection,
   getSections,
@@ -11,12 +11,22 @@ import {
 
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import SectionForm from "./SectionForm";
-import Subsections from "./Subsection/Subsections";
+import Subsections from "../Subsection/Subsections";
+import Translations from "../SectionTranslation/Translations";
+import { Translations as DisplayTranslations } from "../DisplayTranslation/Translations";
 
 const Sections = props => {
   const instrument = props.instrument;
   const [sections, setSections] = useContext(InstrumentSectionContext);
   const [showForm, setShowForm] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
+  const [showSubsectionTranslations, setShowSubsectionTranslations] = useState(
+    false
+  );
+  // eslint-disable-next-line no-unused-vars
+  const [displays, setDisplays] = useState(
+    [].concat.apply([], sections.map(section => section.displays))
+  );
 
   const fetchSections = async () => {
     setShowForm(false);
@@ -69,6 +79,14 @@ const Sections = props => {
     fetchSections();
   };
 
+  const handleSectionTranslations = () => {
+    setShowTranslations(!showTranslations);
+  };
+
+  const handleSubsectionTranslations = () => {
+    setShowSubsectionTranslations(!showSubsectionTranslations);
+  };
+
   if (showForm) {
     return (
       <SectionForm
@@ -77,6 +95,24 @@ const Sections = props => {
         handleCancel={handleCancel}
         fetchSections={fetchSections}
         maxCount={sections.length + 1}
+      />
+    );
+  } else if (showTranslations) {
+    return (
+      <Translations
+        instrument={instrument}
+        sections={sections}
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+      />
+    );
+  } else if (showSubsectionTranslations) {
+    return (
+      <DisplayTranslations
+        instrument={instrument}
+        displays={displays}
+        setShowTranslations={setShowSubsectionTranslations}
+        showTranslations={showSubsectionTranslations}
       />
     );
   } else if (props.showDisplays) {
@@ -91,76 +127,105 @@ const Sections = props => {
     );
   } else {
     return (
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="sections">
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-            >
-              <List
-                footer={<FolderAddButton handleClick={handleNewSection} />}
-                bordered
-                dataSource={sections}
-                renderItem={(section, index) => (
-                  <Draggable
-                    key={section.id}
-                    draggableId={section.id}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        <List.Item>
-                          <Col span={4}>
-                            <Icon type="drag" />{" "}
-                            <Typography.Text strong>
-                              {section.position}
-                            </Typography.Text>
-                          </Col>
-                          <Col span={14}>
-                            <Button
-                              type="link"
-                              onClick={() => props.handleOpenSection(section)}
-                            >
-                              {section.title}
-                            </Button>
-                          </Col>
-                          <Col span={6}>
-                            <EditButton
-                              handleClick={() => handleEditSection(section)}
-                            />
-                            <Divider type="vertical" />
-                            <DeleteButton
-                              handleClick={() => {
-                                if (
-                                  window.confirm(
-                                    `Are you sure you want to delete ${section.title}?`
+      <Fragment>
+        <Row style={{ margin: "3px" }}>
+          <Button
+            title="Show Section Translations"
+            type="primary"
+            onClick={handleSectionTranslations}
+            style={{ marginRight: "2px" }}
+          >
+            <Icon type="global" />
+            Sections
+          </Button>
+          <Button
+            title="Show Subsection Translations"
+            type="primary"
+            onClick={handleSubsectionTranslations}
+            style={{ marginLeft: "2px" }}
+          >
+            <Icon type="global" />
+            Subsections
+          </Button>
+          <Button
+            style={{ float: "right" }}
+            type="primary"
+            title="Add New"
+            onClick={handleNewSection}
+          >
+            <Icon type="plus" />
+          </Button>
+        </Row>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="sections">
+            {(provided, snapshot) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver)}
+              >
+                <List
+                  bordered
+                  dataSource={sections}
+                  renderItem={(section, index) => (
+                    <Draggable
+                      key={section.id}
+                      draggableId={section.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                        >
+                          <List.Item>
+                            <Col span={4}>
+                              <Icon type="drag" />{" "}
+                              <Typography.Text strong>
+                                {section.position}
+                              </Typography.Text>
+                            </Col>
+                            <Col span={14}>
+                              <Button
+                                type="link"
+                                onClick={() => props.handleOpenSection(section)}
+                              >
+                                {section.title}
+                              </Button>
+                            </Col>
+                            <Col span={6}>
+                              <EditButton
+                                handleClick={() => handleEditSection(section)}
+                              />
+                              <Divider type="vertical" />
+                              <DeleteButton
+                                handleClick={() => {
+                                  if (
+                                    window.confirm(
+                                      `Are you sure you want to delete ${section.title}?`
+                                    )
                                   )
-                                )
-                                  handleDeleteSection(section);
-                              }}
-                            />
-                          </Col>
-                        </List.Item>
-                      </div>
-                    )}
-                  </Draggable>
-                )}
-              />
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                                    handleDeleteSection(section);
+                                }}
+                              />
+                            </Col>
+                          </List.Item>
+                        </div>
+                      )}
+                    </Draggable>
+                  )}
+                />
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Fragment>
     );
   }
 };

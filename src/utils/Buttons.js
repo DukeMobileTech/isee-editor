@@ -36,7 +36,7 @@ export const LeftCancelButton = props => {
   return (
     <Col span={2}>
       <Button title="Back" onClick={props.handleClick}>
-        <Icon type="rollback" />
+        <Icon type="left" />
       </Button>
     </Col>
   );
