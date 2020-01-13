@@ -30,6 +30,7 @@ const Display = props => {
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [instrumentQuestion, setInstrumentQuestion] = useState(null);
   const [showTables, setShowTables] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setShowNew(false);
@@ -183,6 +184,10 @@ const Display = props => {
     }
   };
 
+  const onPageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
+
   const DisplayQuestions = () => {
     return (
       <Table
@@ -197,6 +202,11 @@ const Display = props => {
           />
         )}
         expandIcon={props => customExpandIcon(props)}
+        pagination={{
+          defaultPageSize: 25,
+          onChange: onPageChange,
+          current: currentPage
+        }}
       >
         <Column title="Position" dataIndex="number_in_instrument" />
         <Column

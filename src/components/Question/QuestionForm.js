@@ -70,13 +70,14 @@ const QuestionForm = props => {
     >
       <Formik
         initialValues={{
+          question_set_id:
+            (question && question.question_set_id) ||
+            (props.questionSet && props.questionSet.id) ||
+            (props.folder && props.folder.question_set_id) ||
+            "",
           folder_id:
             (question && question.folder_id) ||
             (props.folder && props.folder.id) ||
-            "",
-          question_set_id:
-            (question && question.question_set_id) ||
-            (props.folder && props.folder.question_set_id) ||
             "",
           question_identifier: (question && question.question_identifier) || "",
           question_type: (question && question.question_type) || "",

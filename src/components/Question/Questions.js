@@ -32,6 +32,9 @@ const Questions = () => {
     false
   );
   const location = useLocation();
+  const [folder, setFolder] = useState(null);
+  const [questionSet, setQuestionSet] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchQuestions();
@@ -42,10 +45,12 @@ const Questions = () => {
     setVisible(false);
     setLoading(true);
     if (location && location.state && location.state.folder) {
+      setFolder(location.state.folder);
       const results = await getFolderQuestions(location.state.folder);
       setQuestions(results.data);
       setLoading(false);
     } else if (location && location.state && location.state.questionSet) {
+      setQuestionSet(location.state.questionSet);
       const results = await getQuestionSetQuestions(
         location.state.questionSet.id
       );
@@ -163,13 +168,18 @@ const Questions = () => {
     setShowTranslations(!showTranslations);
   };
 
+  const onPageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
+
   if (visible) {
     return (
       <QuestionForm
         visible={visible}
         setVisible={setVisible}
         question={question}
-        folder={null}
+        folder={folder}
+        questionSet={questionSet}
         fetchQuestions={fetchQuestions}
       />
     );
@@ -200,7 +210,11 @@ const Questions = () => {
           columns={columns}
           dataSource={questions}
           rowKey={question => question.id}
-          pagination={{ defaultPageSize: 25 }}
+          pagination={{
+            defaultPageSize: 25,
+            onChange: onPageChange,
+            current: currentPage
+          }}
           expandedRowRender={question => <Attributes question={question} />}
           expandIcon={props => customExpandIcon(props)}
         />
