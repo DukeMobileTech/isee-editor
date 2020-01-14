@@ -1,20 +1,15 @@
-import { Col, List, Icon, Row } from "antd";
+import { Icon, List, Col, Row } from "antd";
 
 import React, { Fragment } from "react";
-
-import { CenteredH3 } from "../../utils/Styles";
+import { orderQuestions } from "../../utils/api/folder";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { getListStyle, getItemStyle } from "../../utils/Utils";
 import { LeftCancelButton } from "../../utils/Buttons";
-import { orderInstrumentQuestions } from "../../utils/api/display";
 
-const DisplayQuestions = props => {
-  const instrumentQuestions = props.instrumentQuestions;
-  const display = props.display;
-
+const QuestionReorder = props => {
   const onDragEnd = result => {
     let order = [];
-    const copy = [...instrumentQuestions];
+    const copy = [...props.questions];
     copy.splice(
       result.destination.index,
       0,
@@ -23,34 +18,17 @@ const DisplayQuestions = props => {
     copy.forEach((dis, index) => {
       order.push(dis.id);
     });
-    orderInstrumentQuestions(
-      props.projectId,
-      display.instrument_id,
-      display.id,
-      {
-        order
-      }
-    ).then(res => {
-      props.fetchDisplay();
+    orderQuestions(props.folder.question_set_id, props.folder.id, {
+      order
+    }).then(res => {
+      props.fetchQuestions();
     });
   };
 
   return (
     <Fragment>
-      <CenteredH3>{display.title}</CenteredH3>
-      <Row type="flex" justify="space-around" align="middle">
-        <Col span={4}>
-          <strong>Position</strong>
-        </Col>
-        <Col span={4}>
-          <strong>Instrument Number</strong>
-        </Col>
-        <Col span={16}>
-          <strong>Text</strong>
-        </Col>
-      </Row>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="instrumentQuestions">
+        <Droppable droppableId="folder-questions">
           {(provided, snapshot) => (
             <div
               {...provided.droppableProps}
@@ -58,12 +36,11 @@ const DisplayQuestions = props => {
               style={getListStyle(snapshot.isDraggingOver)}
             >
               <List
-                bordered
-                dataSource={instrumentQuestions}
-                renderItem={(instrumentQuestion, index) => (
+                dataSource={props.questions}
+                renderItem={(question, index) => (
                   <Draggable
-                    key={instrumentQuestion.id}
-                    draggableId={instrumentQuestion.id}
+                    key={question.id}
+                    draggableId={question.id}
                     index={index}
                   >
                     {(provided, snapshot) => (
@@ -77,17 +54,15 @@ const DisplayQuestions = props => {
                         )}
                       >
                         <List.Item>
-                          <Col span={4}>
+                          <Col span={2}>
                             <Icon type="drag" />
-                            {instrumentQuestion.position}
+                            {question.position}
                           </Col>
-                          <Col span={4}>
-                            {instrumentQuestion.number_in_instrument}
-                          </Col>
-                          <Col span={16}>
+                          <Col span={10}>{question.question_identifier}</Col>
+                          <Col span={12}>
                             <span
                               dangerouslySetInnerHTML={{
-                                __html: instrumentQuestion.question.text
+                                __html: question.text
                               }}
                             />
                           </Col>
@@ -102,13 +77,13 @@ const DisplayQuestions = props => {
           )}
         </Droppable>
       </DragDropContext>
-      <div style={{ marginTop: "5px" }}>
+      <Row style={{ marginTop: "5px" }}>
         <LeftCancelButton
-          handleClick={() => props.setShowOrder(!props.setShowOrder)}
+          handleClick={() => props.setReorder(!props.reorder)}
         />
-      </div>
+      </Row>
     </Fragment>
   );
 };
 
-export default DisplayQuestions;
+export default QuestionReorder;

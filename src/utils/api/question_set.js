@@ -18,3 +18,9 @@ export const updateQuestionSet = (id, questionSet) => {
 export const deleteQuestionSet = id => {
   return instance.delete(`/question_sets/${id}`);
 };
+
+export const orderFolders = (id, data) => {
+  return instance.post(`/question_sets/${id}/order_folders`, {
+    question_set: data
+  });
+};

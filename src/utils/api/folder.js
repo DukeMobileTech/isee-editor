@@ -22,3 +22,10 @@ export const updateFolder = (questionSetId, id, folder) => {
 export const deleteFolder = (questionSetId, id) => {
   return instance.delete(`/question_sets/${questionSetId}/folders/${id}`);
 };
+
+export const orderQuestions = (questionSetId, id, data) => {
+  return instance.post(
+    `/question_sets/${questionSetId}/folders/${id}/order_questions`,
+    { folder: data }
+  );
+};

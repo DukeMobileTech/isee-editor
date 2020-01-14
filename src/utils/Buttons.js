@@ -107,6 +107,41 @@ export const TranslationAddButtons = props => {
   );
 };
 
+export const TranslationOrderAddButtons = props => {
+  return (
+    <Row
+      type="flex"
+      justify="space-between"
+      align="middle"
+      style={{ margin: "3px" }}
+    >
+      <Button
+        title="Show Translations"
+        type="primary"
+        onClick={props.handleTranslationClick}
+      >
+        <Icon type="global" />
+      </Button>
+      <Button
+        style={{ float: "middle" }}
+        type="primary"
+        onClick={props.handleReorderClick}
+        title="Reorder"
+      >
+        <Icon type="ordered-list" />
+      </Button>
+      <Button
+        style={{ float: "right" }}
+        type="primary"
+        title="Add New"
+        onClick={props.handleAddClick}
+      >
+        <Icon type="plus" />
+      </Button>
+    </Row>
+  );
+};
+
 export const EditButton = props => {
   return (
     <Button

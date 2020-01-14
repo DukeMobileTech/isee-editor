@@ -28,7 +28,7 @@ export const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const padding = 5;
+const padding = 3;
 
 export const getItemStyle = (isDragging, draggableStyle) => ({
   userSelect: "none",

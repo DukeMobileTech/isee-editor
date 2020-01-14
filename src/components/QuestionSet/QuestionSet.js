@@ -1,4 +1,4 @@
-import { Icon, Row, Button, Table } from "antd";
+import { Icon, Row, Button, List, Col } from "antd";
 import {
   DeleteButton,
   EditButton,
@@ -6,8 +6,10 @@ import {
 } from "../../utils/Buttons";
 import React, { useState } from "react";
 import { deleteFolder, getFolders } from "../../utils/api/folder";
-
+import { orderFolders } from "../../utils/api/question_set";
 import FolderForm from "./FolderForm";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { getListStyle, getItemStyle } from "../../utils/Utils";
 
 const QuestionSet = props => {
   const questionSet = props.questionSet;
@@ -43,6 +45,24 @@ const QuestionSet = props => {
       });
   };
 
+  const onDragEnd = result => {
+    let order = [];
+    const copy = [...folders];
+    copy.splice(
+      result.destination.index,
+      0,
+      copy.splice(result.source.index, 1)[0]
+    );
+    copy.forEach((dis, index) => {
+      order.push(dis.id);
+    });
+    orderFolders(questionSet.id, {
+      order
+    }).then(res => {
+      fetchFolders();
+    });
+  };
+
   if (showForm) {
     return (
       <FolderForm
@@ -54,49 +74,88 @@ const QuestionSet = props => {
     );
   } else {
     return (
-      <Table size="small" dataSource={folders} rowKey={folder => folder.id}>
-        <Table.Column title="Folder Title" dataIndex="title" />
-        <Table.Column
-          title="Actions"
-          dataIndex="actions"
-          render={(text, folder) => (
-            <Row
-              type="flex"
-              justify="space-around"
-              align="middle"
-              key={`${folder.id}`}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId={`${questionSet.id}-folders`}>
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={getListStyle(snapshot.isDraggingOver)}
             >
-              <EditButton
-                handleClick={event => {
-                  event.stopPropagation();
-                  handleEditFolder(folder);
-                }}
+              <List
+                dataSource={folders}
+                renderItem={(folder, index) => (
+                  <Draggable
+                    key={folder.id}
+                    draggableId={folder.id}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}
+                      >
+                        <List.Item>
+                          <Col span={2}>
+                            <Icon type="drag" />
+                          </Col>
+                          <Col span={16}>{folder.title}</Col>
+                          <Col span={6}>
+                            <Row
+                              type="flex"
+                              justify="space-around"
+                              align="middle"
+                              key={`${folder.id}`}
+                            >
+                              <EditButton
+                                handleClick={event => {
+                                  event.stopPropagation();
+                                  handleEditFolder(folder);
+                                }}
+                              />
+                              <Button
+                                type="primary"
+                                title="Questions"
+                                onClick={() =>
+                                  props.questionSubset(folder, null)
+                                }
+                              >
+                                <Icon type="database" />
+                              </Button>
+                              <TranslationButton
+                                handleClick={() =>
+                                  props.handleFolderTranslations(folder)
+                                }
+                              />
+                              <DeleteButton
+                                handleClick={event => {
+                                  event.stopPropagation();
+                                  if (
+                                    window.confirm(
+                                      `Are you sure you want to delete ${folder.title}?`
+                                    )
+                                  )
+                                    handleDeleteFolder(folder);
+                                }}
+                              />
+                            </Row>
+                          </Col>
+                        </List.Item>
+                      </div>
+                    )}
+                  </Draggable>
+                )}
               />
-              <Button
-                type="primary"
-                title="Questions"
-                onClick={() => props.questionSubset(folder, null)}
-              >
-                <Icon type="database" />
-              </Button>
-              <TranslationButton
-                handleClick={() => props.handleFolderTranslations(folder)}
-              />
-              <DeleteButton
-                handleClick={event => {
-                  event.stopPropagation();
-                  if (
-                    window.confirm(
-                      `Are you sure you want to delete ${folder.title}?`
-                    )
-                  )
-                    handleDeleteFolder(folder);
-                }}
-              />
-            </Row>
+              {provided.placeholder}
+            </div>
           )}
-        />
-      </Table>
+        </Droppable>
+      </DragDropContext>
     );
   }
 };

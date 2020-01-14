@@ -12,7 +12,8 @@ import {
   EditButton,
   DeleteButton,
   TranslationButton,
-  CopyButton
+  CopyButton,
+  TranslationOrderAddButtons
 } from "../../utils/Buttons";
 import { customExpandIcon } from "../../utils/Utils";
 import Translations from "../QuestionTranslation/Translations";
@@ -20,6 +21,7 @@ import Attributes from "./Attributes";
 import { useLocation } from "react-router-dom";
 import QuestionForm from "./QuestionForm";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
+import QuestionReorder from "./QuestionReorder";
 
 const Questions = () => {
   const [loading, setLoading] = useState(false);
@@ -35,6 +37,7 @@ const Questions = () => {
   const [folder, setFolder] = useState(null);
   const [questionSet, setQuestionSet] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [reorder, setReorder] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
@@ -172,7 +175,21 @@ const Questions = () => {
     setCurrentPage(page);
   };
 
-  if (visible) {
+  const handleReorder = () => {
+    setReorder(!reorder);
+  };
+
+  if (reorder) {
+    return (
+      <QuestionReorder
+        questions={questions}
+        fetchQuestions={fetchQuestions}
+        folder={folder}
+        reorder={reorder}
+        setReorder={setReorder}
+      />
+    );
+  } else if (visible) {
     return (
       <QuestionForm
         visible={visible}
@@ -202,10 +219,19 @@ const Questions = () => {
   } else {
     return (
       <Spin spinning={loading}>
-        <TranslationAddButtons
-          handleTranslationClick={handleTranslationsClick}
-          handleAddClick={handleQuestionAdd}
-        />
+        {!folder && (
+          <TranslationAddButtons
+            handleTranslationClick={handleTranslationsClick}
+            handleAddClick={handleQuestionAdd}
+          />
+        )}
+        {folder && (
+          <TranslationOrderAddButtons
+            handleTranslationClick={handleTranslationsClick}
+            handleAddClick={handleQuestionAdd}
+            handleReorderClick={handleReorder}
+          />
+        )}
         <Table
           columns={columns}
           dataSource={questions}

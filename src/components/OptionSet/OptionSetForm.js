@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-import { DeleteButton, RightSubmitButton } from "../../utils/Buttons";
+import { RightSubmitButton } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Button, Col, Icon, Select, Typography, Modal } from "antd";
 import { Field, Form, Formik } from "formik";
@@ -12,6 +12,7 @@ import { deleteOptionInOptionSet } from "../../utils/api/option_in_option_set";
 import { OptionContext } from "../../context/OptionContext";
 import { InstructionContext } from "../../context/InstructionContext";
 import { modalWidth } from "../../utils/Constants";
+import OptionSetOptions from "./OptionSetOptions";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -221,99 +222,14 @@ const OptionSetForm = props => {
                 <Text strong>Action</Text>
               </Col>
             </DRow>
-            {values.option_in_option_sets &&
-              values.option_in_option_sets.map((oios, index) => (
-                <DRow
-                  key={oios.option_id}
-                  gutter={16}
-                  style={{ marginBottom: 8 }}
-                >
-                  <Col span={4}>
-                    <Field
-                      className="ant-input-number"
-                      name={`option_in_option_sets.${index}.number_in_question`}
-                      placeholder="Position"
-                      type="number"
-                    />
-                    <AlertErrorMessage
-                      name={`option_in_option_sets.${index}.number_in_question`}
-                      type="error"
-                    />
-                  </Col>
-                  <Col span={6}>
-                    {oios.option && (
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: oios.option.text
-                        }}
-                      />
-                    )}
-                  </Col>
-                  <Col span={6}>
-                    <Field
-                      name={`option_in_option_sets.${index}.instruction_id`}
-                      render={({ field }) => (
-                        <Select
-                          {...field}
-                          showSearch
-                          optionFilterProp="children"
-                          onChange={value =>
-                            setFieldValue(
-                              `option_in_option_sets.${index}.instruction_id`,
-                              value
-                            )
-                          }
-                          filterOption={(input, option) =>
-                            option.props.children &&
-                            option.props.children
-                              .toLowerCase()
-                              .indexOf(input.toLowerCase()) >= 0
-                          }
-                        >
-                          <Option value=""></Option>
-                          {instructions.map(instruction => {
-                            return (
-                              <Option
-                                key={instruction.id}
-                                name={`option_in_option_sets.${index}.instruction_id`}
-                                value={instruction.id}
-                              >
-                                {instruction.title.replace(/<[^>]+>/g, "")}
-                              </Option>
-                            );
-                          })}
-                        </Select>
-                      )}
-                    />
-                  </Col>
-                  <Col span={4}>
-                    <Field
-                      name={`option_in_option_sets.${index}.allow_text_entry`}
-                      type="checkbox"
-                      checked={
-                        values.option_in_option_sets[index].allow_text_entry
-                      }
-                    />
-                    <AlertErrorMessage
-                      name={`option_in_option_sets.${index}.allow_text_entry`}
-                      type="error"
-                    />
-                  </Col>
-                  <Col span={4}>
-                    <DeleteButton
-                      handleClick={() => {
-                        if (
-                          window.confirm(
-                            `Are you sure you want to remove ${oios.option &&
-                              oios.option.text} from the set?`
-                          )
-                        )
-                          handleDeleteOption(oios, values, resetForm);
-                      }}
-                    />
-                  </Col>
-                </DRow>
-              ))}
+            <OptionSetOptions
+              optionSet={optionSet}
+              values={values}
+              setFieldValue={setFieldValue}
+              instructions={instructions}
+              handleDeleteOption={handleDeleteOption}
+              resetForm={resetForm}
+            />
             <DRow>
               <Col span={4}>
                 <Button
