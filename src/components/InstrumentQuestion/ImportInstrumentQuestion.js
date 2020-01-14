@@ -43,12 +43,12 @@ const ImportInstrumentQuestion = props => {
 
   const onSaveSelection = () => {
     const instrument_questions = [];
-    let position = props.position + 1;
+    let position = props.display.instrument_questions_count + 1;
     for (const question of selectedQuestions) {
       instrument_questions.push({
         question_id: question.id,
         instrument_id: props.display.instrument_id,
-        number_in_instrument: position,
+        position: position,
         display_id: props.display.id,
         identifier: question.question_identifier
       });

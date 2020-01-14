@@ -12,7 +12,6 @@ import { InstrumentQuestionContext } from "../../context/InstrumentQuestionConte
 
 const { Text } = Typography;
 const InstrumentQuestionSchema = Yup.object().shape({
-  number_in_instrument: Yup.number().required("Position is required"),
   identifier: Yup.string().required("Identifier is required"),
   display_id: Yup.number().required("Subsection is required")
 });
@@ -39,7 +38,6 @@ const InstrumentQuestionForm = props => {
   return (
     <Formik
       initialValues={{
-        number_in_instrument: iq.number_in_instrument || "",
         identifier: iq.identifier || "",
         display_id: iq.display_id || "",
         carry_forward_identifier: iq.carry_forward_identifier || ""
@@ -49,7 +47,6 @@ const InstrumentQuestionForm = props => {
         const editQuestion = {
           id: iq.id,
           instrument_id: iq.instrument_id,
-          number_in_instrument: values.number_in_instrument,
           identifier: values.identifier,
           display_id: values.display_id,
           carry_forward_identifier: values.carry_forward_identifier
@@ -80,22 +77,6 @@ const InstrumentQuestionForm = props => {
             </Col>
             <Col span={6}>
               <AlertErrorMessage name="identifier" type="error" />
-            </Col>
-          </DRow>
-          <DRow>
-            <Col span={4}>
-              <Text strong>Number</Text>
-            </Col>
-            <Col span={14}>
-              <Field
-                className="ant-input"
-                name="number_in_instrument"
-                placeholder="Enter question number"
-                type="number"
-              />
-            </Col>
-            <Col span={6}>
-              <AlertErrorMessage name="number_in_instrument" type="error" />
             </Col>
           </DRow>
           <DRow>

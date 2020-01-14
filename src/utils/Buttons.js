@@ -109,7 +109,12 @@ export const TranslationAddButtons = props => {
 
 export const EditButton = props => {
   return (
-    <Button type="primary" title="Edit" onClick={props.handleClick}>
+    <Button
+      style={{ margin: "1px" }}
+      type="primary"
+      title="Edit"
+      onClick={props.handleClick}
+    >
       <Icon type="edit" />
     </Button>
   );
@@ -117,7 +122,12 @@ export const EditButton = props => {
 
 export const DeleteButton = props => {
   return (
-    <Button type="danger" title="Delete" onClick={props.handleClick}>
+    <Button
+      style={{ margin: "1px" }}
+      type="danger"
+      title="Delete"
+      onClick={props.handleClick}
+    >
       <Icon type="delete" />
     </Button>
   );

@@ -1,4 +1,4 @@
-import { Col, List, Icon } from "antd";
+import { Col, List, Icon, Row, Typography } from "antd";
 
 import React, { Fragment } from "react";
 
@@ -38,6 +38,17 @@ const DisplayQuestions = props => {
   return (
     <Fragment>
       <CenteredH3>{display.title}</CenteredH3>
+      <Row type="flex" justify="space-around" align="middle">
+        <Col span={4}>
+          <Typography.Title level={4}>Position</Typography.Title>
+        </Col>
+        <Col span={4}>
+          <Typography.Title level={4}>Instrument Number</Typography.Title>
+        </Col>
+        <Col span={16}>
+          <Typography.Title level={4}>Text</Typography.Title>
+        </Col>
+      </Row>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="instrumentQuestions">
           {(provided, snapshot) => (
@@ -70,7 +81,10 @@ const DisplayQuestions = props => {
                             <Icon type="drag" />
                             {instrumentQuestion.position}
                           </Col>
-                          <Col span={20}>
+                          <Col span={4}>
+                            {instrumentQuestion.number_in_instrument}
+                          </Col>
+                          <Col span={16}>
                             <span
                               dangerouslySetInnerHTML={{
                                 __html: instrumentQuestion.question.text

@@ -8,7 +8,7 @@ const NewInstrumentQuestion = props => {
     instrument_questions.push({
       question_id: question.id,
       instrument_id: props.display.instrument_id,
-      number_in_instrument: props.position + 1,
+      position: props.display.instrument_questions_count + 1,
       display_id: props.display.id,
       identifier: question.question_identifier
     });

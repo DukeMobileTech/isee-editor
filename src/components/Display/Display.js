@@ -1,8 +1,7 @@
-import { Button, Col, Icon, Row, Spin, Table, Tabs, Typography } from "antd";
+import { Button, Col, Icon, Row, Spin, Table, Typography } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 
 import { CenteredH2 } from "../../utils/Styles";
-import DisplayInstructions from "./DisplayInstructions";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import ExpandedQuestion from "../utils/ExpandedQuestion";
 import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
@@ -16,7 +15,6 @@ import { customExpandIcon } from "../../utils/Utils";
 import DisplayQuestions from "./DisplayQuestions";
 
 const { Column } = Table;
-const { TabPane } = Tabs;
 
 const Display = props => {
   const projectId = props.projectId;
@@ -26,7 +24,6 @@ const Display = props => {
   const [showImport, setShowImport] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [editQuestion, setEditQuestion] = useState(null);
-  const [selectedKey, setSelectedKey] = useState("1");
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [instrumentQuestion, setInstrumentQuestion] = useState(null);
   const [showTables, setShowTables] = useState(false);
@@ -93,18 +90,6 @@ const Display = props => {
       });
   };
 
-  const getPosition = display => {
-    if (
-      display &&
-      display.instrument_questions &&
-      display.instrument_questions.length > 0
-    ) {
-      return display.instrument_questions.slice(-1)[0].number_in_instrument;
-    } else {
-      return display.instrument_question_count;
-    }
-  };
-
   const reorderQuestions = () => {
     setShowOrder(!showOrder);
   };
@@ -112,10 +97,6 @@ const Display = props => {
   const handleCancelQuestion = () => {
     setShowQuestionModal(false);
     setInstrumentQuestion(null);
-  };
-
-  const onTabSelection = key => {
-    setSelectedKey(key);
   };
 
   const handleQuestionClick = question => {
@@ -127,13 +108,16 @@ const Display = props => {
     setShowTables(true);
   };
 
+  const onPageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
+
   const DisplayView = () => {
     if (showNew) {
       return (
         <NewInstrumentQuestion
           projectId={projectId}
           display={display}
-          position={getPosition(display)}
           fetchDisplay={fetchDisplay}
           handleCancel={handleCancel}
           visible={showNew}
@@ -154,7 +138,6 @@ const Display = props => {
         <ImportInstrumentQuestion
           projectId={projectId}
           display={display}
-          position={getPosition(display)}
           handleImportCompleted={handleImportCompleted}
           handleCancel={handleCancel}
         />
@@ -191,126 +174,95 @@ const Display = props => {
       );
     } else {
       return (
-        <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
-          <TabPane
-            tab={
-              <span>
-                <Icon type="project" />
-                Instrument Questions
-              </span>
-            }
-            key="1"
+        <Fragment>
+          <Row style={{ margin: "3px" }}>
+            <Button
+              type="primary"
+              onClick={tabulateQuestions}
+              title="Show Tables"
+            >
+              <Icon type="table" />
+            </Button>
+            <Button
+              style={{ float: "right" }}
+              type="primary"
+              onClick={reorderQuestions}
+              title="Renumber Questions"
+            >
+              <Icon type="ordered-list" />
+            </Button>
+          </Row>
+          <Table
+            size="middle"
+            dataSource={display.instrument_questions}
+            rowKey={iq => iq.id}
+            expandedRowRender={iq => (
+              <ExpandedQuestion
+                question={iq.question}
+                options={iq.options}
+                specialOptions={iq.special_options}
+              />
+            )}
+            expandIcon={props => customExpandIcon(props)}
+            pagination={{
+              defaultPageSize: 25,
+              onChange: onPageChange,
+              current: currentPage
+            }}
           >
-            <Fragment>
-              <Row style={{ margin: "3px" }}>
-                <Button
-                  type="primary"
-                  onClick={tabulateQuestions}
-                  title="Show Tables"
-                >
-                  <Icon type="table" />
+            <Column title="Position" dataIndex="number_in_instrument" />
+            <Column
+              title="Question"
+              dataIndex="type"
+              render={(text, iq) => (
+                <Button type="link" onClick={() => handleQuestionClick(iq)}>
+                  {iq.question.question_type}
                 </Button>
-                <Button
-                  style={{ float: "right" }}
-                  type="primary"
-                  onClick={reorderQuestions}
-                  title="Renumber Questions"
-                >
-                  <Icon type="ordered-list" />
-                </Button>
-              </Row>
-              <Table
-                size="middle"
-                dataSource={display.instrument_questions}
-                rowKey={iq => iq.id}
-                expandedRowRender={iq => (
-                  <ExpandedQuestion
-                    question={iq.question}
-                    options={iq.options}
-                    specialOptions={iq.special_options}
-                  />
-                )}
-                expandIcon={props => customExpandIcon(props)}
-                pagination={{
-                  defaultPageSize: 25,
-                  onChange: onPageChange,
-                  current: currentPage
-                }}
-              >
-                <Column title="Position" dataIndex="number_in_instrument" />
-                <Column
-                  title="Question"
-                  dataIndex="type"
-                  render={(text, iq) => (
-                    <Button type="link" onClick={() => handleQuestionClick(iq)}>
-                      {iq.question.question_type}
-                    </Button>
-                  )}
-                />
-                <Column
-                  title="Text"
-                  dataIndex="text"
-                  render={(text, iq) => (
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: iq.question.text
-                      }}
-                    />
-                  )}
-                />
-                <Column
-                  title="Actions"
-                  dataIndex="actions"
-                  render={(text, iq) => (
-                    <EditDeleteBtnGroup
-                      object={iq}
-                      message={iq.question.question_identifier}
-                      handleEdit={handleQuestionEdit}
-                      handleDelete={handleQuestionDelete}
-                    />
-                  )}
-                />
-              </Table>
-            </Fragment>
-            <Row style={{ marginTop: "3px" }} gutter={16}>
-              <Col span={12}>
-                <Button type="primary" onClick={handleImportInstrumentQuestion}>
-                  <Icon type="import" /> Import Questions
-                </Button>
-              </Col>
-              <Col span={12}>
-                <Button
-                  style={{ float: "right" }}
-                  type="primary"
-                  onClick={handleCreateInstrumentQuestion}
-                >
-                  <Icon type="plus" /> Create Question
-                </Button>
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
-                <Icon type="check-square" />
-                Display Instructions
-              </span>
-            }
-            key="2"
-          >
-            <DisplayInstructions
-              projectId={projectId}
-              display={display}
-              setSelectedKey={setSelectedKey}
+              )}
             />
-          </TabPane>
-        </Tabs>
+            <Column
+              title="Text"
+              dataIndex="text"
+              render={(text, iq) => (
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: iq.question.text
+                  }}
+                />
+              )}
+            />
+            <Column
+              title="Actions"
+              dataIndex="actions"
+              render={(text, iq) => (
+                <EditDeleteBtnGroup
+                  object={iq}
+                  message={iq.question.question_identifier}
+                  handleEdit={handleQuestionEdit}
+                  handleDelete={handleQuestionDelete}
+                />
+              )}
+            />
+          </Table>
+          <Row style={{ marginTop: "3px" }} gutter={16}>
+            <Col span={12}>
+              <Button type="primary" onClick={handleImportInstrumentQuestion}>
+                <Icon type="import" /> Import Questions
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button
+                style={{ float: "right" }}
+                type="primary"
+                onClick={handleCreateInstrumentQuestion}
+              >
+                <Icon type="plus" /> Create Question
+              </Button>
+            </Col>
+          </Row>
+        </Fragment>
       );
     }
-  };
-
-  const onPageChange = (page, pageSize) => {
-    setCurrentPage(page);
   };
 
   return (
