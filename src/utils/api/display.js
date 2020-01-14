@@ -28,3 +28,10 @@ export const deleteDisplay = (projectId, instrumentId, id) => {
     `/projects/${projectId}/instruments/${instrumentId}/displays/${id}`
   );
 };
+
+export const orderInstrumentQuestions = (projectId, instrumentId, id, data) => {
+  return instance.post(
+    `/projects/${projectId}/instruments/${instrumentId}/displays/${id}/order_instrument_questions`,
+    { display: data }
+  );
+};

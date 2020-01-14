@@ -2,9 +2,9 @@ import * as Yup from "yup";
 import React, { Fragment, useState } from "react";
 import {
   LeftCancelButton,
-  AddButton,
   RightSubmitButton,
-  DeleteButton
+  DeleteButton,
+  LeftCancelRightAddButtons
 } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Modal, Form as AntForm, Table, Col, Typography } from "antd";
@@ -213,8 +213,10 @@ const TableQuestions = props => {
             </Table>
           );
         })}
-        <LeftCancelButton handleClick={props.handleCancel} />
-        <AddButton handleClick={handleTableAdd} />
+        <LeftCancelRightAddButtons
+          handleCancelClick={props.handleCancel}
+          handleAddClick={handleTableAdd}
+        />
       </Fragment>
     );
   }

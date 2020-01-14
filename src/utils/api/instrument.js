@@ -39,7 +39,3 @@ export const updateInstrument = (projectId, id, instrument) => {
 export const deleteInstrument = (projectId, id) => {
   return instance.delete(`/projects/${projectId}/instruments/${id}`);
 };
-
-export const reorderInstrumentQuestions = (projectId, id) => {
-  return instance.get(`/projects/${projectId}/instruments/${id}/reorder`);
-};

@@ -34,3 +34,10 @@ export const deleteSection = (projectId, instrumentId, id) => {
     `/projects/${projectId}/instruments/${instrumentId}/sections/${id}`
   );
 };
+
+export const orderDisplays = (projectId, instrumentId, id, data) => {
+  return instance.post(
+    `/projects/${projectId}/instruments/${instrumentId}/sections/${id}/order_displays`,
+    { section: data }
+  );
+};

@@ -12,17 +12,13 @@ import React from "react";
 const FormItem = AntForm.Item;
 
 const SectionSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required"),
-  position: Yup.number()
-    .min(1, "Number must be greater than 0")
-    .required("Postion is required")
+  title: Yup.string().required("Title is required")
 });
 
 const SectionForm = props => {
   const projectId = props.instrument.project_id;
   const instrumentId = props.instrument.id;
   const section = props.section;
-  const maxCount = props.maxCount;
 
   return (
     <Formik
@@ -30,7 +26,8 @@ const SectionForm = props => {
         id: (section && section.id) || null,
         title: (section && section.title) || "",
         instrument_id: (section && section.instrument_id) || instrumentId,
-        position: (section && section.position) || maxCount
+        position:
+          (section && section.position) || props.instrument.section_count + 1
       }}
       validationSchema={SectionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -69,15 +66,6 @@ const SectionForm = props => {
       render={({ values }) => (
         <Form className="ant-form ant-form-horizontal">
           <CenteredH4>{values.title ? values.title : "New Section"}</CenteredH4>
-          <FormItem>
-            <Field
-              className="ant-input"
-              name="position"
-              placeholder="Enter position"
-              type="number"
-            />
-            <AlertErrorMessage name="position" type="error" />
-          </FormItem>
           <FormItem>
             <Field
               className="ant-input"

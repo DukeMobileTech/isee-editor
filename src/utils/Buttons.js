@@ -52,6 +52,24 @@ export const FolderAddButton = props => {
   );
 };
 
+export const LeftCancelRightAddButtons = props => {
+  return (
+    <Row style={{ margin: "3px" }}>
+      <Button title="Back" onClick={props.handleCancelClick}>
+        <Icon type="left" />
+      </Button>
+      <Button
+        style={{ float: "right" }}
+        type="primary"
+        title="New"
+        onClick={props.handleAddClick}
+      >
+        <Icon type="plus" />
+      </Button>
+    </Row>
+  );
+};
+
 export const AddButton = props => {
   return (
     <Row style={{ margin: "3px" }}>

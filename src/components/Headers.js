@@ -21,7 +21,7 @@ const header = {
   fontWeight: "bold"
 };
 
-export const AppHeader = () => {
+export const AppHeader = props => {
   // eslint-disable-next-line no-unused-vars
   const [projects, currentProjectId, setCurrentProjectId] = useContext(
     ProjectContext
@@ -38,9 +38,13 @@ export const AppHeader = () => {
     window.location = "/";
   };
 
-  const UserMenuItem = () => {
+  const UserMenuItem = props => {
     return (
-      <Menu.Item key="4" style={{ float: "right", marginRight: "10px" }}>
+      <Menu.Item
+        key="4"
+        style={{ float: "right", marginRight: "10px" }}
+        {...props}
+      >
         {sessionStorage.getItem("email") && sessionStorage.getItem("jwt") && (
           <span>
             <Icon type="user" />
@@ -69,12 +73,12 @@ export const AppHeader = () => {
           <Menu.Item key="3">
             <a href="/surveys">Responses</a>
           </Menu.Item>
-          <UserMenuItem />
+          <UserMenuItem {...props} />
         </Menu>
       )}
       {!currentProjectId && (
         <Menu theme="light" mode="horizontal" style={header}>
-          <UserMenuItem />
+          <UserMenuItem {...props} />
         </Menu>
       )}
     </Layout.Header>

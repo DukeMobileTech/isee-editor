@@ -14,10 +14,7 @@ const FormItem = AntForm.Item;
 
 const DisplaySchema = Yup.object().shape({
   section_id: Yup.number().required("Section is required"),
-  title: Yup.string().required("Title is required"),
-  position: Yup.number()
-    .min(1, "Number must be greater than 0")
-    .required("Position is required")
+  title: Yup.string().required("Title is required")
 });
 
 const SubsectionForm = props => {
@@ -25,7 +22,6 @@ const SubsectionForm = props => {
   const instrumentId = props.section.instrument_id;
   const sectionId = props.section.id;
   const display = props.display;
-  const displayPosition = props.lastDisplayPosition + 1;
   // eslint-disable-next-line no-unused-vars
   const [sections, setSections] = useContext(InstrumentSectionContext);
 
@@ -36,7 +32,7 @@ const SubsectionForm = props => {
         title: (display && display.title) || "",
         instrument_id: (display && display.instrument_id) || instrumentId,
         section_id: (display && display.section_id) || sectionId,
-        position: (display && display.position) || displayPosition
+        position: (display && display.position) || props.section.display_count
       }}
       validationSchema={DisplaySchema}
       onSubmit={(values, { setErrors }) => {
@@ -93,15 +89,6 @@ const SubsectionForm = props => {
               })}
             </Field>
             <AlertErrorMessage name="section_id" type="error" />
-          </FormItem>
-          <FormItem>
-            <Field
-              className="ant-input"
-              name="position"
-              placeholder="Enter position"
-              type="number"
-            />
-            <AlertErrorMessage name="position" type="error" />
           </FormItem>
           <FormItem>
             <Field

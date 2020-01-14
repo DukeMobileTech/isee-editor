@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Icon, List, Typography, Row } from "antd";
+import { Button, Col, Divider, Icon, List, Row } from "antd";
 import { DeleteButton, EditButton } from "../../utils/Buttons";
 import { getItemStyle, getListStyle } from "../../utils/Utils";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -27,6 +27,7 @@ const Sections = props => {
   const [displays, setDisplays] = useState(
     [].concat.apply([], sections.map(section => section.displays))
   );
+  const [section, setSection] = useState(null);
 
   const fetchSections = async () => {
     setShowForm(false);
@@ -45,12 +46,12 @@ const Sections = props => {
   };
 
   const handleEditSection = section => {
-    props.setSection(section);
     setShowForm(true);
+    setSection(section);
   };
 
   const handleNewSection = () => {
-    props.setSection(null);
+    setSection(null);
     setShowForm(true);
   };
 
@@ -91,10 +92,9 @@ const Sections = props => {
     return (
       <SectionForm
         instrument={instrument}
-        section={props.section}
+        section={section}
         handleCancel={handleCancel}
         fetchSections={fetchSections}
-        maxCount={sections.length + 1}
       />
     );
   } else if (showTranslations) {
@@ -185,10 +185,7 @@ const Sections = props => {
                         >
                           <List.Item>
                             <Col span={4}>
-                              <Icon type="drag" />{" "}
-                              <Typography.Text strong>
-                                {section.position}
-                              </Typography.Text>
+                              <Icon type="drag" />
                             </Col>
                             <Col span={14}>
                               <Button
