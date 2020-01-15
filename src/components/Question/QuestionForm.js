@@ -83,8 +83,8 @@ const QuestionForm = props => {
           question_type: (question && question.question_type) || "",
           pdf_response_height: (question && question.pdf_response_height) || "",
           pdf_print_options: showOnPdf,
-          pop_up_instruction:
-            (question && question.pop_up_instruction) || false,
+          pop_up_instruction_id:
+            (question && question.pop_up_instruction_id) || "",
           instruction_after_text:
             (question && question.instruction_after_text) || false,
           text: (question && question.text) || "",
@@ -109,7 +109,7 @@ const QuestionForm = props => {
             special_option_set_id: values.special_option_set_id,
             pdf_response_height: values.pdf_response_height,
             pdf_print_options: values.pdf_print_options,
-            pop_up_instruction: values.pop_up_instruction,
+            pop_up_instruction_id: values.pop_up_instruction_id,
             instruction_after_text: values.instruction_after_text,
             default_response: values.default_response
           };
@@ -316,20 +316,6 @@ const QuestionForm = props => {
             {values.instruction_id && (
               <DRow>
                 <Col span={4}>
-                  <Text strong>Show Instructions As Pop-up</Text>
-                </Col>
-                <Col span={20}>
-                  <Field
-                    name="pop_up_instruction"
-                    type="checkbox"
-                    checked={values.pop_up_instruction}
-                  />
-                </Col>
-              </DRow>
-            )}
-            {values.instruction_id && (
-              <DRow>
-                <Col span={4}>
                   <Text strong>Show Instructions After Text</Text>
                 </Col>
                 <Col span={20}>
@@ -341,6 +327,48 @@ const QuestionForm = props => {
                 </Col>
               </DRow>
             )}
+            <DRow>
+              <Col span={4}>
+                <Text strong>Pop-up Instructions</Text>
+              </Col>
+              <Col span={20}>
+                <Field
+                  name="pop_up_instruction_id"
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
+                      onChange={value => {
+                        if (value === undefined) {
+                          value = null;
+                        }
+                        setFieldValue("pop_up_instruction_id", value);
+                      }}
+                      filterOption={(input, option) =>
+                        option.props.children &&
+                        option.props.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {instructions.map(instruction => {
+                        return (
+                          <Option
+                            key={instruction.id}
+                            name="pop_up_instruction_id"
+                            value={instruction.id}
+                          >
+                            {instruction.title.replace(/<[^>]+>/g, "")}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  )}
+                />
+              </Col>
+            </DRow>
             <DRow>
               <Col span={4}>
                 <Text strong>Text</Text>

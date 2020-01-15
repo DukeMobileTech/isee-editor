@@ -20,7 +20,10 @@ const InstrumentSchema = Yup.object().shape({
 });
 
 const InstrumentForm = props => {
-  const projects = useContext(ProjectContext);
+  // eslint-disable-next-line no-unused-vars
+  const [projects, currentProjectId, setCurrentProjectId] = useContext(
+    ProjectContext
+  );
   const instrument = props.instrument ? props.instrument : null;
 
   return (
