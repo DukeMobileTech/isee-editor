@@ -11,11 +11,11 @@ export const getInstrument = (projectId, id) => {
   return instance.get(`/projects/${projectId}/instruments/${id}`);
 };
 
-export const getInstrumentPdf = (instrument, language) => {
+export const getInstrumentPdf = (instrument, language, columnCount) => {
   return instance.get(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/pdf_export`,
     {
-      params: { language: language },
+      params: { language: language, column_count: columnCount },
       responseType: "arraybuffer",
       headers: {
         Accept: "application/pdf"
