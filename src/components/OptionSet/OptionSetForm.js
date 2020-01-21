@@ -223,7 +223,6 @@ const OptionSetForm = props => {
               </Col>
             </DRow>
             <OptionSetOptions
-              optionSet={optionSet}
               values={values}
               setFieldValue={setFieldValue}
               instructions={instructions}

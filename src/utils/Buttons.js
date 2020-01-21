@@ -170,7 +170,12 @@ export const DeleteButton = props => {
 
 export const ViewButton = props => {
   return (
-    <Button type="primary" title="View" onClick={props.handleClick}>
+    <Button
+      style={{ margin: "1px" }}
+      type="primary"
+      title="Show"
+      onClick={props.handleClick}
+    >
       <Icon type="folder-open" />
     </Button>
   );

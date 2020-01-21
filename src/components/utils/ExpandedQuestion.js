@@ -10,6 +10,10 @@ const ExpandedQuestion = ({ question, options, specialOptions }) => {
 
   return (
     <span>
+      <p style={{ margin: 1 }}>
+        <Text strong>Type: </Text>
+        <Text>{question.question_type}</Text>
+      </p>
       {question.instruction && (
         <p style={{ margin: 1 }}>
           <Text strong>Instructions: </Text>
@@ -24,7 +28,14 @@ const ExpandedQuestion = ({ question, options, specialOptions }) => {
         <p style={{ margin: 1 }}>
           <Text strong>Options: </Text>
           {questionOptions.map((option, index) => (
-            <Text code key={option.id}>{`${index + 1}) ${option.text}`}</Text>
+            <Text code key={option.id}>
+              {`${index + 1})`}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: option.text.replace("<p>", "").replace("</p>", "")
+                }}
+              />
+            </Text>
           ))}
         </p>
       )}
@@ -32,7 +43,14 @@ const ExpandedQuestion = ({ question, options, specialOptions }) => {
         <p style={{ margin: 1 }}>
           <Text strong>Special Options: </Text>
           {questionSpecialOptions.map((option, index) => (
-            <Tag key={option.id}>{`${index + 1}) ${option.text}`}</Tag>
+            <Tag key={option.id}>
+              {`${index + 1})`}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: option.text.replace("<p>", "").replace("</p>", "")
+                }}
+              />
+            </Tag>
           ))}
         </p>
       )}

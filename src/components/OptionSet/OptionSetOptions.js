@@ -11,7 +11,6 @@ import { DeleteButton } from "../../utils/Buttons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const OptionSetOptions = ({
-  optionSet,
   values,
   setFieldValue,
   instructions,
@@ -19,7 +18,7 @@ const OptionSetOptions = ({
   resetForm
 }) => {
   const onDragEnd = result => {
-    const copy = [...optionSet.option_in_option_sets];
+    const copy = [...values.option_in_option_sets];
     copy.splice(
       result.destination.index,
       0,

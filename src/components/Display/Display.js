@@ -2,7 +2,6 @@ import { Button, Col, Icon, Row, Spin, Table, Typography } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 
 import { CenteredH2 } from "../../utils/Styles";
-import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import ExpandedQuestion from "../utils/ExpandedQuestion";
 import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
@@ -13,6 +12,7 @@ import { getDisplay } from "../../utils/api/display";
 import TableQuestions from "./TableQuestions";
 import { customExpandIcon } from "../../utils/Utils";
 import DisplayQuestions from "./DisplayQuestions";
+import { ViewButton, EditButton, DeleteButton } from "../../utils/Buttons";
 
 const { Column } = Table;
 
@@ -75,7 +75,7 @@ const Display = props => {
     });
   };
 
-  const handleQuestionEdit = question => {
+  const handleInstrumentQuestionEdit = question => {
     setEditQuestion(question);
     setShowEdit(true);
   };
@@ -210,16 +210,8 @@ const Display = props => {
               current: currentPage
             }}
           >
-            <Column title="Position" dataIndex="number_in_instrument" />
-            <Column
-              title="Question"
-              dataIndex="type"
-              render={(text, iq) => (
-                <Button type="link" onClick={() => handleQuestionClick(iq)}>
-                  {iq.question.question_type}
-                </Button>
-              )}
-            />
+            <Column title="Position" dataIndex="position" />
+            <Column title="Identifier" dataIndex="identifier" />
             <Column
               title="Text"
               dataIndex="text"
@@ -235,12 +227,22 @@ const Display = props => {
               title="Actions"
               dataIndex="actions"
               render={(text, iq) => (
-                <EditDeleteBtnGroup
-                  object={iq}
-                  message={iq.question.question_identifier}
-                  handleEdit={handleQuestionEdit}
-                  handleDelete={handleQuestionDelete}
-                />
+                <Row type="flex" justify="space-around" align="middle">
+                  <ViewButton
+                    handleClick={() => handleInstrumentQuestionEdit(iq)}
+                  />
+                  <EditButton handleClick={() => handleQuestionClick(iq)} />
+                  <DeleteButton
+                    handleClick={() => {
+                      if (
+                        window.confirm(
+                          `Are you sure you want to delete ${iq.identifier}?`
+                        )
+                      )
+                        handleQuestionDelete(iq);
+                    }}
+                  />
+                </Row>
               )}
             />
           </Table>

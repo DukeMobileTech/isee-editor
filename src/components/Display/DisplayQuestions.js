@@ -39,13 +39,14 @@ const DisplayQuestions = props => {
     <Fragment>
       <CenteredH3>{display.title}</CenteredH3>
       <Row type="flex" justify="space-around" align="middle">
-        <Col span={4}>
+        <Col span={1} />
+        <Col span={3}>
           <strong>Position</strong>
         </Col>
-        <Col span={4}>
-          <strong>Instrument Number</strong>
+        <Col span={3}>
+          <strong>Identifier</strong>
         </Col>
-        <Col span={16}>
+        <Col span={17}>
           <strong>Text</strong>
         </Col>
       </Row>
@@ -77,14 +78,12 @@ const DisplayQuestions = props => {
                         )}
                       >
                         <List.Item>
-                          <Col span={4}>
+                          <Col span={1}>
                             <Icon type="drag" />
-                            {instrumentQuestion.position}
                           </Col>
-                          <Col span={4}>
-                            {instrumentQuestion.number_in_instrument}
-                          </Col>
-                          <Col span={16}>
+                          <Col span={3}>{instrumentQuestion.position}</Col>
+                          <Col span={3}>{instrumentQuestion.identifier}</Col>
+                          <Col span={17}>
                             <span
                               dangerouslySetInnerHTML={{
                                 __html: instrumentQuestion.question.text
