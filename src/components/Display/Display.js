@@ -12,7 +12,13 @@ import { getDisplay } from "../../utils/api/display";
 import TableQuestions from "./TableQuestions";
 import { customExpandIcon } from "../../utils/Utils";
 import DisplayQuestions from "./DisplayQuestions";
-import { ViewButton, EditButton, DeleteButton } from "../../utils/Buttons";
+import {
+  ViewButton,
+  EditButton,
+  DeleteButton,
+  TranslationButton
+} from "../../utils/Buttons";
+import Translations from "../InstrumentTranslation/Translations";
 
 const { Column } = Table;
 
@@ -29,6 +35,8 @@ const Display = props => {
   const [showTables, setShowTables] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showOrder, setShowOrder] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
+  const [questionIds, setQuestionIds] = useState([]);
 
   useEffect(() => {
     setShowNew(false);
@@ -104,6 +112,16 @@ const Display = props => {
     setShowQuestionModal(true);
   };
 
+  const handleTranslation = question => {
+    setQuestionIds([question.question.id]);
+    setShowTranslations(true);
+  };
+
+  const handleTranslations = () => {
+    setQuestionIds(display.instrument_questions.map(iq => iq.question.id));
+    setShowTranslations(true);
+  };
+
   const tabulateQuestions = () => {
     setShowTables(true);
   };
@@ -113,7 +131,17 @@ const Display = props => {
   };
 
   const DisplayView = () => {
-    if (showNew) {
+    if (showTranslations) {
+      return (
+        <Translations
+          projectId={projectId}
+          instrumentId={display.instrument_id}
+          questionIds={questionIds}
+          setShowTranslations={setShowTranslations}
+          showTranslations={showTranslations}
+        />
+      );
+    } else if (showNew) {
       return (
         <NewInstrumentQuestion
           projectId={projectId}
@@ -175,7 +203,12 @@ const Display = props => {
     } else {
       return (
         <Fragment>
-          <Row style={{ margin: "3px" }}>
+          <Row
+            style={{ marginBottom: "5px" }}
+            type="flex"
+            justify="space-between"
+            align="middle"
+          >
             <Button
               type="primary"
               onClick={tabulateQuestions}
@@ -183,6 +216,7 @@ const Display = props => {
             >
               <Icon type="table" />
             </Button>
+            <TranslationButton handleClick={handleTranslations} />
             <Button
               style={{ float: "right" }}
               type="primary"
@@ -232,6 +266,9 @@ const Display = props => {
                     handleClick={() => handleInstrumentQuestionEdit(iq)}
                   />
                   <EditButton handleClick={() => handleQuestionClick(iq)} />
+                  <TranslationButton
+                    handleClick={() => handleTranslation(iq)}
+                  />
                   <DeleteButton
                     handleClick={() => {
                       if (

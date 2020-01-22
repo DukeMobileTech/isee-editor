@@ -7,6 +7,18 @@ export const getAllQuestions = () => {
   return instance.get("/questions");
 };
 
+export const getQuestions = (projectId, instrumentId, ids, language) => {
+  return instance.get(
+    `projects/${projectId}/instruments/${instrumentId}/questions`,
+    {
+      params: {
+        ids: ids,
+        language: language
+      }
+    }
+  );
+};
+
 export const copyQuestion = id => {
   return instance.get(`/questions/${id}/copy`);
 };
