@@ -43,7 +43,7 @@ const SectionForm = props => {
               props.fetchSections();
             })
             .catch(error => {
-              for (const err of error.response.data.errors) {
+              for (const err of error.data.errors) {
                 if (err.includes("Title")) {
                   setErrors({ title: err });
                 }
@@ -55,7 +55,7 @@ const SectionForm = props => {
               props.fetchSections();
             })
             .catch(error => {
-              for (const err of error.response.data.errors) {
+              for (const err of error.data.errors) {
                 if (err.includes("Title")) {
                   setErrors({ title: err });
                 }

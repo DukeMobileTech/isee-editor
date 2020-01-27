@@ -27,6 +27,6 @@ instance.interceptors.response.use(
       sessionStorage.clear();
       window.location = "/";
     }
-    return Promise.reject(error);
+    return Promise.reject(error.response);
   }
 );

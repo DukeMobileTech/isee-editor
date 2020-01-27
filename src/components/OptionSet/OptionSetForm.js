@@ -4,7 +4,7 @@ import { RightSubmitButton } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Button, Col, Icon, Select, Typography, Modal } from "antd";
 import { Field, Form, Formik } from "formik";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { createOptionSet, updateOptionSet } from "../../utils/api/option_set";
 
 import AddOptions from "./AddOptions";
@@ -13,6 +13,7 @@ import { OptionContext } from "../../context/OptionContext";
 import { InstructionContext } from "../../context/InstructionContext";
 import { modalWidth } from "../../utils/Constants";
 import OptionSetOptions from "./OptionSetOptions";
+import { getOptions } from "../../utils/api/option";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -27,6 +28,18 @@ const OptionSetForm = props => {
   // eslint-disable-next-line no-unused-vars
   const [instructions, setInstructions] = useContext(InstructionContext);
   const [addOptions, setAddOptions] = useState(false);
+
+  useEffect(() => {
+    const fetchOptions = () => {
+      if (options.length === 0) {
+        getOptions().then(results => {
+          setOptions(results.data);
+        });
+      }
+    };
+    fetchOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDeleteOption = (oios, values, resetForm) => {
     const index = optionSet.option_in_option_sets.findIndex(
@@ -108,7 +121,7 @@ const OptionSetForm = props => {
                 }
               })
               .catch(error => {
-                for (const err of error.response.data.errors) {
+                for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });
                   }
@@ -122,11 +135,9 @@ const OptionSetForm = props => {
                 }
               })
               .catch(error => {
-                if (error.response.data) {
-                  for (const err of error.response.data.errors) {
-                    if (err.includes("Title")) {
-                      setErrors({ title: err });
-                    }
+                for (const err of error.data.errors) {
+                  if (err.includes("Title")) {
+                    setErrors({ title: err });
                   }
                 }
               });

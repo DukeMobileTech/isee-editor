@@ -47,6 +47,7 @@ const InstrumentQuestion = props => {
                 question={instrumentQuestion.question}
                 options={instrumentQuestion.options}
                 specialOptions={instrumentQuestion.special_options}
+                fetchDisplay={props.fetchDisplay}
               />
             </Typography.Paragraph>
           </Collapse.Panel>

@@ -67,6 +67,8 @@ const Display = props => {
     setShowEdit(false);
     setShowImport(false);
     setShowTables(false);
+    setShowQuestionModal(false);
+    setInstrumentQuestion(null);
   };
 
   const handleImportCompleted = () => {
@@ -100,11 +102,6 @@ const Display = props => {
 
   const reorderQuestions = () => {
     setShowOrder(!showOrder);
-  };
-
-  const handleCancelQuestion = () => {
-    setShowQuestionModal(false);
-    setInstrumentQuestion(null);
   };
 
   const handleQuestionClick = question => {
@@ -175,7 +172,7 @@ const Display = props => {
         <QuestionForm
           question={instrumentQuestion.question}
           folder={null}
-          fetchQuestions={handleCancelQuestion}
+          fetchQuestions={fetchDisplay}
           visible={showQuestionModal}
           setVisible={setShowQuestionModal}
         />
@@ -235,6 +232,7 @@ const Display = props => {
                 question={iq.question}
                 options={iq.options}
                 specialOptions={iq.special_options}
+                fetchDisplay={fetchDisplay}
               />
             )}
             expandIcon={props => customExpandIcon(props)}

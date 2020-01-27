@@ -10,13 +10,14 @@ import Translations from "../OptionTranslation/Translations";
 import { OptionContext } from "../../context/OptionContext";
 import { CellActions, EditableProvider } from "../utils/EditableCell";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
+import ErrorAlert from "../utils/Errors";
 
 const EditableTable = props => {
   const newId = "new";
-  // eslint-disable-next-line no-unused-vars
   const [options, setOptions] = useContext(OptionContext);
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [errors, setErrors] = useState(null);
 
   const columns = [
     {
@@ -82,23 +83,32 @@ const EditableTable = props => {
       if (index > -1) {
         const item = newData[index];
         if (record.id === newId) {
-          createOption(row).then(result => {
-            newData.splice(index, 1, {
-              ...item,
-              ...result.data
+          createOption(row)
+            .then(result => {
+              console.log("result: ", result);
+              newData.splice(index, 1, {
+                ...item,
+                ...result.data
+              });
+              setEditingKey("");
+              setOptions(newData);
+            })
+            .catch(error => {
+              setErrors(error.data.errors.join("; "));
             });
-            setEditingKey("");
-            setOptions(newData);
-          });
         } else {
           newData.splice(index, 1, {
             ...item,
             ...row
           });
-          updateOption(record.id, row).then(result => {
-            setEditingKey("");
-            setOptions(newData);
-          });
+          updateOption(record.id, row)
+            .then(result => {
+              setEditingKey("");
+              setOptions(newData);
+            })
+            .catch(error => {
+              setErrors(error.data.errors.join("; "));
+            });
         }
       } else {
         newData.push(row);
@@ -118,10 +128,13 @@ const EditableTable = props => {
   };
 
   const handleDelete = record => {
-    deleteOption(record.id).then(res => {
-      const dataSource = [...options];
-      setOptions(dataSource.filter(item => item.id !== record.id));
-    });
+    if (record.id === newId) {
+      setOptions([...options].filter(item => item.id !== record.id));
+    } else {
+      deleteOption(record.id).then(res => {
+        setOptions([...options].filter(item => item.id !== record.id));
+      });
+    }
   };
 
   const handleShowOptionTranslations = record => {
@@ -134,17 +147,21 @@ const EditableTable = props => {
     props.setShowTranslations(!props.showTranslations);
   };
 
-  return (
-    <EditableProvider
-      form={props.form}
-      columns={columns}
-      data={options}
-      isEditing={isEditing}
-      handleShowAllTranslations={handleShowAllTranslations}
-      handleAdd={handleAdd}
-      cancel={cancel}
-    />
-  );
+  if (errors != null) {
+    return <ErrorAlert errors={errors} setErrors={setErrors} />;
+  } else {
+    return (
+      <EditableProvider
+        form={props.form}
+        columns={columns}
+        data={options}
+        isEditing={isEditing}
+        handleShowAllTranslations={handleShowAllTranslations}
+        handleAdd={handleAdd}
+        cancel={cancel}
+      />
+    );
+  }
 };
 
 const Options = () => {

@@ -20,7 +20,10 @@ const InstrumentQuestionForm = props => {
   const iq = props.instrumentQuestion;
   // eslint-disable-next-line no-unused-vars
   const [sections, setSections] = useContext(InstrumentSectionContext);
-  const displays = [].concat.apply([], sections.map(sec => sec.displays));
+  const displays = [].concat.apply(
+    [],
+    sections.map(sec => sec.displays)
+  );
   // eslint-disable-next-line no-unused-vars
   const [instrumentQuestions, setInstrumentQuestions] = useContext(
     InstrumentQuestionContext
@@ -53,12 +56,14 @@ const InstrumentQuestionForm = props => {
         };
         updateInstrumentQuestion(props.projectId, editQuestion)
           .then(response => {
-            if (response.status === 204) {
-              props.fetchDisplay();
-            }
+            props.fetchDisplay();
           })
           .catch(error => {
-            setErrors(error);
+            for (const err of error.data.errors) {
+              if (err.includes("Identifier")) {
+                setErrors({ identifier: err });
+              }
+            }
           });
       }}
       render={({ values }) => (

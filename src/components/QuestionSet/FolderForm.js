@@ -49,7 +49,7 @@ const FolderForm = props => {
                 }
               })
               .catch(error => {
-                for (const err of error.response.data.errors) {
+                for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });
                   }
@@ -63,7 +63,7 @@ const FolderForm = props => {
                 }
               })
               .catch(error => {
-                for (const err of error.response.data.errors) {
+                for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });
                   }

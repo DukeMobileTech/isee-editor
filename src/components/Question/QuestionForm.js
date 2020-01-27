@@ -117,26 +117,30 @@ const QuestionForm = props => {
             editQuestion.id = question.id;
             updateFolderQuestion(editQuestion)
               .then(response => {
-                if (response.status === 204) {
-                  props.fetchQuestions();
-                }
+                props.fetchQuestions();
               })
               .catch(error => {
-                setErrors(error);
+                for (const err of error.data.errors) {
+                  if (err.includes("Question identifier")) {
+                    setErrors({ question_identifier: err });
+                  }
+                }
               });
           } else {
             createFolderQuestion(editQuestion)
               .then(response => {
-                if (response.status === 201) {
-                  if (props.returnValue) {
-                    props.fetchQuestions(response.data);
-                  } else {
-                    props.fetchQuestions();
-                  }
+                if (props.returnValue) {
+                  props.fetchQuestions(response.data);
+                } else {
+                  props.fetchQuestions();
                 }
               })
               .catch(error => {
-                setErrors(error);
+                for (const err of error.data.errors) {
+                  if (err.includes("Question identifier")) {
+                    setErrors({ question_identifier: err });
+                  }
+                }
               });
           }
         }}

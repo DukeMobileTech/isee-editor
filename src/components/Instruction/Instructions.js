@@ -9,12 +9,14 @@ import { CellActions, EditableProvider } from "../utils/EditableCell";
 import Translations from "../InstructionTranslation/Translations";
 import { InstructionContext } from "../../context/InstructionContext";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
+import ErrorAlert from "../utils/Errors";
 
 const EditableTable = props => {
   const newId = "new";
   const [instructions, setInstructions] = useState(props.instructions);
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [errors, setErrors] = useState(null);
 
   const columns = [
     {
@@ -80,23 +82,31 @@ const EditableTable = props => {
       if (index > -1) {
         const item = newData[index];
         if (record.id === newId) {
-          createInstruction(row).then(result => {
-            newData.splice(index, 1, {
-              ...item,
-              ...result.data
+          createInstruction(row)
+            .then(result => {
+              newData.splice(index, 1, {
+                ...item,
+                ...result.data
+              });
+              setEditingKey("");
+              setInstructions(newData);
+            })
+            .catch(error => {
+              setErrors(error.data.errors.join("; "));
             });
-            setEditingKey("");
-            setInstructions(newData);
-          });
         } else {
           newData.splice(index, 1, {
             ...item,
             ...row
           });
-          updateInstruction(record.id, row).then(result => {
-            setEditingKey("");
-            setInstructions(newData);
-          });
+          updateInstruction(record.id, row)
+            .then(result => {
+              setEditingKey("");
+              setInstructions(newData);
+            })
+            .catch(error => {
+              setErrors(error.data.errors.join("; "));
+            });
         }
       } else {
         newData.push(row);
@@ -116,10 +126,15 @@ const EditableTable = props => {
   };
 
   const handleDelete = record => {
-    deleteInstruction(record.id).then(res => {
-      const dataSource = [...instructions];
-      setInstructions(dataSource.filter(item => item.id !== record.id));
-    });
+    if (record.id === newId) {
+      setInstructions([...instructions].filter(item => item.id !== record.id));
+    } else {
+      deleteInstruction(record.id).then(res => {
+        setInstructions(
+          [...instructions].filter(item => item.id !== record.id)
+        );
+      });
+    }
   };
 
   const handleShowInstructionTranslations = record => {
@@ -132,17 +147,21 @@ const EditableTable = props => {
     props.setShowTranslations(!props.showTranslations);
   };
 
-  return (
-    <EditableProvider
-      form={props.form}
-      columns={columns}
-      data={instructions}
-      isEditing={isEditing}
-      handleShowAllTranslations={handleShowAllTranslations}
-      handleAdd={handleAdd}
-      cancel={cancel}
-    />
-  );
+  if (errors != null) {
+    return <ErrorAlert errors={errors} setErrors={setErrors} />;
+  } else {
+    return (
+      <EditableProvider
+        form={props.form}
+        columns={columns}
+        data={instructions}
+        isEditing={isEditing}
+        handleShowAllTranslations={handleShowAllTranslations}
+        handleAdd={handleAdd}
+        cancel={cancel}
+      />
+    );
+  }
 };
 
 const Instructions = () => {
