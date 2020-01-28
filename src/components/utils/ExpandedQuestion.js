@@ -74,6 +74,19 @@ const ExpandedQuestion = ({
             />
           </p>
         )}
+        {question.after_text_instruction_id && (
+          <p style={{ margin: 1 }}>
+            <Text strong>After Text Instructions: </Text>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: instructions.find(
+                  instruction =>
+                    instruction.id === question.after_text_instruction_id
+                ).text
+              }}
+            />
+          </p>
+        )}
         {questionOptions.length > 0 && (
           <p style={{ margin: 1 }}>
             <Button

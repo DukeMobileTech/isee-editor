@@ -49,6 +49,12 @@ const QuestionTranslationsTable = props => {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
+      sortDirections: ["descend", "ascend"],
+      sorter: (a, b) => {
+        const qta = translations.filter(t => t.question_id === a.id);
+        const qtb = translations.filter(t => t.question_id === b.id);
+        return qta.length - qtb.length;
+      },
       render: (text, question) => {
         const questionTranslations = translations.filter(
           translation => translation.question_id === question.id

@@ -46,6 +46,11 @@ const DisplayTable = props => {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
+      sorter: (a, b) => {
+        const qta = translations.filter(t => t.display_id === a.id);
+        const qtb = translations.filter(t => t.display_id === b.id);
+        return qta.length - qtb.length;
+      },
       render: (text, display) => {
         const displayTranslations = translations.filter(
           trans => trans.display_id === display.id

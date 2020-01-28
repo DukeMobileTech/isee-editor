@@ -85,8 +85,8 @@ const QuestionForm = props => {
           pdf_print_options: showOnPdf,
           pop_up_instruction_id:
             (question && question.pop_up_instruction_id) || "",
-          instruction_after_text:
-            (question && question.instruction_after_text) || false,
+          after_text_instruction_id:
+            (question && question.after_text_instruction_id) || "",
           text: (question && question.text) || "",
           identifies_survey: (question && question.identifies_survey) || false,
           option_set_id: (question && question.option_set_id) || "",
@@ -110,7 +110,7 @@ const QuestionForm = props => {
             pdf_response_height: values.pdf_response_height,
             pdf_print_options: values.pdf_print_options,
             pop_up_instruction_id: values.pop_up_instruction_id,
-            instruction_after_text: values.instruction_after_text,
+            after_text_instruction_id: values.after_text_instruction_id,
             default_response: values.default_response
           };
           if (question && question.id) {
@@ -277,7 +277,7 @@ const QuestionForm = props => {
             )}
             <DRow>
               <Col span={4}>
-                <Text strong>Instructions</Text>
+                <Text strong>Before Text Instructions</Text>
               </Col>
               <Col span={20}>
                 <Field
@@ -317,20 +317,24 @@ const QuestionForm = props => {
                 />
               </Col>
             </DRow>
-            {values.instruction_id && (
-              <DRow>
-                <Col span={4}>
-                  <Text strong>Show Instructions After Text</Text>
-                </Col>
-                <Col span={20}>
-                  <Field
-                    name="instruction_after_text"
-                    type="checkbox"
-                    checked={values.instruction_after_text}
-                  />
-                </Col>
-              </DRow>
-            )}
+            <DRow>
+              <Col span={4}>
+                <Text strong>Text</Text>
+              </Col>
+              <Col span={14}>
+                <Field name="text">
+                  {({ field }) => (
+                    <ReactQuill
+                      value={field.value}
+                      onChange={field.onChange(field.name)}
+                    />
+                  )}
+                </Field>
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="text" type="error" />
+              </Col>
+            </DRow>
             <DRow>
               <Col span={4}>
                 <Text strong>Pop-up Instructions</Text>
@@ -375,20 +379,44 @@ const QuestionForm = props => {
             </DRow>
             <DRow>
               <Col span={4}>
-                <Text strong>Text</Text>
+                <Text strong>After Text Instructions</Text>
               </Col>
-              <Col span={14}>
-                <Field name="text">
-                  {({ field }) => (
-                    <ReactQuill
-                      value={field.value}
-                      onChange={field.onChange(field.name)}
-                    />
+              <Col span={20}>
+                <Field
+                  name="after_text_instruction_id"
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
+                      onChange={value => {
+                        if (value === undefined) {
+                          value = null;
+                        }
+                        setFieldValue("after_text_instruction_id", value);
+                      }}
+                      filterOption={(input, option) =>
+                        option.props.children &&
+                        option.props.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {instructions.map(instruction => {
+                        return (
+                          <Option
+                            key={instruction.id}
+                            name="after_text_instruction_id"
+                            value={instruction.id}
+                          >
+                            {instruction.title.replace(/<[^>]+>/g, "")}
+                          </Option>
+                        );
+                      })}
+                    </Select>
                   )}
-                </Field>
-              </Col>
-              <Col span={6}>
-                <AlertErrorMessage name="text" type="error" />
+                />
               </Col>
             </DRow>
             {questionTypesWithDefaultResponses.includes(

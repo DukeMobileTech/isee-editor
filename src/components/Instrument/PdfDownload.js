@@ -37,7 +37,7 @@ const PdfDownload = props => {
 
   return (
     <Spin spinning={loading}>
-      <Row type="flex" align="middle">
+      <Row type="flex" align="middle" style={{ margin: "2px" }}>
         <Col span={6}></Col>
         <Col span={6}>
           <Typography.Text strong style={{ margin: "5px" }}>
@@ -61,7 +61,7 @@ const PdfDownload = props => {
         </Col>
         <Col span={6}></Col>
       </Row>
-      <Row type="flex" align="middle">
+      <Row type="flex" align="middle" style={{ margin: "2px" }}>
         <Col span={6}></Col>
         <Col span={6}>
           <Typography.Text strong style={{ margin: "5px" }}>

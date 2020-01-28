@@ -45,6 +45,11 @@ const OptionsTable = props => {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
+      sorter: (a, b) => {
+        const ota = translations.filter(t => t.option_id === a.id);
+        const otb = translations.filter(t => t.option_id === b.id);
+        return ota.length - otb.length;
+      },
       render: (text, option) => {
         const optionTranslations = translations.filter(
           trans => trans.option_id === option.id

@@ -44,6 +44,15 @@ const OptionsTable = props => {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
+      sorter: (a, b) => {
+        const qta = a.option_translations.filter(
+          t => t.language === props.language
+        );
+        const qtb = b.option_translations.filter(
+          t => t.language === props.language
+        );
+        return qta.length - qtb.length;
+      },
       render: (text, option) => {
         const translations = option.option_translations.filter(
           translation => translation.language === props.language
@@ -110,6 +119,15 @@ const TranslationsTable = props => {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
+      sorter: (a, b) => {
+        const qta = a.question_translations.filter(
+          t => t.language === props.language
+        );
+        const qtb = b.question_translations.filter(
+          t => t.language === props.language
+        );
+        return qta.length - qtb.length;
+      },
       render: (text, question) => {
         const translations = question.question_translations.filter(
           translation => translation.language === props.language
@@ -168,7 +186,11 @@ const Translations = props => {
       questionIds,
       language
     );
-    setQuestions(result.data);
+    const ordered = [];
+    questionIds.forEach(id => {
+      ordered.push(result.data.find(qst => qst.id === id));
+    });
+    setQuestions(ordered);
     setLoading(false);
   };
 

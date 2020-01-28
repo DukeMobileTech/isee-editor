@@ -46,6 +46,11 @@ const SectionTable = props => {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
+      sorter: (a, b) => {
+        const qta = translations.filter(t => t.section_id === a.id);
+        const qtb = translations.filter(t => t.section_id === b.id);
+        return qta.length - qtb.length;
+      },
       render: (text, section) => {
         const sectionTranslations = translations.filter(
           trans => trans.section_id === section.id

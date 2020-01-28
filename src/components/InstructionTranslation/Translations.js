@@ -44,6 +44,11 @@ const InstructionsTable = props => {
       title: "Translations",
       dataIndex: "translations",
       width: "55%",
+      sorter: (a, b) => {
+        const ita = translations.filter(t => t.instruction_id === a.id);
+        const itb = translations.filter(t => t.instruction_id === b.id);
+        return ita.length - itb.length;
+      },
       render: (text, instruction) => {
         const instructionTranslations = translations.filter(
           translation => translation.instruction_id === instruction.id
