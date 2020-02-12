@@ -223,13 +223,16 @@ const OptionSetForm = props => {
               <Col span={6}>
                 <Text strong>Text</Text>
               </Col>
-              <Col span={6}>
+              <Col span={5}>
                 <Text strong>Pop-up Instruction</Text>
               </Col>
-              <Col span={4}>
+              <Col span={5}>
+                <Text strong>Excludes</Text>
+              </Col>
+              <Col span={2}>
                 <Text strong>Allow Text Entry</Text>
               </Col>
-              <Col span={4}>
+              <Col span={2}>
                 <Text strong>Action</Text>
               </Col>
             </DRow>

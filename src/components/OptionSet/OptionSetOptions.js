@@ -81,7 +81,7 @@ const OptionSetOptions = ({
                               />
                             )}
                           </Col>
-                          <Col span={6}>
+                          <Col span={5}>
                             <Field
                               name={`option_in_option_sets.${index}.instruction_id`}
                               render={({ field }) => (
@@ -122,7 +122,53 @@ const OptionSetOptions = ({
                               )}
                             />
                           </Col>
-                          <Col span={4}>
+                          <Col span={5}>
+                            <Field
+                              name={`option_in_option_sets.${index}.exclusion_ids`}
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  mode="multiple"
+                                  value={
+                                    oios.exclusion_ids
+                                      ? oios.exclusion_ids.split(",")
+                                      : []
+                                  }
+                                  onChange={values => {
+                                    setFieldValue(
+                                      `option_in_option_sets.${index}.exclusion_ids`,
+                                      [
+                                        ...new Set(
+                                          values
+                                            .join(",")
+                                            .replace(/(^[,\s]+)|([,\s]+$)/g, "")
+                                            .split(",")
+                                            .filter(
+                                              val => val !== String(oios.id)
+                                            )
+                                        )
+                                      ].join(",")
+                                    );
+                                  }}
+                                >
+                                  <Select.Option value=""></Select.Option>
+                                  {values.option_in_option_sets.map(
+                                    (optionIn, idx) => {
+                                      return (
+                                        <Select.Option
+                                          key={optionIn.id}
+                                          value={`${optionIn.id}`}
+                                        >
+                                          {optionIn.option.text}
+                                        </Select.Option>
+                                      );
+                                    }
+                                  )}
+                                </Select>
+                              )}
+                            />
+                          </Col>
+                          <Col span={2}>
                             <Field
                               name={`option_in_option_sets.${index}.allow_text_entry`}
                               type="checkbox"
@@ -136,7 +182,7 @@ const OptionSetOptions = ({
                               type="error"
                             />
                           </Col>
-                          <Col span={4}>
+                          <Col span={2}>
                             <DeleteButton
                               handleClick={() => {
                                 if (
