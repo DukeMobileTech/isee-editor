@@ -159,7 +159,10 @@ const OptionSetOptions = ({
                                           key={optionIn.id}
                                           value={`${optionIn.id}`}
                                         >
-                                          {optionIn.option.text}
+                                          {optionIn.option.text.replace(
+                                            /<[^>]+>/g,
+                                            ""
+                                          )}
                                         </Select.Option>
                                       );
                                     }

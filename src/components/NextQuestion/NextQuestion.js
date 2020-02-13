@@ -72,16 +72,12 @@ const NextQuestion = props => {
         <Table dataSource={nextQuestions} rowKey={nq => nq.id}>
           <Column title="Option" dataIndex="option_identifier" />
           <Column title="Value" dataIndex="value" />
+          <Column title="Value Operator" dataIndex="value_operator" />
           <Column title="Next Question" dataIndex="next_question_identifier" />
           <Column
             title="Complete Survey"
             dataIndex="complete_survey"
-            render={(text, nq) =>
-              String(nq.complete_survey) === false ||
-              String(nq.complete_survey) === "null"
-                ? "False"
-                : "True"
-            }
+            render={(_text, nq) => String(nq.complete_survey)}
           />
           <Column
             title="Actions"

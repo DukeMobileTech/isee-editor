@@ -11,6 +11,7 @@ import {
 
 import React, { useContext } from "react";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { valueOperators } from "../../utils/Constants";
 
 const { Text } = Typography;
 
@@ -21,10 +22,7 @@ const NextQuestionSchema = Yup.object().shape({
     is: val => val === null || val === "",
     then: Yup.string().required("Option is required")
   }),
-  next_question_identifier: Yup.string().when("complete_survey", {
-    is: val => val === false || val === "",
-    then: Yup.string().required("Next Question is required")
-  })
+  next_question_identifier: Yup.string().required("Next Question is required")
 });
 
 const NextQuestionForm = props => {
@@ -35,6 +33,14 @@ const NextQuestionForm = props => {
     InstrumentQuestionContext
   );
 
+  const hasIntegerResponses = question => {
+    return (
+      question.question_type === "INTEGER" ||
+      question.question_type === "DECIMAL" ||
+      question.question_type === "LIST_OF_INTEGER_BOXES"
+    );
+  };
+
   return (
     <Formik
       initialValues={{
@@ -43,7 +49,8 @@ const NextQuestionForm = props => {
         option_identifier: nextQuestion.option_identifier || "",
         value: nextQuestion.value || "",
         next_question_identifier: nextQuestion.next_question_identifier || "",
-        complete_survey: nextQuestion.complete_survey || false
+        complete_survey: nextQuestion.complete_survey || false,
+        value_operator: nextQuestion.value_operator || ""
       }}
       validationSchema={NextQuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -54,7 +61,8 @@ const NextQuestionForm = props => {
           option_identifier: values.option_identifier,
           value: values.value,
           next_question_identifier: values.next_question_identifier,
-          complete_survey: values.complete_survey
+          complete_survey: values.complete_survey,
+          value_operator: values.value_operator
         };
         if (editNextQuestion.id) {
           updateNextQuestion(
@@ -89,38 +97,35 @@ const NextQuestionForm = props => {
       }}
       render={({ values }) => (
         <Form>
-          {(values.value === null || values.value === "") && (
-            <DRow>
-              <Col span={4}>
-                <Text strong>Option</Text>
-              </Col>
-              <Col span={14}>
-                <Field
-                  className="ant-input"
-                  name="option_identifier"
-                  component="select"
-                >
-                  <option></option>
-                  {instrumentQuestion.options.map(option => {
-                    return (
-                      <option
-                        key={option.id}
-                        name="option_identifier"
-                        value={option.identifier}
-                      >
-                        {option.text}
-                      </option>
-                    );
-                  })}
-                </Field>
-              </Col>
-              <Col span={6}>
-                <AlertErrorMessage name="option_identifier" type="error" />
-              </Col>
-            </DRow>
-          )}
-          {(values.option_identifier === null ||
-            values.option_identifier === "") && (
+          <DRow>
+            <Col span={4}>
+              <Text strong>Option</Text>
+            </Col>
+            <Col span={14}>
+              <Field
+                className="ant-input"
+                name="option_identifier"
+                component="select"
+              >
+                <option></option>
+                {instrumentQuestion.options.map(option => {
+                  return (
+                    <option
+                      key={option.id}
+                      name="option_identifier"
+                      value={option.identifier}
+                    >
+                      {option.text.replace(/<[^>]+>/g, "")}
+                    </option>
+                  );
+                })}
+              </Field>
+            </Col>
+            <Col span={6}>
+              <AlertErrorMessage name="option_identifier" type="error" />
+            </Col>
+          </DRow>
+          {hasIntegerResponses(instrumentQuestion.question) && (
             <DRow>
               <Col span={4}>
                 <Text strong>Value</Text>
@@ -130,6 +135,36 @@ const NextQuestionForm = props => {
               </Col>
               <Col span={6}>
                 <AlertErrorMessage name="value" type="error" />
+              </Col>
+            </DRow>
+          )}
+          {values.value !== null && values.value !== "" && (
+            <DRow>
+              <Col span={4}>
+                <Text strong>Value Operator</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="value_operator"
+                  component="select"
+                >
+                  <option key="EMPTY"></option>
+                  {valueOperators.map(operator => {
+                    return (
+                      <option
+                        key={operator}
+                        name="value_operator"
+                        value={operator}
+                      >
+                        {operator}
+                      </option>
+                    );
+                  })}
+                </Field>
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="value_operator" type="error" />
               </Col>
             </DRow>
           )}

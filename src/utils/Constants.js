@@ -55,3 +55,14 @@ export const questionTypesWithDefaultResponses = [
   "INTEGER",
   "DECIMAL_NUMBER"
 ];
+
+export const skipOperationTypes = ["DEFAULT", "INVERSE"];
+
+export const valueOperators = [
+  "EQUALS_TO",
+  "LESS_THAN",
+  "EQUALS_TO_OR_LESS_THAN",
+  "NOT_EQUALS_TO",
+  "MORE_THAN",
+  "EQUALS_TO_OR_MORE_THAN"
+];

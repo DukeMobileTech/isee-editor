@@ -105,7 +105,7 @@ const MultipleSkipForm = props => {
                         name="option_identifier"
                         value={option.identifier}
                       >
-                        {option.text}
+                        {option.text.replace(/<[^>]+>/g, "")}
                       </option>
                     );
                   })}
