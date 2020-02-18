@@ -71,7 +71,7 @@ export const AppHeader = props => {
             <a href={`/projects/${currentProjectId}`}>Instruments</a>
           </Menu.Item>
           <Menu.Item key="3">
-            <a href="/surveys">Responses</a>
+            <a href="/admin">Admin</a>
           </Menu.Item>
           <UserMenuItem {...props} />
         </Menu>
