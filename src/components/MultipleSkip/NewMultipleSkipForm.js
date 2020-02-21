@@ -2,31 +2,27 @@ import * as Yup from "yup";
 
 import { RightSubmitButton, LeftCancelButton } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow, hasNumberResponses } from "../../utils/Utils";
-import { Col, Typography } from "antd";
+import { Col, Typography, Select } from "antd";
 import { Field, Form, Formik } from "formik";
-import {
-  createNextQuestion,
-  updateNextQuestion
-} from "../../utils/api/next_question";
 
 import React, { useContext, Fragment } from "react";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { createMultipleSkip } from "../../utils/api/multiple_skip";
 import { valueOperators } from "../../utils/Constants";
 
 const { Text } = Typography;
 
-const NextQuestionSchema = Yup.object().shape({
+const MultipleSkipSchema = Yup.object().shape({
   instrument_question_id: Yup.number().required("Question Id is required"),
   question_identifier: Yup.string().required("Question is required"),
   option_identifier: Yup.string().when("value", {
     is: val => val === null || val === "",
     then: Yup.string().required("Option is required")
   }),
-  next_question_identifier: Yup.string().required("Next Question is required")
+  skipQuestionIdentifiers: Yup.string().required("Question to skip is required")
 });
 
-const NextQuestionForm = props => {
-  const nextQuestion = props.nextQuestion;
+const NewMultipleSkipForm = props => {
   const instrumentQuestion = props.instrumentQuestion;
   // eslint-disable-next-line no-unused-vars
   const [instrumentQuestions, setInstrumentQuestions] = useContext(
@@ -38,56 +34,37 @@ const NextQuestionForm = props => {
       initialValues={{
         instrument_question_id: instrumentQuestion.id,
         question_identifier: instrumentQuestion.identifier,
-        option_identifier: nextQuestion.option_identifier || "",
-        value: nextQuestion.value || "",
-        next_question_identifier: nextQuestion.next_question_identifier || "",
-        complete_survey: nextQuestion.complete_survey || false,
-        value_operator: nextQuestion.value_operator || ""
+        option_identifier: "",
+        value: "",
+        skipQuestionIdentifiers: [],
+        value_operator: ""
       }}
-      validationSchema={NextQuestionSchema}
-      onSubmit={(values, { setErrors }) => {
-        const editNextQuestion = {
-          id: nextQuestion.id,
-          instrument_question_id: values.instrument_question_id,
-          question_identifier: values.question_identifier,
-          option_identifier: values.option_identifier,
-          value: values.value,
-          next_question_identifier: values.next_question_identifier,
-          complete_survey: values.complete_survey,
-          value_operator: values.value_operator
-        };
-        if (editNextQuestion.id) {
-          updateNextQuestion(
-            props.projectId,
-            instrumentQuestion.instrument_id,
-            editNextQuestion
-          )
-            .then(response => {
-              if (response.status === 204) {
-                props.fetchNextQuestions();
-              }
-            })
-            .catch(error => {
-              setErrors(error);
-            });
-        } else {
-          createNextQuestion(
+      validationSchema={MultipleSkipSchema}
+      onSubmit={values => {
+        let count = 0;
+        values.skipQuestionIdentifiers.forEach(qid => {
+          const multipleSkip = {
+            instrument_question_id: values.instrument_question_id,
+            question_identifier: values.question_identifier,
+            option_identifier: values.option_identifier,
+            value: values.value,
+            skip_question_identifier: qid,
+            value_operator: values.value_operator
+          };
+          createMultipleSkip(
             props.projectId,
             instrumentQuestion.instrument_id,
             instrumentQuestion.id,
-            editNextQuestion
-          )
-            .then(response => {
-              if (response.status === 201) {
-                props.fetchNextQuestions();
-              }
-            })
-            .catch(error => {
-              setErrors(error);
-            });
-        }
+            multipleSkip
+          ).then(response => {
+            count += 1;
+            if (count === values.skipQuestionIdentifiers.length) {
+              props.fetchMultipleSkips();
+            }
+          });
+        });
       }}
-      render={({ values }) => (
+      render={({ values, setFieldValue }) => (
         <Form>
           <DRow>
             <Col span={4}>
@@ -162,52 +139,42 @@ const NextQuestionForm = props => {
           )}
           <DRow>
             <Col span={4}>
-              <Text strong>Next Question</Text>
+              <Text strong>Questions To Skip</Text>
             </Col>
             <Col span={14}>
               <Field
-                className="ant-input"
-                name="next_question_identifier"
-                component="select"
-              >
-                <option></option>
-                {instrumentQuestions
-                  .filter(
-                    iq =>
-                      iq.number_in_instrument >
-                      instrumentQuestion.number_in_instrument
-                  )
-                  .map(iq => {
-                    return (
-                      <option
-                        key={iq.id}
-                        name="next_question_identifier"
-                        value={iq.identifier}
-                      >
-                        {iq.identifier}
-                      </option>
-                    );
-                  })}
-              </Field>
-            </Col>
-            <Col span={6}>
-              <AlertErrorMessage name="next_question_identifier" type="error" />
-            </Col>
-          </DRow>
-          <DRow>
-            <Col span={4}>
-              <Text strong>Finish Survey</Text>
-            </Col>
-            <Col span={14}>
-              <Field
-                className="ant-input"
-                name="complete_survey"
-                type="checkbox"
-                checked={values.complete_survey}
+                name="skipQuestionIdentifiers"
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    mode="multiple"
+                    onChange={values => {
+                      setFieldValue("skipQuestionIdentifiers", values);
+                    }}
+                  >
+                    {instrumentQuestions
+                      .filter(
+                        iq =>
+                          iq.number_in_instrument >
+                          instrumentQuestion.number_in_instrument
+                      )
+                      .map(iq => {
+                        return (
+                          <Select.Option
+                            key={iq.id}
+                            name="skipQuestionIdentifiers"
+                            value={iq.identifier}
+                          >
+                            {iq.identifier}
+                          </Select.Option>
+                        );
+                      })}
+                  </Select>
+                )}
               />
             </Col>
             <Col span={6}>
-              <AlertErrorMessage name="complete_survey" type="error" />
+              <AlertErrorMessage name="skipQuestionIdentifiers" type="error" />
             </Col>
           </DRow>
           <LeftCancelButton handleClick={props.handleCancel} />
@@ -218,4 +185,4 @@ const NextQuestionForm = props => {
   );
 };
 
-export default NextQuestionForm;
+export default NewMultipleSkipForm;

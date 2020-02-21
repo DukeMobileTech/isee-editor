@@ -1,4 +1,4 @@
-import { Button, Col, Icon, Row, Spin, Table } from "antd";
+import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
@@ -7,6 +7,9 @@ import {
   getMultipleSkips
 } from "../../utils/api/multiple_skip";
 import MultipleSkipForm from "./MultipleSkipForm";
+import { AddButton } from "../../utils/Buttons";
+import IQForm from "./IQForm";
+import NewMultipleSkipForm from "./NewMultipleSkipForm";
 
 const { Column } = Table;
 
@@ -15,6 +18,7 @@ const MultipleSkip = props => {
   const [multipleSkips, setMultipleSkips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [multipleSkip, setMultipleSkip] = useState(null);
+  const [create, setCreate] = useState(false);
 
   useEffect(() => {
     fetchMultipleSkips();
@@ -23,7 +27,7 @@ const MultipleSkip = props => {
 
   const fetchMultipleSkips = () => {
     setLoading(true);
-    setMultipleSkip(null);
+    handleCancel();
     getMultipleSkips(
       props.projectId,
       instrumentQuestion.instrument_id,
@@ -49,14 +53,24 @@ const MultipleSkip = props => {
   };
 
   const handleNewMultipleSkip = () => {
-    setMultipleSkip({});
+    setCreate(true);
   };
 
   const handleCancel = () => {
     setMultipleSkip(null);
+    setCreate(false);
   };
 
-  if (multipleSkip) {
+  if (create) {
+    return (
+      <NewMultipleSkipForm
+        instrumentQuestion={instrumentQuestion}
+        projectId={props.projectId}
+        handleCancel={handleCancel}
+        fetchMultipleSkips={fetchMultipleSkips}
+      />
+    );
+  } else if (multipleSkip) {
     return (
       <MultipleSkipForm
         multipleSkip={multipleSkip}
@@ -71,6 +85,7 @@ const MultipleSkip = props => {
       <Spin spinning={loading}>
         <Table dataSource={multipleSkips} rowKey={nq => nq.id}>
           <Column title="Option" dataIndex="option_identifier" />
+          <Column title="Value Operator" dataIndex="value_operator" />
           <Column title="Value" dataIndex="value" />
           <Column
             title="Question To Skip"
@@ -89,15 +104,12 @@ const MultipleSkip = props => {
             )}
           />
         </Table>
-        <br />
-        <Row gutter={8}>
-          <Col span={18}></Col>
-          <Col span={6}>
-            <Button type="primary" onClick={handleNewMultipleSkip}>
-              <Icon type="plus" /> New Question To Skip
-            </Button>
-          </Col>
-        </Row>
+        <AddButton handleClick={handleNewMultipleSkip} />
+        <IQForm
+          instrumentQuestion={instrumentQuestion}
+          projectId={props.projectId}
+          multipleSkips={multipleSkips}
+        />
       </Spin>
     );
   }

@@ -56,7 +56,17 @@ export const questionTypesWithDefaultResponses = [
   "DECIMAL_NUMBER"
 ];
 
-export const skipOperationTypes = ["DEFAULT", "INVERSE"];
+export const ALL = "ALL";
+export const ANY = "ANY";
+export const ANY_AND_NO_OTHER = "ANY_AND_NO_OTHER";
+export const ANY_NOT_SELECTED = "ANY_NOT_SELECTED";
+
+export const skipOperationTypes = [
+  ANY,
+  ALL,
+  ANY_AND_NO_OTHER,
+  ANY_NOT_SELECTED
+];
 
 export const valueOperators = [
   "EQUALS_TO",

@@ -9,7 +9,6 @@ import React, { useContext } from "react";
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import { updateInstrumentQuestion } from "../../utils/api/instrument_question";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
-import { skipOperationTypes } from "../../utils/Constants";
 
 const { Text } = Typography;
 const InstrumentQuestionSchema = Yup.object().shape({
@@ -44,8 +43,7 @@ const InstrumentQuestionForm = props => {
       initialValues={{
         identifier: iq.identifier || "",
         display_id: iq.display_id || "",
-        carry_forward_identifier: iq.carry_forward_identifier || "",
-        skip_operation: iq.skip_operation || ""
+        carry_forward_identifier: iq.carry_forward_identifier || ""
       }}
       validationSchema={InstrumentQuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -54,8 +52,7 @@ const InstrumentQuestionForm = props => {
           instrument_id: iq.instrument_id,
           identifier: values.identifier,
           display_id: values.display_id,
-          carry_forward_identifier: values.carry_forward_identifier,
-          skip_operation: values.skip_operation
+          carry_forward_identifier: values.carry_forward_identifier
         };
         updateInstrumentQuestion(props.projectId, editQuestion)
           .then(response => {
@@ -145,36 +142,6 @@ const InstrumentQuestionForm = props => {
               <AlertErrorMessage name="carry_forward_identifier" type="error" />
             </Col>
           </DRow>
-          {hasMultipleResponses(iq.question) && (
-            <DRow>
-              <Col span={4}>
-                <Text strong>Skip Operation Type</Text>
-              </Col>
-              <Col span={14}>
-                <Field
-                  className="ant-input"
-                  name="skip_operation"
-                  component="select"
-                >
-                  <option></option>
-                  {skipOperationTypes.map(operation => {
-                    return (
-                      <option
-                        key={operation}
-                        name="skip_operation"
-                        value={operation}
-                      >
-                        {operation}
-                      </option>
-                    );
-                  })}
-                </Field>
-              </Col>
-              <Col span={6}>
-                <AlertErrorMessage name="skip_operation" type="error" />
-              </Col>
-            </DRow>
-          )}
           <RightSubmitButton />
         </Form>
       )}

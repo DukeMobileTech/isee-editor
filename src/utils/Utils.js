@@ -56,3 +56,20 @@ export const customExpandIcon = props => {
     );
   }
 };
+
+export const hasNumberResponses = question => {
+  return (
+    question.question_type === "INTEGER" ||
+    question.question_type === "DECIMAL" ||
+    question.question_type === "LIST_OF_INTEGER_BOXES"
+  );
+};
+
+export const hasMultipleResponses = question => {
+  return (
+    question.question_type === "SELECT_MULTIPLE" ||
+    question.question_type === "SELECT_MULTIPLE_WRITE_OTHER" ||
+    question.question_type === "LIST_OF_TEXT_BOXES" ||
+    question.question_type === "LIST_OF_INTEGER_BOXES"
+  );
+};

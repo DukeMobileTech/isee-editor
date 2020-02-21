@@ -1,16 +1,14 @@
 import * as Yup from "yup";
 
 import { RightSubmitButton, LeftCancelButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
+import { AlertErrorMessage, DRow, hasNumberResponses } from "../../utils/Utils";
 import { Col, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
 
-import React, { useContext } from "react";
+import React, { useContext, Fragment } from "react";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
-import {
-  updateMultipleSkip,
-  createMultipleSkip
-} from "../../utils/api/multiple_skip";
+import { updateMultipleSkip } from "../../utils/api/multiple_skip";
+import { valueOperators } from "../../utils/Constants";
 
 const { Text } = Typography;
 
@@ -41,7 +39,8 @@ const MultipleSkipForm = props => {
         question_identifier: instrumentQuestion.identifier,
         option_identifier: multipleSkip.option_identifier || "",
         value: multipleSkip.value || "",
-        skip_question_identifier: multipleSkip.skip_question_identifier || ""
+        skip_question_identifier: multipleSkip.skip_question_identifier || "",
+        value_operator: multipleSkip.value_operator || ""
       }}
       validationSchema={MultipleSkipSchema}
       onSubmit={(values, { setErrors }) => {
@@ -51,84 +50,95 @@ const MultipleSkipForm = props => {
           question_identifier: values.question_identifier,
           option_identifier: values.option_identifier,
           value: values.value,
-          skip_question_identifier: values.skip_question_identifier
+          skip_question_identifier: values.skip_question_identifier,
+          value_operator: values.value_operator
         };
-        if (editMultipleSkip.id) {
-          updateMultipleSkip(
-            props.projectId,
-            instrumentQuestion.instrument_id,
-            editMultipleSkip
-          )
-            .then(response => {
-              if (response.status === 204) {
-                props.fetchMultipleSkips();
-              }
-            })
-            .catch(error => {
-              setErrors(error);
-            });
-        } else {
-          createMultipleSkip(
-            props.projectId,
-            instrumentQuestion.instrument_id,
-            instrumentQuestion.id,
-            editMultipleSkip
-          )
-            .then(response => {
-              if (response.status === 201) {
-                props.fetchMultipleSkips();
-              }
-            })
-            .catch(error => {
-              setErrors(error);
-            });
-        }
+        updateMultipleSkip(
+          props.projectId,
+          instrumentQuestion.instrument_id,
+          editMultipleSkip
+        )
+          .then(response => {
+            if (response.status === 204) {
+              props.fetchMultipleSkips();
+            }
+          })
+          .catch(error => {
+            setErrors(error);
+          });
       }}
       render={({ values }) => (
         <Form>
-          {(values.value === null || values.value === "") && (
-            <DRow>
-              <Col span={4}>
-                <Text strong>Option</Text>
-              </Col>
-              <Col span={14}>
-                <Field
-                  className="ant-input"
-                  name="option_identifier"
-                  component="select"
-                >
-                  <option></option>
-                  {instrumentQuestion.options.map(option => {
-                    return (
-                      <option
-                        key={option.id}
-                        name="option_identifier"
-                        value={option.identifier}
-                      >
-                        {option.text.replace(/<[^>]+>/g, "")}
-                      </option>
-                    );
-                  })}
-                </Field>
-              </Col>
-              <Col span={6}>
-                <AlertErrorMessage name="option_identifier" type="error" />
-              </Col>
-            </DRow>
-          )}
-          {(values.option_identifier === null ||
-            values.option_identifier === "") && (
-            <DRow>
-              <Col span={4}>
-                <Text strong>Value</Text>
-              </Col>
-              <Col span={14}>
-                <Field className="ant-input" name="value" type="text" />
-              </Col>
-              <Col span={6}>
-                <AlertErrorMessage name="value" type="error" />
-              </Col>
-            </DRow>
+          <DRow>
+            <Col span={4}>
+              <Text strong>Option</Text>
+            </Col>
+            <Col span={14}>
+              <Field
+                className="ant-input"
+                name="option_identifier"
+                component="select"
+              >
+                <option></option>
+                {instrumentQuestion.options.map(option => {
+                  return (
+                    <option
+                      key={option.id}
+                      name="option_identifier"
+                      value={option.identifier}
+                    >
+                      {option.text.replace(/<[^>]+>/g, "")}
+                    </option>
+                  );
+                })}
+              </Field>
+            </Col>
+            <Col span={6}>
+              <AlertErrorMessage name="option_identifier" type="error" />
+            </Col>
+          </DRow>
+          {hasNumberResponses(instrumentQuestion.question) && (
+            <Fragment>
+              <DRow>
+                <Col span={4}>
+                  <Text strong>Value Operator</Text>
+                </Col>
+                <Col span={14}>
+                  <Field
+                    className="ant-input"
+                    name="value_operator"
+                    component="select"
+                  >
+                    <option key="EMPTY"></option>
+                    {valueOperators.map(operator => {
+                      return (
+                        <option
+                          key={operator}
+                          name="value_operator"
+                          value={operator}
+                        >
+                          {operator}
+                        </option>
+                      );
+                    })}
+                  </Field>
+                </Col>
+                <Col span={6}>
+                  <AlertErrorMessage name="value_operator" type="error" />
+                </Col>
+              </DRow>
+              <DRow>
+                <Col span={4}>
+                  <Text strong>Value</Text>
+                </Col>
+                <Col span={14}>
+                  <Field className="ant-input" name="value" type="text" />
+                </Col>
+                <Col span={6}>
+                  <AlertErrorMessage name="value" type="error" />
+                </Col>
+              </DRow>
+            </Fragment>
           )}
           <DRow>
             <Col span={4}>

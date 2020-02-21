@@ -1,4 +1,4 @@
-import { Button, Col, Icon, Row, Spin, Table } from "antd";
+import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
@@ -7,6 +7,8 @@ import {
   getNextQuestions,
   deleteNextQuestion
 } from "../../utils/api/next_question";
+import { AddButton } from "../../utils/Buttons";
+import IQForm from "./IQForm";
 
 const { Column } = Table;
 
@@ -71,8 +73,8 @@ const NextQuestion = props => {
       <Spin spinning={loading}>
         <Table dataSource={nextQuestions} rowKey={nq => nq.id}>
           <Column title="Option" dataIndex="option_identifier" />
-          <Column title="Value" dataIndex="value" />
           <Column title="Value Operator" dataIndex="value_operator" />
+          <Column title="Value" dataIndex="value" />
           <Column title="Next Question" dataIndex="next_question_identifier" />
           <Column
             title="Complete Survey"
@@ -92,15 +94,12 @@ const NextQuestion = props => {
             )}
           />
         </Table>
-        <br />
-        <Row gutter={8}>
-          <Col span={18}></Col>
-          <Col span={6}>
-            <Button type="primary" onClick={handleNewNextQuestion}>
-              <Icon type="plus" /> New Skip To
-            </Button>
-          </Col>
-        </Row>
+        <AddButton handleClick={handleNewNextQuestion} />
+        <IQForm
+          instrumentQuestion={instrumentQuestion}
+          projectId={props.projectId}
+          nextQuestions={nextQuestions}
+        />
       </Spin>
     );
   }

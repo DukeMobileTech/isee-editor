@@ -1,6 +1,7 @@
 import { Button, Col, Icon, Row } from "antd";
 
 import React from "react";
+import { GREEN, WHITE } from "./Colors";
 
 export const CenteredSubmitButton = props => {
   return (
@@ -17,6 +18,20 @@ export const RightSubmitButton = () => {
     <Col offset={22}>
       <Button type="primary" title="Submit" htmlType="submit">
         <Icon type="save" />
+      </Button>
+    </Col>
+  );
+};
+
+export const GreenSubmitButton = () => {
+  return (
+    <Col offset={22}>
+      <Button
+        style={{ backgroundColor: GREEN }}
+        title="Submit"
+        htmlType="submit"
+      >
+        <Icon type="save" style={{ color: WHITE }} />
       </Button>
     </Col>
   );
