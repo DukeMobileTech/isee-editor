@@ -7,6 +7,7 @@ import ExpandedQuestion from "../utils/ExpandedQuestion";
 import NextQuestion from "../NextQuestion/NextQuestion";
 import MultipleSkip from "../MultipleSkip/MultipleSkip";
 import LoopQuestion from "../LoopQuestion/LoopQuestion";
+import ConditionSkip from "../ConditionSkip/ConditionSkip";
 
 const { TabPane } = Tabs;
 
@@ -108,6 +109,21 @@ const InstrumentQuestion = props => {
             <LoopQuestion
               instrumentQuestion={instrumentQuestion}
               projectId={props.projectId}
+            />
+          </TabPane>
+          <TabPane
+            tab={
+              <span>
+                <Icon type="fast-forward" />
+                Multiple Questions Skip To
+              </span>
+            }
+            key="5"
+          >
+            <ConditionSkip
+              instrumentQuestion={instrumentQuestion}
+              projectId={props.projectId}
+              display={props.display}
             />
           </TabPane>
         </Tabs>

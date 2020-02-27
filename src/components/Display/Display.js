@@ -156,6 +156,7 @@ const Display = props => {
           handleCancel={handleCancel}
           projectId={projectId}
           fetchDisplay={fetchDisplay}
+          display={display}
         />
       );
     } else if (showImport) {

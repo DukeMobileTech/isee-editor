@@ -73,3 +73,11 @@ export const hasMultipleResponses = question => {
     question.question_type === "LIST_OF_INTEGER_BOXES"
   );
 };
+
+export const hasSingleResponse = question => {
+  return (
+    question.question_type === "SELECT_ONE" ||
+    question.question_type === "SELECT_ONE_WRITE_OTHER" ||
+    question.question_type === "DROP_DOWN"
+  );
+};
