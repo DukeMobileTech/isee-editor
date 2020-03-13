@@ -76,3 +76,15 @@ export const valueOperators = [
   "MORE_THAN",
   "EQUALS_TO_OR_MORE_THAN"
 ];
+
+export const scoreTypes = [
+  "MATCH",
+  "BANK",
+  "SUM",
+  "INDEX",
+  "LOOKUP",
+  "SEARCH",
+  "GROUP-AVERAGE",
+  "CALCULATION",
+  "ROSTER"
+];

@@ -23,6 +23,12 @@ export const updateScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
   );
 };
 
+export const copyScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
+  return instance.get(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units/${scoreUnit.id}/copy`
+  );
+};
+
 export const deleteScoreUnit = (instrument, scoreSchemeId, scoreUnit) => {
   return instance.delete(
     `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/subdomains/${scoreUnit.subdomain_id}/score_units/${scoreUnit.id}`

@@ -1,21 +1,22 @@
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
-import { Divider, Table } from "antd";
+import { DeleteButton, EditButton, AddButton } from "../../utils/Buttons";
+import { Divider, Table, Button } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   deleteScoreScheme,
   getScoreSchemes
 } from "../../utils/api/score_scheme";
 
-import { Link } from "react-router-dom";
 import ScoreSchemeForm from "./ScoreSchemeForm";
+import ScoreScheme from "./ScoreScheme";
 
 const { Column } = Table;
 
 const ScoreSchemes = props => {
   const instrument = props.instrument;
   const [scoreSchemes, setScoreSchemes] = useState([]);
-  const [scheme, setScheme] = useState(null);
+  const [scoreScheme, setScoreScheme] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showUnits, setShowUnits] = useState(false);
 
   useEffect(() => {
     if (instrument) fetchScoreSchemes();
@@ -23,23 +24,24 @@ const ScoreSchemes = props => {
   }, []);
 
   const fetchScoreSchemes = async () => {
-    setShowForm(false);
+    handleCancel();
     const result = await getScoreSchemes(instrument.project_id, instrument.id);
     setScoreSchemes(result.data);
   };
 
   const handleNewScheme = () => {
     setShowForm(true);
-    setScheme(null);
+    setScoreScheme(null);
   };
 
   const handleEditScheme = scheme => {
-    setScheme(scheme);
+    setScoreScheme(scheme);
     setShowForm(true);
   };
 
   const handleCancel = () => {
     setShowForm(false);
+    setShowUnits(false);
   };
 
   const handleDeleteScheme = scheme => {
@@ -54,37 +56,40 @@ const ScoreSchemes = props => {
       });
   };
 
-  const ScoreSchemesView = () => {
-    if (showForm) {
-      return (
-        <ScoreSchemeForm
-          instrument={instrument}
-          scoreScheme={scheme}
-          fetchScoreSchemes={fetchScoreSchemes}
-          handleCancel={handleCancel}
-        />
-      );
-    } else {
-      return <ScoreSchemeList />;
-    }
+  const handleShowUnits = scheme => {
+    setScoreScheme(scheme);
+    setShowUnits(true);
   };
 
-  const ScoreSchemeList = () => {
+  if (showForm) {
+    return (
+      <ScoreSchemeForm
+        instrument={instrument}
+        scoreScheme={scoreScheme}
+        fetchScoreSchemes={fetchScoreSchemes}
+        handleCancel={handleCancel}
+      />
+    );
+  } else if (showUnits) {
+    return (
+      <ScoreScheme
+        instrument={instrument}
+        scoreScheme={scoreScheme}
+        handleCancel={handleCancel}
+      />
+    );
+  } else {
     return (
       <Fragment>
+        <AddButton handleClick={handleNewScheme} />
         <Table dataSource={scoreSchemes} rowKey={scheme => scheme.id}>
           <Column
             title="Title"
             dataIndex="title"
             render={(text, scheme) => (
-              <Link
-                to={{
-                  pathname: `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scheme.id}`,
-                  state: { instrument, scheme }
-                }}
-              >
+              <Button type="link" onClick={() => handleShowUnits(scheme)}>
                 {scheme.title}
-              </Link>
+              </Button>
             )}
           />
           <Column
@@ -114,16 +119,9 @@ const ScoreSchemes = props => {
             )}
           />
         </Table>
-        <FolderAddButton handleClick={handleNewScheme} />
       </Fragment>
     );
-  };
-
-  return (
-    <Fragment>
-      <ScoreSchemesView />
-    </Fragment>
-  );
+  }
 };
 
 export default ScoreSchemes;

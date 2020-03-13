@@ -1,9 +1,9 @@
-import { Collapse, Divider } from "antd";
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
+import { Collapse, Divider, Button, Row } from "antd";
+import { DeleteButton, EditButton } from "../../utils/Buttons";
 import React, { Fragment, useState } from "react";
 
-import ScoreUnits from "./ScoreUnits";
-import Subdomain from "./Domain/Subdomain";
+import ScoreUnits from "../ScoreUnit/ScoreUnits";
+import Subdomain from "./Subdomain";
 import { deleteSubdomain } from "../../utils/api/subdomain";
 
 const { Panel } = Collapse;
@@ -14,19 +14,17 @@ const Subdomains = props => {
   const [visible, setVisible] = useState(false);
   const [subdomain, setSubdomain] = useState(null);
 
-  const onNewSubdomain = () => {
-    setVisible(true);
-  };
-
   const handleEditSubdomain = subdomain => {
     setVisible(true);
     setSubdomain(subdomain);
   };
 
   const handleDeleteSubdomain = subdomain => {
-    deleteSubdomain(props.instrument, domain.score_scheme_id, subdomain).then(
-      res => props.fetchDomains()
-    );
+    deleteSubdomain(
+      props.instrument,
+      domain.score_scheme_id,
+      subdomain
+    ).then(res => props.fetchDomains());
   };
 
   const genExtra = subdomain => (
@@ -52,28 +50,8 @@ const Subdomains = props => {
     </Fragment>
   );
 
-  return (
-    <Fragment>
-      <Collapse accordion>
-        {subdomains &&
-          subdomains.map(subdomain => {
-            return (
-              <Panel
-                header={subdomain.title}
-                key={subdomain.id}
-                extra={genExtra(subdomain)}
-              >
-                <ScoreUnits
-                  instrument={props.instrument}
-                  scoreSchemeId={domain.score_scheme_id}
-                  subdomain={subdomain}
-                />
-              </Panel>
-            );
-          })}
-      </Collapse>
-      <br />
-      <FolderAddButton handleClick={onNewSubdomain} />
+  if (visible) {
+    return (
       <Subdomain
         domain={domain}
         subdomain={subdomain}
@@ -82,8 +60,40 @@ const Subdomains = props => {
         instrument={props.instrument}
         fetchDomains={props.fetchDomains}
       />
-    </Fragment>
-  );
+    );
+  } else {
+    return (
+      <Fragment>
+        <Row style={{ margin: "3px" }}>
+          <Button
+            style={{ float: "right" }}
+            type="primary"
+            onClick={() => handleEditSubdomain({})}
+          >
+            Add Subdomain
+          </Button>
+        </Row>
+        <Collapse accordion>
+          {subdomains &&
+            subdomains.map(subdomain => {
+              return (
+                <Panel
+                  header={subdomain.title}
+                  key={subdomain.id}
+                  extra={genExtra(subdomain)}
+                >
+                  <ScoreUnits
+                    instrument={props.instrument}
+                    scoreSchemeId={domain.score_scheme_id}
+                    subdomain={subdomain}
+                  />
+                </Panel>
+              );
+            })}
+        </Collapse>
+      </Fragment>
+    );
+  }
 };
 
 export default Subdomains;

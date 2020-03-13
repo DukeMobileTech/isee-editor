@@ -3,7 +3,6 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 
 import Display from "../Display/Display";
 import { InstructionContext } from "../../context/InstructionContext";
-import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import InstrumentSider from "./InstrumentSider";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
@@ -29,8 +28,6 @@ const Instrument = ({ match }) => {
   const instrumentId = match.params.id;
   const [loading, setLoading] = useState(true);
   const [instrument, setInstrument] = useState({});
-  // eslint-disable-next-line no-unused-vars
-  const [sections, setSections] = useContext(InstrumentSectionContext);
   const [display, setDisplay] = useState(null);
   const [selectedKey, setSelectedKey] = useState("1");
   // eslint-disable-next-line no-unused-vars
@@ -110,65 +107,6 @@ const Instrument = ({ match }) => {
     setShowDisplays(true);
   };
 
-  const InstrumentView = () => {
-    return (
-      <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
-        <TabPane
-          tab={
-            <span>
-              <Icon type="ordered-list" />
-              Sections
-            </span>
-          }
-          key="1"
-        >
-          <Sections
-            instrument={instrument}
-            showQuestions={showQuestions}
-            handleOpenSection={handleOpenSection}
-            section={section}
-            setSection={setSection}
-            showDisplays={showDisplays}
-            setShowDisplays={setShowDisplays}
-          />
-        </TabPane>
-        <TabPane
-          tab={
-            <span>
-              <Icon type="project" />
-              Questions
-            </span>
-          }
-          key="2"
-        >
-          <Display projectId={projectId} display={display} />
-        </TabPane>
-        <TabPane
-          tab={
-            <span>
-              <Icon type="check-square" />
-              Scoring Schemes
-            </span>
-          }
-          key="3"
-        >
-          <ScoreSchemes instrument={instrument} />
-        </TabPane>
-        <TabPane
-          tab={
-            <span>
-              <Icon type="layout" />
-              PDF
-            </span>
-          }
-          key="4"
-        >
-          <PdfDownload instrument={instrument} />
-        </TabPane>
-      </Tabs>
-    );
-  };
-
   return (
     <Fragment>
       <ProjectHeader project={project} />
@@ -182,7 +120,60 @@ const Instrument = ({ match }) => {
         />
         <Content style={{ padding: "10px" }}>
           <Spin spinning={loading}>
-            <InstrumentView />
+            <Tabs defaultActiveKey={selectedKey} onChange={onTabSelection}>
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="ordered-list" />
+                    Sections
+                  </span>
+                }
+                key="1"
+              >
+                <Sections
+                  instrument={instrument}
+                  showQuestions={showQuestions}
+                  handleOpenSection={handleOpenSection}
+                  section={section}
+                  setSection={setSection}
+                  showDisplays={showDisplays}
+                  setShowDisplays={setShowDisplays}
+                />
+              </TabPane>
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="project" />
+                    Questions
+                  </span>
+                }
+                key="2"
+              >
+                <Display projectId={projectId} display={display} />
+              </TabPane>
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="check-square" />
+                    Score Schemes
+                  </span>
+                }
+                key="3"
+              >
+                <ScoreSchemes instrument={instrument} />
+              </TabPane>
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="layout" />
+                    PDF
+                  </span>
+                }
+                key="4"
+              >
+                <PdfDownload instrument={instrument} />
+              </TabPane>
+            </Tabs>
           </Spin>
         </Content>
       </Layout>

@@ -1,17 +1,16 @@
-import { CenteredH1, CenteredH3 } from "../../utils/Styles";
-import { Collapse, Divider } from "antd";
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
+import { Collapse, Divider, Row, Button, Typography } from "antd";
+import { DeleteButton, EditButton } from "../../utils/Buttons";
 import React, { Fragment, useEffect, useState } from "react";
 import { deleteDomain, getDomains } from "../../utils/api/domain";
 
-import Domain from "./Domain/Domain";
-import Subdomains from "./Subdomains";
+import Domain from "../Domain/Domain";
+import Subdomains from "../Subdomain/Subdomains";
 
 const { Panel } = Collapse;
 
 const ScoreScheme = props => {
-  const instrument = props.location.state.instrument;
-  const scoreScheme = props.location.state.scheme;
+  const instrument = props.instrument;
+  const scoreScheme = props.scoreScheme;
   const [domains, setDomains] = useState([]);
   const [visible, setVisible] = useState(false);
   const [domain, setDomain] = useState(null);
@@ -33,6 +32,7 @@ const ScoreScheme = props => {
   };
 
   const onNewDomain = () => {
+    setDomain({});
     setVisible(true);
   };
 
@@ -66,9 +66,30 @@ const ScoreScheme = props => {
     </Fragment>
   );
 
-  const DomainView = () => {
+  if (visible) {
+    return (
+      <Domain
+        visible={visible}
+        setVisible={setVisible}
+        scoreSchemeId={scoreScheme.id}
+        instrument={instrument}
+        fetchDomains={fetchDomains}
+        domain={domain}
+      />
+    );
+  } else {
     return (
       <Fragment>
+        <Row style={{ margin: "3px" }}>
+          <Typography.Text strong>{scoreScheme.title}</Typography.Text>
+          <Button
+            style={{ float: "right" }}
+            type="primary"
+            onClick={onNewDomain}
+          >
+            Add Domain
+          </Button>
+        </Row>
         <Collapse accordion>
           {domains &&
             domains.map(domain => {
@@ -88,27 +109,9 @@ const ScoreScheme = props => {
               );
             })}
         </Collapse>
-        <br />
-        <FolderAddButton handleClick={onNewDomain} />
-        <Domain
-          visible={visible}
-          setVisible={setVisible}
-          scoreSchemeId={scoreScheme.id}
-          instrument={instrument}
-          fetchDomains={fetchDomains}
-          domain={domain}
-        />
       </Fragment>
     );
-  };
-
-  return (
-    <Fragment>
-      <CenteredH1>{instrument.title}</CenteredH1>
-      <CenteredH3>{scoreScheme.title}</CenteredH3>
-      <DomainView />
-    </Fragment>
-  );
+  }
 };
 
 export default ScoreScheme;
