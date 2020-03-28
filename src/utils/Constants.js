@@ -79,8 +79,8 @@ export const valueOperators = [
 
 export const scoreTypes = [
   "MATCH",
-  "BANK",
   "SUM",
+  "BANK",
   "INDEX",
   "LOOKUP",
   "SEARCH",

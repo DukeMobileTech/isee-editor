@@ -157,6 +157,19 @@ export const TranslationOrderAddButtons = props => {
   );
 };
 
+export const SaveButton = props => {
+  return (
+    <Button
+      style={{ margin: "1px", backgroundColor: GREEN }}
+      type="primary"
+      title="Save"
+      onClick={props.handleClick}
+    >
+      <Icon type="save" />
+    </Button>
+  );
+};
+
 export const EditButton = props => {
   return (
     <Button

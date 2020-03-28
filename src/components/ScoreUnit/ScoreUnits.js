@@ -1,9 +1,4 @@
-import {
-  DeleteButton,
-  ViewButton,
-  EditButton,
-  CopyButton
-} from "../../utils/Buttons";
+import { DeleteButton, EditButton, CopyButton } from "../../utils/Buttons";
 import { Divider, Table, Row, Button } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import {
@@ -12,7 +7,6 @@ import {
   copyScoreUnit
 } from "../../utils/api/score_unit";
 
-import ScoreUnit from "./ScoreUnit";
 import ScoreUnitForm from "./ScoreUnitForm";
 import EditScoreUnitForm from "./EditScoreUnitForm";
 
@@ -23,7 +17,6 @@ const ScoreUnits = props => {
   const subdomain = props.subdomain;
   const [scoreUnits, setScoreUnits] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [showScoreUnit, setShowScoreUnit] = useState(false);
   const [scoreUnit, setScoreUnit] = useState(null);
   const [editScoreUnit, setEditScoreUnit] = useState(false);
 
@@ -32,8 +25,8 @@ const ScoreUnits = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchScoreUnits = async () => {
-    handleCancel();
+  const fetchScoreUnits = async (status = false, unit = null) => {
+    handleCancel(status, unit);
     const result = await getScoreUnits(
       instrument,
       props.scoreSchemeId,
@@ -46,16 +39,10 @@ const ScoreUnits = props => {
     setShowForm(true);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (status = false, unit = null) => {
     setShowForm(false);
-    setShowScoreUnit(false);
-    setEditScoreUnit(false);
-    setScoreUnit(null);
-  };
-
-  const handleShowScoreUnit = scoreUnit => {
-    setScoreUnit(scoreUnit);
-    setShowScoreUnit(true);
+    setEditScoreUnit(status);
+    setScoreUnit(unit);
   };
 
   const handleEditScoreUnit = scoreUnit => {
@@ -103,15 +90,8 @@ const ScoreUnits = props => {
         handleCancel={handleCancel}
         scoreSchemeId={props.scoreSchemeId}
         fetchScoreUnits={fetchScoreUnits}
-      />
-    );
-  } else if (showScoreUnit) {
-    return (
-      <ScoreUnit
-        scoreUnit={scoreUnit}
-        instrument={instrument}
-        handleCancel={handleCancel}
-        scoreSchemeId={props.scoreSchemeId}
+        visible={showForm}
+        setVisible={setShowForm}
       />
     );
   } else {
@@ -126,7 +106,13 @@ const ScoreUnits = props => {
             Add Score Unit
           </Button>
         </Row>
-        <Table dataSource={scoreUnits} rowKey={su => su.id}>
+        <Table
+          dataSource={scoreUnits}
+          rowKey={su => su.id}
+          pagination={{
+            defaultPageSize: 25
+          }}
+        >
           <Column title="Title" dataIndex="title" />
           <Column title="Type" dataIndex="score_type" />
           <Column title="Weight" dataIndex="weight" />
@@ -140,10 +126,6 @@ const ScoreUnits = props => {
               <span>
                 <EditButton
                   handleClick={() => handleEditScoreUnit(scoreUnit)}
-                />
-                <Divider type="vertical" />
-                <ViewButton
-                  handleClick={() => handleShowScoreUnit(scoreUnit)}
                 />
                 <Divider type="vertical" />
                 <CopyButton handleClick={() => handleCopyUnit(scoreUnit)} />
