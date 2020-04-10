@@ -9,6 +9,7 @@ import {
 
 import ScoreUnitForm from "./ScoreUnitForm";
 import EditScoreUnitForm from "./EditScoreUnitForm";
+import { customExpandIcon } from "../../utils/Utils";
 
 const { Column } = Table;
 
@@ -112,11 +113,22 @@ const ScoreUnits = props => {
           pagination={{
             defaultPageSize: 25
           }}
+          expandedRowRender={scoreUnit => (
+            <Table
+              dataSource={scoreUnit.option_scores}
+              rowKey={optionScore => optionScore.id}
+            >
+              <Table.Column title="Identifier" dataIndex="option_identifier" />
+              <Table.Column title="Score" dataIndex="value" />
+            </Table>
+          )}
+          expandIcon={props => customExpandIcon(props)}
         >
           <Column title="Title" dataIndex="title" />
           <Column title="Type" dataIndex="score_type" />
           <Column title="Weight" dataIndex="weight" />
           <Column title="Base Score" dataIndex="base_point_score" />
+          <Column title="Institution" dataIndex="institution_type" />
           <Column title="Questions" dataIndex="question_identifiers" />
           <Column title="Option Count" dataIndex="option_score_count" />
           <Column
@@ -128,7 +140,16 @@ const ScoreUnits = props => {
                   handleClick={() => handleEditScoreUnit(scoreUnit)}
                 />
                 <Divider type="vertical" />
-                <CopyButton handleClick={() => handleCopyUnit(scoreUnit)} />
+                <CopyButton
+                  handleClick={() => {
+                    if (
+                      window.confirm(
+                        `Are you sure you want to make a copy of ${scoreUnit.title}?`
+                      )
+                    )
+                      handleCopyUnit(scoreUnit);
+                  }}
+                />
                 <Divider type="vertical" />
                 <DeleteButton
                   handleClick={() => {

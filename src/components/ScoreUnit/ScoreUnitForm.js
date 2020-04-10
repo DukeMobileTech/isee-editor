@@ -14,7 +14,11 @@ import React, { useContext } from "react";
 import { createScoreUnit } from "../../utils/api/score_unit";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
-import { scoreTypes, modalWidth } from "../../utils/Constants";
+import {
+  scoreTypes,
+  modalWidth,
+  institutionTypes
+} from "../../utils/Constants";
 
 const { Text } = Typography;
 const FormItem = AntForm.Item;
@@ -53,6 +57,7 @@ const ScoreUnitForm = props => {
           weight: (scoreUnit && scoreUnit.weight) || 1.0,
           score_type: (scoreUnit && scoreUnit.type) || "",
           base_point_score: (scoreUnit && scoreUnit.base_point_score) || 0,
+          institution_type: (scoreUnit && scoreUnit.institution_type) || "",
           options: []
         }}
         validationSchema={ScoreUnitSchema}
@@ -63,6 +68,7 @@ const ScoreUnitForm = props => {
             weight: values.weight,
             score_type: values.score_type,
             base_point_score: values.base_point_score,
+            institution_type: values.institution_type,
             options: values.options
           };
           createScoreUnit(instrument, props.scoreSchemeId, scoreUnit)
@@ -155,6 +161,30 @@ const ScoreUnitForm = props => {
                 </Col>
               </DRow>
             )}
+            <DRow>
+              <Col span={4}>
+                <Text strong>Institution Type</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="institution_type"
+                  component="select"
+                >
+                  <option></option>
+                  {institutionTypes.map(type => {
+                    return (
+                      <option key={type} name="institution_type" value={type}>
+                        {type}
+                      </option>
+                    );
+                  })}
+                </Field>
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="institution_type" type="error" />
+              </Col>
+            </DRow>
             <DRow>
               <Col span={4}>
                 <Text strong>Questions in Score Unit</Text>

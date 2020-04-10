@@ -11,7 +11,11 @@ import { Field, Form, Formik } from "formik";
 import React, { useState, useEffect } from "react";
 
 import { updateScoreUnit } from "../../utils/api/score_unit";
-import { modalWidth, scoreTypes } from "../../utils/Constants";
+import {
+  modalWidth,
+  scoreTypes,
+  institutionTypes
+} from "../../utils/Constants";
 import { getDomains } from "../../utils/api/domain";
 import {
   deleteOptionScore,
@@ -90,6 +94,7 @@ const EditScoreUnitForm = props => {
           weight: scoreUnit.weight,
           score_type: scoreUnit.score_type,
           base_point_score: scoreUnit.base_point_score,
+          institution_type: scoreUnit.institution_type,
           option_scores: scoreUnit.option_scores
         }}
         validationSchema={ScoreUnitSchema}
@@ -101,6 +106,7 @@ const EditScoreUnitForm = props => {
             title: values.title,
             weight: values.weight,
             score_type: values.score_type,
+            institution_type: values.institution_type,
             base_point_score: values.base_point_score
           })
             .then(res => props.fetchScoreUnits())
@@ -198,22 +204,6 @@ const EditScoreUnitForm = props => {
             </DRow>
             <DRow>
               <Col span={4}>
-                <Text strong>Base Point Score</Text>
-              </Col>
-              <Col span={14}>
-                <Field
-                  className="ant-input-number"
-                  name="base_point_score"
-                  placeholder="Enter base point score"
-                  type="number"
-                />
-              </Col>
-              <Col span={6}>
-                <AlertErrorMessage name="base_point_score" type="error" />
-              </Col>
-            </DRow>
-            <DRow>
-              <Col span={4}>
                 <Text strong>Score Type</Text>
               </Col>
               <Col span={14}>
@@ -234,6 +224,48 @@ const EditScoreUnitForm = props => {
               </Col>
               <Col span={6}>
                 <AlertErrorMessage name="score_type" type="error" />
+              </Col>
+            </DRow>
+            {values.score_type === "SUM" && (
+              <DRow>
+                <Col span={4}>
+                  <Text strong>Base Point Score</Text>
+                </Col>
+                <Col span={14}>
+                  <Field
+                    className="ant-input-number"
+                    name="base_point_score"
+                    placeholder="Enter base point score"
+                    type="number"
+                  />
+                </Col>
+                <Col span={6}>
+                  <AlertErrorMessage name="base_point_score" type="error" />
+                </Col>
+              </DRow>
+            )}
+            <DRow>
+              <Col span={4}>
+                <Text strong>Institution Type</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="institution_type"
+                  component="select"
+                >
+                  <option></option>
+                  {institutionTypes.map(type => {
+                    return (
+                      <option key={type} name="institution_type" value={type}>
+                        {type}
+                      </option>
+                    );
+                  })}
+                </Field>
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="institution_type" type="error" />
               </Col>
             </DRow>
             <DRow>

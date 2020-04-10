@@ -88,3 +88,5 @@ export const scoreTypes = [
   "CALCULATION",
   "ROSTER"
 ];
+
+export const institutionTypes = ["RESIDENTIAL", "NON_RESIDENTIAL"];
