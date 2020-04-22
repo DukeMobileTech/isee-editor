@@ -111,7 +111,7 @@ const ScoreUnits = props => {
           dataSource={scoreUnits}
           rowKey={su => su.id}
           pagination={{
-            defaultPageSize: 25
+            defaultPageSize: 50
           }}
           expandedRowRender={scoreUnit => (
             <Table

@@ -3,9 +3,10 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Project from "./Project/Project";
 import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
-import ScoreScheme from "./ScoreScheme/ScoreScheme";
 import Bank from "./Bank";
 import Projects from "./Project/Projects";
+import ScoreSchemes from "./ScoreScheme/ScoreSchemes";
+import Home from "./ScoreScheme/Home";
 
 const Router = () => {
   return (
@@ -19,8 +20,13 @@ const Router = () => {
           exact
         />
         <Route
+          path="/projects/:project_id/instruments/:instrument_id/score_schemes"
+          component={ScoreSchemes}
+          exact
+        />
+        <Route
           path="/projects/:project_id/instruments/:instrument_id/score_schemes/:id"
-          component={ScoreScheme}
+          component={Home}
           exact
         />
         <Route path="/banks/:tab?" component={Bank} exact />

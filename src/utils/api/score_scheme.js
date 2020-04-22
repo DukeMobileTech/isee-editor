@@ -9,6 +9,12 @@ export const getScoreSchemes = (projectId, instrumentId) => {
   );
 };
 
+export const getScoreSchemeUnits = (instrument, scoreSchemeId) => {
+  return instance.get(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/score_units`
+  );
+};
+
 export const createScoreScheme = (projectId, instrumentId, scheme) => {
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/score_schemes`,

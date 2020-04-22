@@ -1,31 +1,31 @@
 import { DeleteButton, EditButton, AddButton } from "../../utils/Buttons";
-import { Divider, Table, Button } from "antd";
+import { Divider, Table } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   deleteScoreScheme,
   getScoreSchemes
 } from "../../utils/api/score_scheme";
-
 import ScoreSchemeForm from "./ScoreSchemeForm";
-import ScoreScheme from "./ScoreScheme";
+import { ProjectHeader, InstrumentHeader } from "../Headers";
+import { Link } from "react-router-dom";
 
 const { Column } = Table;
 
 const ScoreSchemes = props => {
-  const instrument = props.instrument;
+  const project = props.location.state.project;
+  const instrument = props.location.state.instrument;
   const [scoreSchemes, setScoreSchemes] = useState([]);
   const [scoreScheme, setScoreScheme] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [showUnits, setShowUnits] = useState(false);
 
   useEffect(() => {
-    if (instrument) fetchScoreSchemes();
+    fetchScoreSchemes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchScoreSchemes = async () => {
     handleCancel();
-    const result = await getScoreSchemes(instrument.project_id, instrument.id);
+    const result = await getScoreSchemes(project.id, instrument.id);
     setScoreSchemes(result.data);
   };
 
@@ -41,7 +41,6 @@ const ScoreSchemes = props => {
 
   const handleCancel = () => {
     setShowForm(false);
-    setShowUnits(false);
   };
 
   const handleDeleteScheme = scheme => {
@@ -56,11 +55,6 @@ const ScoreSchemes = props => {
       });
   };
 
-  const handleShowUnits = scheme => {
-    setScoreScheme(scheme);
-    setShowUnits(true);
-  };
-
   if (showForm) {
     return (
       <ScoreSchemeForm
@@ -70,26 +64,29 @@ const ScoreSchemes = props => {
         handleCancel={handleCancel}
       />
     );
-  } else if (showUnits) {
-    return (
-      <ScoreScheme
-        instrument={instrument}
-        scoreScheme={scoreScheme}
-        handleCancel={handleCancel}
-      />
-    );
   } else {
     return (
       <Fragment>
+        <ProjectHeader project={project} />
+        <InstrumentHeader instrument={instrument} />
         <AddButton handleClick={handleNewScheme} />
         <Table dataSource={scoreSchemes} rowKey={scheme => scheme.id}>
           <Column
             title="Title"
             dataIndex="title"
             render={(text, scheme) => (
-              <Button type="link" onClick={() => handleShowUnits(scheme)}>
+              <Link
+                to={{
+                  pathname: `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scheme.id}`,
+                  state: {
+                    project: project,
+                    instrument: instrument,
+                    scoreScheme: scheme
+                  }
+                }}
+              >
                 {scheme.title}
-              </Button>
+              </Link>
             )}
           />
           <Column

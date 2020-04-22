@@ -1,4 +1,4 @@
-import { Collapse, Divider, Row, Button, Typography } from "antd";
+import { Collapse, Divider, Row, Button } from "antd";
 import { DeleteButton, EditButton } from "../../utils/Buttons";
 import React, { Fragment, useEffect, useState } from "react";
 import { deleteDomain, getDomains } from "../../utils/api/domain";
@@ -81,7 +81,6 @@ const ScoreScheme = props => {
     return (
       <Fragment>
         <Row style={{ margin: "3px" }}>
-          <Typography.Text strong>{scoreScheme.title}</Typography.Text>
           <Button
             style={{ float: "right" }}
             type="primary"

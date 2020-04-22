@@ -6,7 +6,6 @@ import { InstructionContext } from "../../context/InstructionContext";
 import InstrumentSider from "./InstrumentSider";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
-import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
 import Sections from "../Section/Sections";
 import { getInstructions } from "../../utils/api/instruction";
 import { getInstrument } from "../../utils/api/instrument";
@@ -17,13 +16,17 @@ import { getInstrumentQuestions } from "../../utils/api/instrument_question";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { ProjectContext } from "../../context/ProjectContext";
 import { ProjectHeader, InstrumentHeader } from "../Headers";
+import { Link } from "react-router-dom";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
 const Instrument = ({ match }) => {
   const projectId = match.params.project_id;
-  const projects = useContext(ProjectContext);
+  // eslint-disable-next-line no-unused-vars
+  const [projects, currentProject, setCurrentProject] = useContext(
+    ProjectContext
+  );
   const project = projects.find(project => project.id === Number(projectId));
   const instrumentId = match.params.id;
   const [loading, setLoading] = useState(true);
@@ -154,25 +157,29 @@ const Instrument = ({ match }) => {
               <TabPane
                 tab={
                   <span>
-                    <Icon type="check-square" />
-                    Score Schemes
-                  </span>
-                }
-                key="3"
-              >
-                <ScoreSchemes instrument={instrument} />
-              </TabPane>
-              <TabPane
-                tab={
-                  <span>
                     <Icon type="layout" />
                     PDF
                   </span>
                 }
-                key="4"
+                key="3"
               >
                 <PdfDownload instrument={instrument} />
               </TabPane>
+              <TabPane
+                tab={
+                  <Link
+                    to={{
+                      pathname: `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes`,
+                      state: { instrument: instrument, project: project }
+                    }}
+                  >
+                    <span>
+                      <Icon type="check-square" /> Score Schemes
+                    </span>
+                  </Link>
+                }
+                key="4"
+              ></TabPane>
             </Tabs>
           </Spin>
         </Content>
