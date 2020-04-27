@@ -3,6 +3,8 @@ import { Spin, Table } from "antd";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
 import { getScoreSchemeUnits } from "../../utils/api/score_scheme";
 import { customExpandIcon } from "../../utils/Utils";
+import { EditButton } from "../../utils/Buttons";
+import EditScoreUnitForm from "../ScoreUnit/EditScoreUnitForm";
 
 const Units = props => {
   const instrument = props.instrument;
@@ -11,13 +13,15 @@ const Units = props => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [scoreUnits, setScoreUnits] = useState([]);
+  const [scoreUnit, setScoreUnit] = useState(null);
+  const [editScoreUnit, setEditScoreUnit] = useState(false);
 
   useEffect(() => {
     fetchScoreUnits();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchScoreUnits = async () => {
+  const fetchScoreUnits = async (status = false, unit = null) => {
     setLoading(true);
     const result = await getScoreSchemeUnits(instrument, scoreScheme.id);
     setScoreUnits(result.data);
@@ -64,6 +68,13 @@ const Units = props => {
       title: "Base Score",
       dataIndex: "base_point_score",
       ...getColumnSearchProps("base_point_score", searchText, setSearchText)
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (text, unit) => (
+        <EditButton handleClick={() => handleEditScoreUnit(unit)} />
+      )
     }
   ];
 
@@ -71,33 +82,52 @@ const Units = props => {
     setCurrentPage(page);
   };
 
-  return (
-    <Spin spinning={loading}>
-      <Table
-        columns={columns}
-        dataSource={scoreUnits}
-        rowKey={scoreUnit => scoreUnit.id}
-        pagination={{
-          defaultPageSize: 100,
-          onChange: onPageChange,
-          current: currentPage
-        }}
-        expandedRowRender={scoreUnit => (
-          <Table
-            dataSource={scoreUnit.option_scores}
-            rowKey={optionScore => optionScore.id}
-            pagination={{
-              defaultPageSize: 100
-            }}
-          >
-            <Table.Column title="Identifier" dataIndex="option_identifier" />
-            <Table.Column title="Score" dataIndex="value" />
-          </Table>
-        )}
-        expandIcon={props => customExpandIcon(props)}
+  const handleEditScoreUnit = unit => {
+    console.log(unit);
+    setScoreUnit(unit);
+    setEditScoreUnit(true);
+  };
+
+  if (editScoreUnit) {
+    return (
+      <EditScoreUnitForm
+        scoreUnit={scoreUnit}
+        instrument={instrument}
+        scoreSchemeId={scoreScheme.id}
+        fetchScoreUnits={fetchScoreUnits}
+        visible={editScoreUnit}
+        setVisible={setEditScoreUnit}
       />
-    </Spin>
-  );
+    );
+  } else {
+    return (
+      <Spin spinning={loading}>
+        <Table
+          columns={columns}
+          dataSource={scoreUnits}
+          rowKey={scoreUnit => scoreUnit.id}
+          pagination={{
+            defaultPageSize: 100,
+            onChange: onPageChange,
+            current: currentPage
+          }}
+          expandedRowRender={scoreUnit => (
+            <Table
+              dataSource={scoreUnit.option_scores}
+              rowKey={optionScore => optionScore.id}
+              pagination={{
+                defaultPageSize: 100
+              }}
+            >
+              <Table.Column title="Identifier" dataIndex="option_identifier" />
+              <Table.Column title="Score" dataIndex="value" />
+            </Table>
+          )}
+          expandIcon={props => customExpandIcon(props)}
+        />
+      </Spin>
+    );
+  }
 };
 
 export default Units;

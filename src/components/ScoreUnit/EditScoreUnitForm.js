@@ -3,12 +3,13 @@ import * as Yup from "yup";
 import {
   RightSubmitButton,
   SaveButton,
-  DeleteButton
+  DeleteButton,
+  AddButton
 } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Col, Typography, Modal, Divider } from "antd";
 import { Field, Form, Formik } from "formik";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { updateScoreUnit } from "../../utils/api/score_unit";
 import {
@@ -19,8 +20,11 @@ import {
 import { getDomains } from "../../utils/api/domain";
 import {
   deleteOptionScore,
-  updateOptionScore
+  updateOptionScore,
+  createOptionScore
 } from "../../utils/api/option_score";
+import { OptionSetContext } from "../../context/OptionSetContext";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 
 const { Text } = Typography;
 const ScoreUnitSchema = Yup.object().shape({
@@ -35,6 +39,16 @@ const EditScoreUnitForm = props => {
   const instrument = props.instrument;
   const scoreUnit = props.scoreUnit;
   const [domains, setDomains] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [instrumentQuestions, setInstrumentQuestions] = useContext(
+    InstrumentQuestionContext
+  );
+  // eslint-disable-next-line no-unused-vars
+  const [optionSets, setOptionSets] = useContext(OptionSetContext);
+  const question = instrumentQuestions.find(
+    iq => iq.identifier === scoreUnit.question_identifiers
+  );
+  const os = optionSets.find(set => set.id === question.option_set_id);
 
   useEffect(() => {
     fetchDomains();
@@ -51,31 +65,58 @@ const EditScoreUnitForm = props => {
   };
 
   const handleDeleteOptionScore = (optionScore, values, setFieldValue) => {
-    deleteOptionScore(
-      instrument,
-      props.scoreSchemeId,
-      scoreUnit,
-      optionScore.id
-    )
-      .then(res => {
-        let index = values.option_scores.indexOf(optionScore);
-        const copy = values.option_scores.slice();
-        copy.splice(index, 1);
-        setFieldValue("option_scores", copy);
-        props.fetchScoreUnits(true, scoreUnit);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    if (optionScore.id != null) {
+      deleteOptionScore(
+        instrument,
+        props.scoreSchemeId,
+        scoreUnit,
+        optionScore.id
+      )
+        .then(res => {
+          let index = values.option_scores.indexOf(optionScore);
+          const copy = values.option_scores.slice();
+          copy.splice(index, 1);
+          setFieldValue("option_scores", copy);
+          props.fetchScoreUnits(true, scoreUnit);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
+      let index = values.option_scores.indexOf(optionScore);
+      const copy = values.option_scores.slice();
+      copy.splice(index, 1);
+      setFieldValue("option_scores", copy);
+    }
   };
 
   const handleUpdateOptionScore = optionScore => {
-    updateOptionScore(
-      instrument,
-      props.scoreSchemeId,
-      scoreUnit,
-      optionScore
-    ).then(props.fetchScoreUnits(true, scoreUnit));
+    if (optionScore.id != null) {
+      updateOptionScore(
+        instrument,
+        props.scoreSchemeId,
+        scoreUnit,
+        optionScore
+      ).then(props.fetchScoreUnits(true, scoreUnit));
+    } else {
+      createOptionScore(
+        instrument,
+        props.scoreSchemeId,
+        scoreUnit,
+        optionScore
+      ).then(props.fetchScoreUnits(true, scoreUnit));
+    }
+  };
+
+  const handleAddOptionScore = (values, setFieldValue) => {
+    let optionScore = {
+      option_identifier: "",
+      value: "",
+      score_unit_question_id: scoreUnit.option_scores[0].score_unit_question_id
+    };
+    const copy = values.option_scores.slice();
+    copy.push(optionScore);
+    setFieldValue("option_scores", copy);
   };
 
   return (
@@ -94,7 +135,7 @@ const EditScoreUnitForm = props => {
           weight: scoreUnit.weight,
           score_type: scoreUnit.score_type,
           base_point_score: scoreUnit.base_point_score,
-          institution_type: scoreUnit.institution_type,
+          institution_type: scoreUnit.institution_type || "",
           option_scores: scoreUnit.option_scores
         }}
         validationSchema={ScoreUnitSchema}
@@ -255,10 +296,10 @@ const EditScoreUnitForm = props => {
                   component="select"
                 >
                   <option></option>
-                  {institutionTypes.map(type => {
+                  {institutionTypes.map(iType => {
                     return (
-                      <option key={type} name="institution_type" value={type}>
-                        {type}
+                      <option key={iType} name="institution_type" value={iType}>
+                        {iType}
                       </option>
                     );
                   })}
@@ -287,11 +328,23 @@ const EditScoreUnitForm = props => {
             {values.option_scores.map((optionScore, index) => (
               <DRow key={`${optionScore.option_identifier}_${index}`}>
                 <Col span={12}>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: optionScore.option_identifier
-                    }}
-                  />
+                  <Field
+                    className="ant-input"
+                    name={`option_scores.${index}.option_identifier`}
+                    component="select"
+                  >
+                    {os.option_in_option_sets.map(oios => {
+                      return (
+                        <option
+                          key={oios.option.id}
+                          name={`option_scores.${index}.option_identifier`}
+                          value={oios.option.identifier}
+                        >
+                          {oios.option.identifier}
+                        </option>
+                      );
+                    })}
+                  </Field>
                 </Col>
                 <Col span={8}>
                   <Field
@@ -328,6 +381,9 @@ const EditScoreUnitForm = props => {
                 </Col>
               </DRow>
             ))}
+            <AddButton
+              handleClick={() => handleAddOptionScore(values, setFieldValue)}
+            />
           </Form>
         )}
       />
