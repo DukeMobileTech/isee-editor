@@ -5,7 +5,7 @@ import {
   RightSubmitButton,
   DeleteButton
 } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
+import { AlertErrorMessage, DRow, hasOtherOption } from "../../utils/Utils";
 import { Form as AntForm, Col, Select, Typography, Modal } from "antd";
 import { CenteredH4 } from "../../utils/Styles";
 import { Field, FieldArray, Form, Formik } from "formik";
@@ -214,9 +214,7 @@ const ScoreUnitForm = props => {
                                     value: "",
                                     option_identifier: oios.option.identifier,
                                     text: oios.option.text,
-                                    instrument_question_id: question.id,
-                                    position: index,
-                                    follow_up_qid: ""
+                                    instrument_question_id: question.id
                                   };
                                   if (
                                     !values.options.find(
@@ -229,6 +227,15 @@ const ScoreUnitForm = props => {
                                   }
                                 }
                               );
+                            question &&
+                              hasOtherOption(question) &&
+                              os &&
+                              arrayHelpers.push({
+                                value: "",
+                                option_identifier: os.other_option.identifier,
+                                text: os.other_option.text,
+                                instrument_question_id: question.id
+                              });
                           }}
                         >
                           {instrumentQuestions &&
@@ -243,14 +250,11 @@ const ScoreUnitForm = props => {
                       </FormItem>
                       {values.options.length > 0 && (
                         <DRow>
-                          <Col span={8}>
+                          <Col span={12}>
                             <strong>Text</strong>
                           </Col>
-                          <Col span={4}>
-                            <strong>Score</strong>
-                          </Col>
                           <Col span={8}>
-                            <strong>Follow-up Question</strong>
+                            <strong>Score</strong>
                           </Col>
                           <Col span={4}>
                             <strong>Remove</strong>
@@ -260,14 +264,14 @@ const ScoreUnitForm = props => {
                       {values.options &&
                         values.options.map((option, index) => (
                           <DRow key={`${option.option_identifier}_${index}`}>
-                            <Col span={8}>
+                            <Col span={12}>
                               <span
                                 dangerouslySetInnerHTML={{
                                   __html: option.text
                                 }}
                               />
                             </Col>
-                            <Col span={4}>
+                            <Col span={8}>
                               <Field
                                 className="ant-input-number"
                                 name={`options.${index}.value`}
@@ -277,18 +281,6 @@ const ScoreUnitForm = props => {
                               />
                               <AlertErrorMessage
                                 name={`options.${index}.value`}
-                                type="error"
-                              />
-                            </Col>
-                            <Col span={8}>
-                              <Field
-                                className="ant-input"
-                                name={`options.${index}.follow_up_qid`}
-                                placeholder="Follow-up question identifier"
-                                type="text"
-                              />
-                              <AlertErrorMessage
-                                name={`options.${index}.follow_up_qid`}
                                 type="error"
                               />
                             </Col>

@@ -81,3 +81,10 @@ export const hasSingleResponse = question => {
     question.question_type === "DROP_DOWN"
   );
 };
+
+export const hasOtherOption = question => {
+  return (
+    question.question_type === "SELECT_ONE_WRITE_OTHER" ||
+    question.question_type === "SELECT_MULTIPLE_WRITE_OTHER"
+  );
+};

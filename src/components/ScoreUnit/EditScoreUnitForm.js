@@ -6,7 +6,7 @@ import {
   DeleteButton,
   AddButton
 } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
+import { AlertErrorMessage, DRow, hasOtherOption } from "../../utils/Utils";
 import { Col, Typography, Modal, Divider } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useState, useEffect, useContext } from "react";
@@ -344,6 +344,15 @@ const EditScoreUnitForm = props => {
                         </option>
                       );
                     })}
+                    {question && hasOtherOption(question) && os && (
+                      <option
+                        key={os.other_option.id}
+                        name={`option_scores.${index}.option_identifier`}
+                        value={os.other_option.identifier}
+                      >
+                        {os.other_option.identifier}
+                      </option>
+                    )}
                   </Field>
                 </Col>
                 <Col span={8}>

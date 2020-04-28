@@ -117,6 +117,9 @@ const ScoreUnits = props => {
             <Table
               dataSource={scoreUnit.option_scores}
               rowKey={optionScore => optionScore.id}
+              pagination={{
+                defaultPageSize: 50
+              }}
             >
               <Table.Column title="Identifier" dataIndex="option_identifier" />
               <Table.Column title="Score" dataIndex="value" />
