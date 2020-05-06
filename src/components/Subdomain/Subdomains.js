@@ -78,7 +78,7 @@ const Subdomains = props => {
             subdomains.map(subdomain => {
               return (
                 <Panel
-                  header={subdomain.title}
+                  header={`${subdomain.title} ${subdomain.name}`}
                   key={subdomain.id}
                   extra={genExtra(subdomain)}
                 >

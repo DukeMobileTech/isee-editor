@@ -45,10 +45,6 @@ const EditScoreUnitForm = props => {
   );
   // eslint-disable-next-line no-unused-vars
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
-  const question = instrumentQuestions.find(
-    iq => iq.identifier === scoreUnit.question_identifiers
-  );
-  const os = optionSets.find(set => set.id === question.option_set_id);
 
   useEffect(() => {
     fetchDomains();
@@ -112,7 +108,8 @@ const EditScoreUnitForm = props => {
     let optionScore = {
       option_identifier: "",
       value: "",
-      score_unit_question_id: scoreUnit.option_scores[0].score_unit_question_id
+      score_unit_question_id: scoreUnit.option_scores[0].score_unit_question_id,
+      question_identifier: scoreUnit.option_scores[0].question_identifier
     };
     const copy = values.option_scores.slice();
     copy.push(optionScore);
@@ -136,6 +133,7 @@ const EditScoreUnitForm = props => {
           score_type: scoreUnit.score_type,
           base_point_score: scoreUnit.base_point_score,
           institution_type: scoreUnit.institution_type || "",
+          notes: (scoreUnit && scoreUnit.notes) || "",
           option_scores: scoreUnit.option_scores
         }}
         validationSchema={ScoreUnitSchema}
@@ -148,7 +146,8 @@ const EditScoreUnitForm = props => {
             weight: values.weight,
             score_type: values.score_type,
             institution_type: values.institution_type,
-            base_point_score: values.base_point_score
+            base_point_score: values.base_point_score,
+            notes: values.notes
           })
             .then(res => props.fetchScoreUnits())
             .catch(error => setErrors(error));
@@ -310,86 +309,124 @@ const EditScoreUnitForm = props => {
               </Col>
             </DRow>
             <DRow>
+              <Col span={4}>
+                <Text strong>Notes</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="notes"
+                  component="textarea"
+                />
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="notes" type="error" />
+              </Col>
+            </DRow>
+            <DRow>
               <RightSubmitButton />
             </DRow>
             {values.option_scores.length > 0 && (
               <DRow>
-                <Col span={12}>
+                <Col span={5}>
+                  <strong>Question</strong>
+                </Col>
+                <Col span={6}>
                   <strong>Option Identifier</strong>
                 </Col>
-                <Col span={8}>
+                <Col span={4}>
                   <strong>Option Score</strong>
+                </Col>
+                <Col span={5}>
+                  <strong>Notes</strong>
                 </Col>
                 <Col span={4}>
                   <strong>Actions</strong>
                 </Col>
               </DRow>
             )}
-            {values.option_scores.map((optionScore, index) => (
-              <DRow key={`${optionScore.option_identifier}_${index}`}>
-                <Col span={12}>
-                  <Field
-                    className="ant-input"
-                    name={`option_scores.${index}.option_identifier`}
-                    component="select"
-                  >
-                    {os.option_in_option_sets.map(oios => {
-                      return (
+            {values.option_scores.map((optionScore, index) => {
+              const question = instrumentQuestions.find(
+                iq => iq.identifier === optionScore.question_identifier
+              );
+              const os =
+                question &&
+                optionSets.find(set => set.id === question.option_set_id);
+              return (
+                <DRow key={`${optionScore.option_identifier}_${index}`}>
+                  {question && <Col span={5}>{question.identifier}</Col>}
+                  <Col span={6}>
+                    <Field
+                      className="ant-input"
+                      name={`option_scores.${index}.option_identifier`}
+                      component="select"
+                    >
+                      {os &&
+                        os.option_in_option_sets.map(oios => {
+                          return (
+                            <option
+                              key={oios.option.id}
+                              name={`option_scores.${index}.option_identifier`}
+                              value={oios.option.identifier}
+                            >
+                              {oios.option.identifier}
+                            </option>
+                          );
+                        })}
+                      {question && hasOtherOption(question) && os && (
                         <option
-                          key={oios.option.id}
+                          key={os.other_option.id}
                           name={`option_scores.${index}.option_identifier`}
-                          value={oios.option.identifier}
+                          value={os.other_option.identifier}
                         >
-                          {oios.option.identifier}
+                          {os.other_option.identifier}
                         </option>
-                      );
-                    })}
-                    {question && hasOtherOption(question) && os && (
-                      <option
-                        key={os.other_option.id}
-                        name={`option_scores.${index}.option_identifier`}
-                        value={os.other_option.identifier}
-                      >
-                        {os.other_option.identifier}
-                      </option>
-                    )}
-                  </Field>
-                </Col>
-                <Col span={8}>
-                  <Field
-                    className="ant-input-number"
-                    name={`option_scores.${index}.value`}
-                    placeholder="Value"
-                    type="number"
-                    step="0.1"
-                  />
-                  <AlertErrorMessage
-                    name={`option_scores.${index}.value`}
-                    type="error"
-                  />
-                </Col>
-                <Col span={4}>
-                  <SaveButton
-                    handleClick={() => handleUpdateOptionScore(optionScore)}
-                  />
-                  <Divider type="vertical" />
-                  <DeleteButton
-                    handleClick={() => {
-                      if (
-                        window.confirm(
-                          `Are you sure you want to delete ${optionScore.option_identifier}?`
+                      )}
+                    </Field>
+                  </Col>
+                  <Col span={4}>
+                    <Field
+                      className="ant-input-number"
+                      name={`option_scores.${index}.value`}
+                      placeholder="Value"
+                      type="number"
+                      step="0.1"
+                    />
+                    <AlertErrorMessage
+                      name={`option_scores.${index}.value`}
+                      type="error"
+                    />
+                  </Col>
+                  <Col span={5}>
+                    <Field
+                      className="ant-input"
+                      name={`option_scores.${index}.notes`}
+                      component="textarea"
+                    />
+                  </Col>
+                  <Col span={4}>
+                    <SaveButton
+                      handleClick={() => handleUpdateOptionScore(optionScore)}
+                    />
+                    <Divider type="vertical" />
+                    <DeleteButton
+                      handleClick={() => {
+                        if (
+                          window.confirm(
+                            `Are you sure you want to delete ${optionScore.option_identifier}?`
+                          )
                         )
-                      )
-                        handleDeleteOptionScore(
-                          optionScore,
-                          values,
-                          setFieldValue
-                        );
-                    }}
-                  />
-                </Col>
-              </DRow>
-            ))}
+                          handleDeleteOptionScore(
+                            optionScore,
+                            values,
+                            setFieldValue
+                          );
+                      }}
+                    />
+                  </Col>
+                </DRow>
+              );
+            })}
             <AddButton
               handleClick={() => handleAddOptionScore(values, setFieldValue)}
             />

@@ -114,16 +114,26 @@ const ScoreUnits = props => {
             defaultPageSize: 50
           }}
           expandedRowRender={scoreUnit => (
-            <Table
-              dataSource={scoreUnit.option_scores}
-              rowKey={optionScore => optionScore.id}
-              pagination={{
-                defaultPageSize: 50
-              }}
-            >
-              <Table.Column title="Identifier" dataIndex="option_identifier" />
-              <Table.Column title="Score" dataIndex="value" />
-            </Table>
+            <Fragment>
+              {scoreUnit.notes && (
+                <Row style={{ marginBottom: "25px" }}>{scoreUnit.notes}</Row>
+              )}
+              <Table
+                dataSource={scoreUnit.option_scores}
+                rowKey={optionScore => optionScore.id}
+                pagination={{
+                  defaultPageSize: 50
+                }}
+              >
+                <Table.Column
+                  title="Question"
+                  dataIndex="question_identifier"
+                />
+                <Table.Column title="Option" dataIndex="option_identifier" />
+                <Table.Column title="Score" dataIndex="value" />
+                <Table.Column title="Notes" dataIndex="notes" />
+              </Table>
+            </Fragment>
           )}
           expandIcon={props => customExpandIcon(props)}
         >

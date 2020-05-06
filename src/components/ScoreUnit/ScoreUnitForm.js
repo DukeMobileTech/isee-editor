@@ -58,6 +58,7 @@ const ScoreUnitForm = props => {
           score_type: (scoreUnit && scoreUnit.type) || "",
           base_point_score: (scoreUnit && scoreUnit.base_point_score) || 0,
           institution_type: (scoreUnit && scoreUnit.institution_type) || "",
+          notes: (scoreUnit && scoreUnit.notes) || "",
           options: []
         }}
         validationSchema={ScoreUnitSchema}
@@ -69,6 +70,7 @@ const ScoreUnitForm = props => {
             score_type: values.score_type,
             base_point_score: values.base_point_score,
             institution_type: values.institution_type,
+            notes: values.notes,
             options: values.options
           };
           createScoreUnit(instrument, props.scoreSchemeId, scoreUnit)
@@ -187,6 +189,21 @@ const ScoreUnitForm = props => {
             </DRow>
             <DRow>
               <Col span={4}>
+                <Text strong>Notes</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="notes"
+                  component="textarea"
+                />
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="notes" type="error" />
+              </Col>
+            </DRow>
+            <DRow>
+              <Col span={4}>
                 <Text strong>Questions in Score Unit</Text>
               </Col>
               <Col span={20}>
@@ -214,7 +231,8 @@ const ScoreUnitForm = props => {
                                     value: "",
                                     option_identifier: oios.option.identifier,
                                     text: oios.option.text,
-                                    instrument_question_id: question.id
+                                    instrument_question_id: question.id,
+                                    notes: ""
                                   };
                                   if (
                                     !values.options.find(
@@ -234,7 +252,8 @@ const ScoreUnitForm = props => {
                                 value: "",
                                 option_identifier: os.other_option.identifier,
                                 text: os.other_option.text,
-                                instrument_question_id: question.id
+                                instrument_question_id: question.id,
+                                notes: ""
                               });
                           }}
                         >
@@ -250,11 +269,14 @@ const ScoreUnitForm = props => {
                       </FormItem>
                       {values.options.length > 0 && (
                         <DRow>
-                          <Col span={12}>
+                          <Col span={10}>
                             <strong>Text</strong>
                           </Col>
-                          <Col span={8}>
+                          <Col span={6}>
                             <strong>Score</strong>
+                          </Col>
+                          <Col span={4}>
+                            <strong>Notes</strong>
                           </Col>
                           <Col span={4}>
                             <strong>Remove</strong>
@@ -264,14 +286,14 @@ const ScoreUnitForm = props => {
                       {values.options &&
                         values.options.map((option, index) => (
                           <DRow key={`${option.option_identifier}_${index}`}>
-                            <Col span={12}>
+                            <Col span={10}>
                               <span
                                 dangerouslySetInnerHTML={{
                                   __html: option.text
                                 }}
                               />
                             </Col>
-                            <Col span={8}>
+                            <Col span={6}>
                               <Field
                                 className="ant-input-number"
                                 name={`options.${index}.value`}
@@ -282,6 +304,13 @@ const ScoreUnitForm = props => {
                               <AlertErrorMessage
                                 name={`options.${index}.value`}
                                 type="error"
+                              />
+                            </Col>
+                            <Col span={4}>
+                              <Field
+                                className="ant-input"
+                                name={`options.${index}.notes`}
+                                component="textarea"
                               />
                             </Col>
                             <Col span={4}>

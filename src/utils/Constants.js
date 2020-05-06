@@ -80,13 +80,10 @@ export const valueOperators = [
 export const scoreTypes = [
   "MATCH",
   "SUM",
-  "BANK",
-  "INDEX",
-  "LOOKUP",
-  "SEARCH",
-  "GROUP-AVERAGE",
   "CALCULATION",
-  "ROSTER"
+  "AVERAGE",
+  "LOWEST",
+  "HIGHEST"
 ];
 
 export const institutionTypes = ["RESIDENTIAL", "NON_RESIDENTIAL"];

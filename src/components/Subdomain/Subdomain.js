@@ -38,6 +38,7 @@ const Subdomain = props => {
       <Formik
         initialValues={{
           title: (subdomain && subdomain.title) || "",
+          name: (subdomain && subdomain.name) || "",
           domain_id: props.domain.id
         }}
         validationSchema={SubdomainSchema}
@@ -46,11 +47,13 @@ const Subdomain = props => {
             updateSubdomain(props.instrument, props.domain.score_scheme_id, {
               id: subdomain.id,
               title: values.title,
+              name: values.name,
               domain_id: props.domain.id
             }).then(res => onCancel());
           } else {
             createSubdomain(props.instrument, props.domain.score_scheme_id, {
               title: values.title,
+              name: values.name,
               domain_id: props.domain.id
             }).then(res => onCancel());
           }
@@ -71,6 +74,22 @@ const Subdomain = props => {
               </Col>
               <Col span={6}>
                 <AlertErrorMessage name="title" type="error" />
+              </Col>
+            </DRow>
+            <DRow>
+              <Col span={4}>
+                <Text strong>Name</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="name"
+                  placeholder="Enter name"
+                  type="text"
+                />
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="name" type="error" />
               </Col>
             </DRow>
             <RightSubmitButton />

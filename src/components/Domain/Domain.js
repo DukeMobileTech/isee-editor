@@ -30,7 +30,8 @@ const Domain = props => {
       <Formik
         initialValues={{
           title: (domain && domain.title) || "",
-          score_scheme_id: props.scoreSchemeId
+          score_scheme_id: props.scoreSchemeId,
+          name: (domain && domain.name) || ""
         }}
         validationSchema={DomainSchema}
         onSubmit={values => {
@@ -38,11 +39,13 @@ const Domain = props => {
             updateDomain(props.instrument, {
               id: domain.id,
               title: values.title,
+              name: values.name,
               score_scheme_id: props.scoreSchemeId
             }).then(res => props.fetchDomains());
           } else {
             createDomain(props.instrument, {
               title: values.title,
+              name: values.name,
               score_scheme_id: props.scoreSchemeId
             }).then(res => props.fetchDomains());
           }
@@ -63,6 +66,22 @@ const Domain = props => {
               </Col>
               <Col span={6}>
                 <AlertErrorMessage name="title" type="error" />
+              </Col>
+            </DRow>
+            <DRow>
+              <Col span={4}>
+                <Text strong>Name</Text>
+              </Col>
+              <Col span={14}>
+                <Field
+                  className="ant-input"
+                  name="name"
+                  placeholder="Enter name"
+                  type="text"
+                />
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="name" type="error" />
               </Col>
             </DRow>
             <RightSubmitButton />
