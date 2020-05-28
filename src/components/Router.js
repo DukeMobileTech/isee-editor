@@ -5,7 +5,6 @@ import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
 import Bank from "./Bank";
 import Projects from "./Project/Projects";
-import ScoreSchemes from "./ScoreScheme/ScoreSchemes";
 import Home from "./ScoreScheme/Home";
 
 const Router = () => {
@@ -17,11 +16,6 @@ const Router = () => {
         <Route
           path="/projects/:project_id/instruments/:id"
           component={Instrument}
-          exact
-        />
-        <Route
-          path="/projects/:project_id/instruments/:instrument_id/score_schemes"
-          component={ScoreSchemes}
           exact
         />
         <Route

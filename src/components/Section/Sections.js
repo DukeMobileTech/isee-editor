@@ -1,42 +1,58 @@
-import { Button, Col, Divider, Icon, List, Row } from "antd";
-import { DeleteButton, EditButton } from "../../utils/Buttons";
-import { getItemStyle, getListStyle } from "../../utils/Utils";
+import * as Yup from "yup";
+import { Button, Col, Divider, Icon, List, Row, Drawer } from "antd";
+import {
+  DeleteButton,
+  EditButton,
+  LeftCancelButton,
+  RightSubmitButton
+} from "../../utils/Buttons";
+import {
+  getItemStyle,
+  getListStyle,
+  DRow,
+  AlertErrorMessage
+} from "../../utils/Utils";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import React, { useContext, useState, Fragment } from "react";
+import React, { useContext, useState, Fragment, useEffect } from "react";
 import {
   deleteSection,
   getSections,
-  updateSection
+  updateSection,
+  createSection
 } from "../../utils/api/section";
 
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
-import SectionForm from "./SectionForm";
-import Subsections from "../Subsection/Subsections";
+import Displays from "./Displays";
 import Translations from "../SectionTranslation/Translations";
-import { Translations as DisplayTranslations } from "../DisplayTranslation/Translations";
+import { Formik, Form, Field } from "formik";
+
+const SectionSchema = Yup.object().shape({
+  title: Yup.string().required("Title is required")
+});
 
 const Sections = props => {
   const instrument = props.instrument;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
   const [sections, setSections] = useContext(InstrumentSectionContext);
   const [showForm, setShowForm] = useState(false);
   const [showTranslations, setShowTranslations] = useState(false);
-  const [showSubsectionTranslations, setShowSubsectionTranslations] = useState(
-    false
-  );
-  // eslint-disable-next-line no-unused-vars
-  const [displays, setDisplays] = useState(
-    [].concat.apply([], sections.map(section => section.displays))
-  );
   const [section, setSection] = useState(null);
+  const [showDisplays, setShowDisplays] = useState(false);
+
+  useEffect(() => {
+    fetchSections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchSections = async () => {
-    setShowForm(false);
-    const results = await getSections(instrument.project_id, instrument.id);
+    handleCancel();
+    const results = await getSections(projectId, instrumentId);
     setSections(results.data);
   };
 
   const handleDeleteSection = section => {
-    deleteSection(instrument.project_id, instrument.id, section.id)
+    deleteSection(projectId, instrumentId, section.id)
       .then(res => {
         fetchSections();
       })
@@ -46,8 +62,8 @@ const Sections = props => {
   };
 
   const handleEditSection = section => {
-    setShowForm(true);
     setSection(section);
+    setShowForm(true);
   };
 
   const handleNewSection = () => {
@@ -57,7 +73,13 @@ const Sections = props => {
 
   const handleCancel = () => {
     setShowForm(false);
-    props.setShowDisplays(false);
+    setShowDisplays(false);
+    setSection(null);
+  };
+
+  const handleShowDisplays = section => {
+    setSection(section);
+    setShowDisplays(true);
   };
 
   const onDragEnd = async result => {
@@ -84,20 +106,7 @@ const Sections = props => {
     setShowTranslations(!showTranslations);
   };
 
-  const handleSubsectionTranslations = () => {
-    setShowSubsectionTranslations(!showSubsectionTranslations);
-  };
-
-  if (showForm) {
-    return (
-      <SectionForm
-        instrument={instrument}
-        section={section}
-        handleCancel={handleCancel}
-        fetchSections={fetchSections}
-      />
-    );
-  } else if (showTranslations) {
+  if (showTranslations) {
     return (
       <Translations
         instrument={instrument}
@@ -106,23 +115,12 @@ const Sections = props => {
         showTranslations={showTranslations}
       />
     );
-  } else if (showSubsectionTranslations) {
+  } else if (showDisplays) {
     return (
-      <DisplayTranslations
+      <Displays
+        section={section}
         instrument={instrument}
-        displays={displays}
-        setShowTranslations={setShowSubsectionTranslations}
-        showTranslations={showSubsectionTranslations}
-      />
-    );
-  } else if (props.showDisplays) {
-    return (
-      <Subsections
-        section={props.section}
-        instrument={instrument}
-        sections={sections}
         handleCancel={handleCancel}
-        showQuestions={props.showQuestions}
       />
     );
   } else {
@@ -130,22 +128,12 @@ const Sections = props => {
       <Fragment>
         <Row style={{ margin: "3px" }}>
           <Button
-            title="Show Section Translations"
+            title="Show Translations"
             type="primary"
             onClick={handleSectionTranslations}
             style={{ marginRight: "2px" }}
           >
             <Icon type="global" />
-            Sections
-          </Button>
-          <Button
-            title="Show Subsection Translations"
-            type="primary"
-            onClick={handleSubsectionTranslations}
-            style={{ marginLeft: "2px" }}
-          >
-            <Icon type="global" />
-            Subsections
           </Button>
           <Button
             style={{ float: "right" }}
@@ -184,18 +172,18 @@ const Sections = props => {
                           )}
                         >
                           <List.Item>
-                            <Col span={4}>
+                            <Col span={1}>
                               <Icon type="drag" />
                             </Col>
-                            <Col span={14}>
+                            <Col span={19}>
                               <Button
                                 type="link"
-                                onClick={() => props.handleOpenSection(section)}
+                                onClick={() => handleShowDisplays(section)}
                               >
                                 {section.title}
                               </Button>
                             </Col>
-                            <Col span={6}>
+                            <Col span={3}>
                               <EditButton
                                 handleClick={() => handleEditSection(section)}
                               />
@@ -222,6 +210,91 @@ const Sections = props => {
             )}
           </Droppable>
         </DragDropContext>
+        <Drawer
+          title={section === null ? "New Section" : section.title}
+          placement={"right"}
+          width={720}
+          closable={false}
+          onClose={handleCancel}
+          visible={showForm}
+          key={"right"}
+          destroyOnClose={true}
+        >
+          <Formik
+            initialValues={{
+              id: (section && section.id) || null,
+              title: (section && section.title) || "",
+              instrument_id:
+                (section && section.instrument_id) || instrument.id,
+              position:
+                (section && section.position) || instrument.section_count + 1
+            }}
+            validationSchema={SectionSchema}
+            onSubmit={(values, { setErrors }) => {
+              const secObj = {
+                id: values.id,
+                title: values.title,
+                instrument_id: values.instrument_id,
+                position: values.position
+              };
+              if (values.id) {
+                updateSection(
+                  instrument.project_id,
+                  values.instrument_id,
+                  values.id,
+                  secObj
+                )
+                  .then(res => {
+                    fetchSections();
+                  })
+                  .catch(error => {
+                    for (const err of error.data.errors) {
+                      if (err.includes("Title")) {
+                        setErrors({ title: err });
+                      }
+                    }
+                  });
+              } else {
+                createSection(
+                  instrument.project_id,
+                  values.instrument_id,
+                  secObj
+                )
+                  .then(res => {
+                    fetchSections();
+                  })
+                  .catch(error => {
+                    for (const err of error.data.errors) {
+                      if (err.includes("Title")) {
+                        setErrors({ title: err });
+                      }
+                    }
+                  });
+              }
+            }}
+            render={({ values }) => (
+              <Form>
+                <DRow>
+                  <Col span={18}>
+                    <Field
+                      className="ant-input"
+                      name="title"
+                      placeholder="Enter title"
+                      type="text"
+                    />
+                  </Col>
+                  <Col span={6}>
+                    <AlertErrorMessage name="title" type="error" />
+                  </Col>
+                </DRow>
+                <DRow>
+                  <LeftCancelButton handleClick={handleCancel} />
+                  <RightSubmitButton />
+                </DRow>
+              </Form>
+            )}
+          />
+        </Drawer>
       </Fragment>
     );
   }

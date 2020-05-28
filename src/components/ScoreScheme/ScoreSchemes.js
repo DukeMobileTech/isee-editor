@@ -6,14 +6,13 @@ import {
   getScoreSchemes
 } from "../../utils/api/score_scheme";
 import ScoreSchemeForm from "./ScoreSchemeForm";
-import { ProjectHeader, InstrumentHeader } from "../Headers";
 import { Link } from "react-router-dom";
 
 const { Column } = Table;
 
 const ScoreSchemes = props => {
-  const project = props.location.state.project;
-  const instrument = props.location.state.instrument;
+  const project = props.project;
+  const instrument = props.instrument;
   const [scoreSchemes, setScoreSchemes] = useState([]);
   const [scoreScheme, setScoreScheme] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -67,8 +66,6 @@ const ScoreSchemes = props => {
   } else {
     return (
       <Fragment>
-        <ProjectHeader project={project} />
-        <InstrumentHeader instrument={instrument} />
         <AddButton handleClick={handleNewScheme} />
         <Table dataSource={scoreSchemes} rowKey={scheme => scheme.id}>
           <Column

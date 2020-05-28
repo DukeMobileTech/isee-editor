@@ -88,3 +88,45 @@ export const hasOtherOption = question => {
     question.question_type === "SELECT_MULTIPLE_WRITE_OTHER"
   );
 };
+
+export const isDropDown = question => {
+  return question.question_type === "DROP_DOWN";
+};
+
+export const isSelectOne = question => {
+  return (
+    question.question_type === "SELECT_ONE" ||
+    question.question_type === "SELECT_ONE_WRITE_OTHER"
+  );
+};
+
+export const isSelectMultiple = question => {
+  return (
+    question.question_type === "SELECT_MULTIPLE" ||
+    question.question_type === "SELECT_MULTIPLE_WRITE_OTHER"
+  );
+};
+
+export const isInstruction = question => {
+  return question.question_type === "INSTRUCTIONS";
+};
+
+export const isList = question => {
+  return (
+    question.question_type === "LIST_OF_TEXT_BOXES" ||
+    question.question_type === "LIST_OF_INTEGER_BOXES"
+  );
+};
+
+export const isOther = question => {
+  return (
+    question.question_type !== "SELECT_ONE" &&
+    question.question_type !== "SELECT_ONE_WRITE_OTHER" &&
+    question.question_type !== "DROP_DOWN" &&
+    question.question_type !== "INSTRUCTIONS" &&
+    question.question_type !== "SELECT_MULTIPLE" &&
+    question.question_type !== "SELECT_MULTIPLE_WRITE_OTHER" &&
+    question.question_type !== "LIST_OF_TEXT_BOXES" &&
+    question.question_type !== "LIST_OF_INTEGER_BOXES"
+  );
+};

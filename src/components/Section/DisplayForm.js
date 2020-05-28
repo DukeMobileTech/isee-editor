@@ -6,7 +6,6 @@ import React, { useContext } from "react";
 import { createDisplay, updateDisplay } from "../../utils/api/display";
 
 import { Form as AntForm } from "antd";
-import { CenteredH4 } from "../../utils/Styles";
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import { AlertErrorMessage } from "../../utils/Utils";
 
@@ -17,7 +16,7 @@ const DisplaySchema = Yup.object().shape({
   title: Yup.string().required("Title is required")
 });
 
-const SubsectionForm = props => {
+const DisplayForm = props => {
   const projectId = props.instrument.project_id;
   const instrumentId = props.section.instrument_id;
   const sectionId = props.section.id;
@@ -74,9 +73,6 @@ const SubsectionForm = props => {
       }}
       render={({ values }) => (
         <Form className="ant-form ant-form-horizontal">
-          <CenteredH4>
-            {values.title ? values.title : "New Subsection"}
-          </CenteredH4>
           <FormItem>
             <Field className="ant-input" name="section_id" component="select">
               <option></option>
@@ -107,4 +103,4 @@ const SubsectionForm = props => {
   );
 };
 
-export default SubsectionForm;
+export default DisplayForm;

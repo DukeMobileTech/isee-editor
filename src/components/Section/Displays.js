@@ -1,27 +1,40 @@
-import { Button, Col, Divider, List, Row, Icon } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  List,
+  Row,
+  Icon,
+  Drawer,
+  Layout,
+  Menu
+} from "antd";
 import {
   DeleteButton,
   EditButton,
-  FolderAddButton,
   LeftCancelButton
 } from "../../utils/Buttons";
-import React, { Fragment, useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
-import { CenteredH3 } from "../../utils/Styles";
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
-import SubsectionForm from "./SubsectionForm";
+import DisplayForm from "./DisplayForm";
 import { deleteDisplay } from "../../utils/api/display";
 import { getSections, orderDisplays } from "../../utils/api/section";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { getListStyle, getItemStyle } from "../../utils/Utils";
+import Display from "../Display/Display";
+import { Translations } from "../DisplayTranslation/Translations";
+import { CenteredH2, CenteredH4 } from "../../utils/Styles";
 
-const Subsections = props => {
+const Displays = props => {
   // eslint-disable-next-line no-unused-vars
   const [sections, setSections] = useContext(InstrumentSectionContext);
-  const section = props.section;
+  const [section, setSection] = useState(props.section);
   const [displays, setDisplays] = useState(section.displays);
   const [showForm, setShowForm] = useState(false);
   const [display, setDisplay] = useState(null);
+  const [showQuestions, setShowQuestions] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
 
   useEffect(() => {
     sections.forEach(sec => {
@@ -66,15 +79,7 @@ const Subsections = props => {
 
   const handleCancel = () => {
     setShowForm(false);
-  };
-
-  const FooterButtons = () => {
-    return (
-      <Row>
-        <LeftCancelButton handleClick={props.handleCancel} />
-        <FolderAddButton handleClick={handleNewDisplay} />
-      </Row>
-    );
+    setShowQuestions(false);
   };
 
   const onDragEnd = result => {
@@ -100,20 +105,80 @@ const Subsections = props => {
     });
   };
 
-  const DisplaysView = () => {
-    if (showForm) {
-      return (
-        <SubsectionForm
-          instrument={props.instrument}
-          section={section}
-          display={display}
-          handleCancel={handleCancel}
-          fetchSections={fetchSections}
-        />
-      );
-    } else {
-      return (
-        <Fragment>
+  const handleShowQuestions = display => {
+    setDisplay(display);
+    setShowQuestions(true);
+  };
+
+  const handleTranslations = () => {
+    setShowTranslations(!showTranslations);
+  };
+
+  const handleSectionClick = item => {
+    const clickedSection = sections.find(sec => sec.id === Number(item.key));
+    setSection(clickedSection);
+  };
+
+  if (showTranslations) {
+    return (
+      <Translations
+        instrument={props.instrument}
+        displays={displays}
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+      />
+    );
+  } else if (showQuestions) {
+    return (
+      <Display
+        display={display}
+        displays={displays}
+        section={section}
+        projectId={props.instrument.project_id}
+        handleCancel={handleCancel}
+      />
+    );
+  } else {
+    return (
+      <Layout>
+        <Layout.Sider width={250} style={{ background: "#ffffff" }}>
+          <CenteredH4>Sections</CenteredH4>
+          <Menu
+            key={section.title}
+            defaultSelectedKeys={[`${section.id}`]}
+            defaultOpenKeys={[`${section.id}`]}
+            onClick={handleSectionClick}
+          >
+            {sections.map(sectionItem => {
+              return (
+                <Menu.Item key={`${sectionItem.id}`}>
+                  {sectionItem.title}
+                </Menu.Item>
+              );
+            })}
+          </Menu>
+        </Layout.Sider>
+        <Layout.Content>
+          <CenteredH2>{section.title}</CenteredH2>
+          <Row
+            gutter={8}
+            type="flex"
+            justify="space-between"
+            align="middle"
+            style={{ margin: "5px" }}
+          >
+            <LeftCancelButton handleClick={props.handleCancel} />
+            <Button
+              title="Show Translations"
+              type="primary"
+              onClick={handleTranslations}
+            >
+              <Icon type="global" />
+            </Button>
+            <Button type="primary" title="Add New" onClick={handleNewDisplay}>
+              <Icon type="plus" />
+            </Button>
+          </Row>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="sections">
               {(provided, snapshot) => (
@@ -123,7 +188,6 @@ const Subsections = props => {
                   style={getListStyle(snapshot.isDraggingOver)}
                 >
                   <List
-                    footer={<FooterButtons />}
                     bordered
                     dataSource={displays}
                     renderItem={(display, index) => (
@@ -143,18 +207,18 @@ const Subsections = props => {
                             )}
                           >
                             <List.Item>
-                              <Col span={2}>
+                              <Col span={1}>
                                 <Icon type="drag" />
                               </Col>
-                              <Col span={16}>
+                              <Col span={19}>
                                 <Button
                                   type="link"
-                                  onClick={() => props.showQuestions(display)}
+                                  onClick={() => handleShowQuestions(display)}
                                 >
                                   {display.title}
                                 </Button>
                               </Col>
-                              <Col span={6}>
+                              <Col span={3}>
                                 <EditButton
                                   handleClick={() => handleEditDisplay(display)}
                                 />
@@ -181,17 +245,28 @@ const Subsections = props => {
               )}
             </Droppable>
           </DragDropContext>
-        </Fragment>
-      );
-    }
-  };
-
-  return (
-    <Fragment>
-      <CenteredH3>{section.title}</CenteredH3>
-      <DisplaysView />
-    </Fragment>
-  );
+          <Drawer
+            title={display === null ? "New Subsection" : display.title}
+            placement={"right"}
+            width={720}
+            closable={false}
+            onClose={handleCancel}
+            visible={showForm}
+            key={"right"}
+            destroyOnClose={true}
+          >
+            <DisplayForm
+              instrument={props.instrument}
+              section={section}
+              display={display}
+              handleCancel={handleCancel}
+              fetchSections={fetchSections}
+            />
+          </Drawer>
+        </Layout.Content>
+      </Layout>
+    );
+  }
 };
 
-export default Subsections;
+export default Displays;
