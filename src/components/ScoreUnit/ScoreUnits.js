@@ -1,5 +1,10 @@
-import { DeleteButton, EditButton, CopyButton } from "../../utils/Buttons";
-import { Divider, Table, Row, Button } from "antd";
+import {
+  DeleteButton,
+  EditButton,
+  CopyButton,
+  LeftCancelButton
+} from "../../utils/Buttons";
+import { Divider, Table, Row, Button, Layout, Menu, Icon, Drawer } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   deleteScoreUnit,
@@ -7,59 +12,74 @@ import {
   copyScoreUnit
 } from "../../utils/api/score_unit";
 
-import ScoreUnitForm from "./ScoreUnitForm";
-import EditScoreUnitForm from "./EditScoreUnitForm";
+import NewScoreUnit from "./NewScoreUnit";
+import EditScoreUnit from "./EditScoreUnit";
 import { customExpandIcon } from "../../utils/Utils";
+import { CenteredH4, CenteredH3 } from "../../utils/Styles";
 
 const { Column } = Table;
 
 const ScoreUnits = props => {
   const instrument = props.instrument;
-  const subdomain = props.subdomain;
+  const scoreScheme = props.scoreScheme;
+  const domain = props.domain;
+  const subdomains = props.subdomains;
+  const [subdomain, setSubdomain] = useState(props.subdomain);
   const [scoreUnits, setScoreUnits] = useState([]);
-  const [showForm, setShowForm] = useState(false);
+  const [showNew, setShowNew] = useState(false);
   const [scoreUnit, setScoreUnit] = useState(null);
-  const [editScoreUnit, setEditScoreUnit] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   useEffect(() => {
     fetchScoreUnits();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchScoreUnits = async (status = false, unit = null) => {
-    handleCancel(status, unit);
+  const fetchScoreUnits = async () => {
     const result = await getScoreUnits(
       instrument,
-      props.scoreSchemeId,
+      scoreScheme.id,
       subdomain.id
     );
     setScoreUnits(result.data);
   };
 
-  const handleNewScoreUnit = () => {
-    setShowForm(true);
+  const handleSubdomainClick = item => {
+    const clicked = subdomains.find(sd => sd.id === Number(item.key));
+    setSubdomain(clicked);
+    getScoreUnits(instrument, scoreScheme.id, clicked.id).then(res =>
+      setScoreUnits(res.data)
+    );
   };
 
-  const handleCancel = (status = false, unit = null) => {
-    setShowForm(false);
-    setEditScoreUnit(status);
-    setScoreUnit(unit);
+  const onNew = () => {
+    setShowNew(true);
+  };
+
+  const onCancelNew = () => {
+    setShowNew(false);
+  };
+
+  const onCancelEdit = () => {
+    setShowEdit(false);
+    setScoreUnit(null);
+    fetchScoreUnits();
   };
 
   const handleEditScoreUnit = scoreUnit => {
     setScoreUnit(scoreUnit);
-    setEditScoreUnit(true);
+    setShowEdit(true);
   };
 
   const handleCopyUnit = scoreUnit => {
-    copyScoreUnit(instrument, props.scoreSchemeId, scoreUnit).then(response => {
+    copyScoreUnit(instrument, scoreScheme.id, scoreUnit).then(response => {
       scoreUnits.unshift(response.data);
       setScoreUnits([...scoreUnits]);
     });
   };
 
   const handleDeleteScoreUnit = scoreUnit => {
-    deleteScoreUnit(instrument, props.scoreSchemeId, scoreUnit)
+    deleteScoreUnit(instrument, scoreScheme.id, scoreUnit)
       .then(res => {
         let index = scoreUnits.indexOf(scoreUnit);
         scoreUnits.splice(index, 1);
@@ -70,41 +90,37 @@ const ScoreUnits = props => {
       });
   };
 
-  if (editScoreUnit) {
-    return (
-      <EditScoreUnitForm
-        scoreUnit={scoreUnit}
-        subdomain={subdomain}
-        instrument={instrument}
-        handleCancel={handleCancel}
-        scoreSchemeId={props.scoreSchemeId}
-        fetchScoreUnits={fetchScoreUnits}
-        visible={editScoreUnit}
-        setVisible={setEditScoreUnit}
-      />
-    );
-  } else if (showForm) {
-    return (
-      <ScoreUnitForm
-        subdomain={subdomain}
-        instrument={instrument}
-        handleCancel={handleCancel}
-        scoreSchemeId={props.scoreSchemeId}
-        fetchScoreUnits={fetchScoreUnits}
-        visible={showForm}
-        setVisible={setShowForm}
-      />
-    );
-  } else {
-    return (
-      <Fragment>
-        <Row style={{ margin: "3px" }}>
+  return (
+    <Layout>
+      <Layout.Sider width={250} style={{ background: "#ffffff" }}>
+        <CenteredH4>Subdomains</CenteredH4>
+        <Menu
+          key={subdomain.title}
+          defaultSelectedKeys={[`${subdomain.id}`]}
+          defaultOpenKeys={[`${subdomain.id}`]}
+          onClick={handleSubdomainClick}
+        >
+          {subdomains.map(item => {
+            return (
+              <Menu.Item key={`${item.id}`}>
+                {`${item.title} ${item.name}`}
+              </Menu.Item>
+            );
+          })}
+        </Menu>
+      </Layout.Sider>
+      <Layout.Content>
+        <CenteredH3>{`${domain.title} ${domain.name}`}</CenteredH3>
+        <CenteredH4>{`${subdomain.title} ${subdomain.name}`}</CenteredH4>
+        <Row style={{ margin: "5px" }}>
+          <LeftCancelButton handleClick={props.handleCancel} />
           <Button
             style={{ float: "right" }}
             type="primary"
-            onClick={handleNewScoreUnit}
+            onClick={onNew}
+            title="New Score Unit"
           >
-            Add Score Unit
+            <Icon type="plus" />
           </Button>
         </Row>
         <Table
@@ -178,8 +194,50 @@ const ScoreUnits = props => {
             )}
           />
         </Table>
-      </Fragment>
-    );
-  }
+        <Drawer
+          title="New Score Unit"
+          placement={"right"}
+          width={720}
+          closable={false}
+          onClose={onCancelNew}
+          visible={showNew}
+          key="new"
+          destroyOnClose={true}
+        >
+          <NewScoreUnit
+            subdomain={subdomain}
+            instrument={instrument}
+            handleCancel={onCancelNew}
+            scoreSchemeId={scoreScheme.id}
+            fetchScoreUnits={fetchScoreUnits}
+            visible={showNew}
+            setVisible={setShowNew}
+          />
+        </Drawer>
+        <Drawer
+          title={scoreUnit && scoreUnit.title}
+          placement={"right"}
+          width={1080}
+          closable={false}
+          onClose={onCancelEdit}
+          visible={showEdit}
+          key="edit"
+          destroyOnClose={true}
+        >
+          <EditScoreUnit
+            scoreUnit={scoreUnit}
+            subdomain={subdomain}
+            instrument={instrument}
+            handleCancel={onCancelEdit}
+            scoreSchemeId={scoreScheme.id}
+            fetchScoreUnits={fetchScoreUnits}
+            visible={showEdit}
+            setVisible={setShowEdit}
+          />
+        </Drawer>
+      </Layout.Content>
+    </Layout>
+  );
+  // }
 };
 export default ScoreUnits;

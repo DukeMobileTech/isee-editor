@@ -1,12 +1,12 @@
 import { DeleteButton, EditButton, AddButton } from "../../utils/Buttons";
-import { Divider, Table } from "antd";
+import { Divider, Table, Button } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   deleteScoreScheme,
   getScoreSchemes
 } from "../../utils/api/score_scheme";
 import ScoreSchemeForm from "./ScoreSchemeForm";
-import { Link } from "react-router-dom";
+import ScoreScheme from "./ScoreScheme";
 
 const { Column } = Table;
 
@@ -16,6 +16,7 @@ const ScoreSchemes = props => {
   const [scoreSchemes, setScoreSchemes] = useState([]);
   const [scoreScheme, setScoreScheme] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showScheme, setShowScheme] = useState(false);
 
   useEffect(() => {
     fetchScoreSchemes();
@@ -40,6 +41,7 @@ const ScoreSchemes = props => {
 
   const handleCancel = () => {
     setShowForm(false);
+    setShowScheme(false);
   };
 
   const handleDeleteScheme = scheme => {
@@ -54,7 +56,21 @@ const ScoreSchemes = props => {
       });
   };
 
-  if (showForm) {
+  const handleShowScheme = scheme => {
+    setScoreScheme(scheme);
+    setShowScheme(true);
+  };
+
+  if (showScheme) {
+    return (
+      <ScoreScheme
+        project={project}
+        instrument={instrument}
+        scoreScheme={scoreScheme}
+        handleCancel={handleCancel}
+      />
+    );
+  } else if (showForm) {
     return (
       <ScoreSchemeForm
         instrument={instrument}
@@ -72,18 +88,9 @@ const ScoreSchemes = props => {
             title="Title"
             dataIndex="title"
             render={(text, scheme) => (
-              <Link
-                to={{
-                  pathname: `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scheme.id}`,
-                  state: {
-                    project: project,
-                    instrument: instrument,
-                    scoreScheme: scheme
-                  }
-                }}
-              >
+              <Button type="link" onClick={() => handleShowScheme(scheme)}>
                 {scheme.title}
-              </Link>
+              </Button>
             )}
           />
           <Column

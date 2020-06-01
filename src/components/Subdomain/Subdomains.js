@@ -1,97 +1,186 @@
-import { Collapse, Divider, Button, Row } from "antd";
-import { DeleteButton, EditButton } from "../../utils/Buttons";
+import {
+  Divider,
+  Button,
+  Row,
+  Layout,
+  Menu,
+  Icon,
+  Drawer,
+  Table,
+  Typography
+} from "antd";
+import {
+  DeleteButton,
+  EditButton,
+  LeftCancelButton
+} from "../../utils/Buttons";
 import React, { Fragment, useState } from "react";
 
 import ScoreUnits from "../ScoreUnit/ScoreUnits";
-import Subdomain from "./Subdomain";
+import SubdomainForm from "./SubdomainForm";
 import { deleteSubdomain } from "../../utils/api/subdomain";
-
-const { Panel } = Collapse;
+import { CenteredH4, CenteredH3 } from "../../utils/Styles";
+import { getDomain } from "../../utils/api/domain";
 
 const Subdomains = props => {
-  const subdomains = props.subdomains;
-  const domain = props.domain;
+  const instrument = props.instrument;
+  const scoreScheme = props.scoreScheme;
+  const [domain, setDomain] = useState(props.domain);
+  const [subdomains, setSubdomains] = useState(props.domain.subdomains);
   const [visible, setVisible] = useState(false);
   const [subdomain, setSubdomain] = useState(null);
+  const [show, setShow] = useState(false);
 
-  const handleEditSubdomain = subdomain => {
-    setVisible(true);
+  const fetchDomain = async () => {
+    handleCancel();
+    const result = await getDomain(
+      instrument.project_id,
+      instrument.id,
+      scoreScheme.id,
+      domain.id
+    );
+    setDomain(result.data);
+    setSubdomains(result.data.subdomains);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+    setShow(false);
+    setSubdomain(null);
+  };
+
+  const handleDomainClick = item => {
+    const clicked = props.domains.find(dom => dom.id === Number(item.key));
+    setDomain(clicked);
+    setSubdomains(clicked.subdomains);
+  };
+
+  const handleEditSubdomain = (subdomain = null) => {
     setSubdomain(subdomain);
+    setVisible(true);
+  };
+
+  const handleShowSubdomain = subdomain => {
+    setSubdomain(subdomain);
+    setShow(true);
   };
 
   const handleDeleteSubdomain = subdomain => {
-    deleteSubdomain(
-      props.instrument,
-      domain.score_scheme_id,
-      subdomain
-    ).then(res => props.fetchDomains());
+    deleteSubdomain(instrument, scoreScheme.id, subdomain).then(res =>
+      fetchDomain()
+    );
   };
 
-  const genExtra = subdomain => (
-    <Fragment>
-      <EditButton
-        handleClick={event => {
-          event.stopPropagation();
-          handleEditSubdomain(subdomain);
-        }}
-      />
-      <Divider type="vertical" />
-      <DeleteButton
-        handleClick={event => {
-          event.stopPropagation();
-          if (
-            window.confirm(
-              `Are you sure you want to delete ${subdomain.title}?`
-            )
-          )
-            handleDeleteSubdomain(subdomain);
-        }}
-      />
-    </Fragment>
-  );
-
-  if (visible) {
+  if (show) {
     return (
-      <Subdomain
+      <ScoreUnits
+        instrument={instrument}
+        scoreScheme={scoreScheme}
         domain={domain}
         subdomain={subdomain}
-        visible={visible}
-        setVisible={setVisible}
-        instrument={props.instrument}
-        fetchDomains={props.fetchDomains}
+        subdomains={subdomains}
+        handleCancel={handleCancel}
       />
     );
   } else {
     return (
-      <Fragment>
-        <Row style={{ margin: "3px" }}>
-          <Button
-            style={{ float: "right" }}
-            type="primary"
-            onClick={() => handleEditSubdomain({})}
+      <Layout>
+        <Layout.Sider width={250} style={{ background: "#ffffff" }}>
+          <CenteredH4>Domains</CenteredH4>
+          <Menu
+            key={domain.title}
+            defaultSelectedKeys={[`${domain.id}`]}
+            defaultOpenKeys={[`${domain.id}`]}
+            onClick={handleDomainClick}
           >
-            Add Subdomain
-          </Button>
-        </Row>
-        <Collapse accordion>
-          {subdomains &&
-            subdomains.map(subdomain => {
+            {props.domains.map(domainItem => {
               return (
-                <Panel
-                  header={`${subdomain.title} ${subdomain.name}`}
-                  key={subdomain.id}
-                  extra={genExtra(subdomain)}
-                >
-                  <ScoreUnits
-                    instrument={props.instrument}
-                    scoreSchemeId={domain.score_scheme_id}
-                    subdomain={subdomain}
-                  />
-                </Panel>
+                <Menu.Item key={`${domainItem.id}`}>
+                  {`${domainItem.title} ${domainItem.name}`}
+                </Menu.Item>
               );
             })}
-        </Collapse>
-      </Fragment>
+          </Menu>
+        </Layout.Sider>
+        <Layout.Content>
+          <CenteredH3>{`${domain.title} ${domain.name}`}</CenteredH3>
+          <Row style={{ margin: "5px" }}>
+            <LeftCancelButton handleClick={props.handleCancel} />
+            <Button
+              title="New Subdomain"
+              style={{ float: "right" }}
+              type="primary"
+              onClick={() => handleEditSubdomain()}
+            >
+              <Icon type="plus" />
+            </Button>
+          </Row>
+          <Table
+            size="small"
+            bordered
+            dataSource={subdomains}
+            rowKey={sd => sd.id}
+            pagination={{ defaultPageSize: 25 }}
+          >
+            <Table.Column
+              title="Title"
+              dataIndex="title"
+              render={(text, sd) => (
+                <Typography.Text>{sd.title}</Typography.Text>
+              )}
+            />
+            <Table.Column
+              title="Name"
+              dataIndex="name"
+              render={(text, sd) => (
+                <Button type="link" onClick={() => handleShowSubdomain(sd)}>
+                  {sd.name}
+                </Button>
+              )}
+            />
+            <Table.Column
+              title="Actions"
+              dataIndex="actions"
+              render={(text, sd) => (
+                <Fragment>
+                  <EditButton handleClick={() => handleEditSubdomain(sd)} />
+                  <Divider type="vertical" />
+                  <DeleteButton
+                    handleClick={() => {
+                      if (
+                        window.confirm(
+                          `Are you sure you want to delete ${sd.title}?`
+                        )
+                      )
+                        handleDeleteSubdomain(sd);
+                    }}
+                  />
+                </Fragment>
+              )}
+            />
+          </Table>
+          <Drawer
+            title={subdomain === null ? "New Subdomain" : subdomain.name}
+            placement={"right"}
+            width={720}
+            closable={false}
+            onClose={handleCancel}
+            visible={visible}
+            key={"right"}
+            destroyOnClose={true}
+          >
+            <SubdomainForm
+              domain={domain}
+              subdomain={subdomain}
+              visible={visible}
+              setVisible={setVisible}
+              instrument={instrument}
+              scoreScheme={scoreScheme}
+              fetchDomain={fetchDomain}
+            />
+          </Drawer>
+        </Layout.Content>
+      </Layout>
     );
   }
 };
