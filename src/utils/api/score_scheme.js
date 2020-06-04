@@ -34,3 +34,15 @@ export const deleteScoreScheme = (projectId, instrumentId, id) => {
     `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${id}`
   );
 };
+
+export const getScoreSchemeExcel = (instrument, scoreScheme) => {
+  return instance.get(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreScheme.id}/download`,
+    {
+      responseType: "arraybuffer",
+      headers: {
+        Accept: "application/xlsx"
+      }
+    }
+  );
+};
