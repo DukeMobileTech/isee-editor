@@ -13,7 +13,7 @@ import PdfDownload from "./PdfDownload";
 import { getInstrumentQuestions } from "../../utils/api/instrument_question";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { ProjectContext } from "../../context/ProjectContext";
-import { ProjectHeader, InstrumentHeader } from "../Headers";
+import { InstrumentHeader } from "../Headers";
 import InstrumentQuestions from "../InstrumentQuestion/InstrumentQuestions";
 import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
 
@@ -97,7 +97,6 @@ const Instrument = ({ match }) => {
 
   return (
     <Fragment>
-      <ProjectHeader project={project} />
       <InstrumentHeader instrument={instrument} />
       <Layout>
         <Content style={{ padding: "10px" }}>

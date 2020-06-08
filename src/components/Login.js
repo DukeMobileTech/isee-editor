@@ -3,9 +3,8 @@ import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import AppFooter from "./AppFooter";
 import { AppHeader } from "./Headers";
-import { Layout, Form as AntForm } from "antd";
+import { Layout, Form as AntForm, Button, Row } from "antd";
 import { MainContent, CenteredH2 } from "../utils/Styles";
-import { CenteredSubmitButton } from "../utils/Buttons";
 import { AlertErrorMessage } from "../utils/Utils";
 import axios from "axios";
 
@@ -50,31 +49,41 @@ const Login = () => {
       }}
       render={() => (
         <Form>
-          <AppHeader />
-          <Content style={{ padding: "0 50px" }}>
-            <MainContent>
-              <CenteredH2>Sign in</CenteredH2>
-              <FormItem>
-                <Field
-                  className="ant-input"
-                  name="email"
-                  placeholder="Enter email"
-                  type="email"
-                />
-                <AlertErrorMessage name="email" type="error" />
-              </FormItem>
-              <FormItem>
-                <Field
-                  className="ant-input"
-                  name="password"
-                  type="password"
-                  placeholder="Enter password"
-                />
-                <AlertErrorMessage name="password" type="error" />
-              </FormItem>
-              <CenteredSubmitButton text="Log in" />
-            </MainContent>
-          </Content>
+          <Layout className="layout">
+            <AppHeader />
+            <Content style={{ padding: "0 50px" }}>
+              <MainContent>
+                <CenteredH2>Sign In</CenteredH2>
+                <Row type="flex" justify="center" align="middle">
+                  <FormItem>
+                    <Field
+                      className="ant-input"
+                      name="email"
+                      placeholder="Enter email"
+                      type="email"
+                    />
+                    <AlertErrorMessage name="email" type="error" />
+                  </FormItem>
+                </Row>
+                <Row type="flex" justify="center" align="middle">
+                  <FormItem>
+                    <Field
+                      className="ant-input"
+                      name="password"
+                      type="password"
+                      placeholder="Enter password"
+                    />
+                    <AlertErrorMessage name="password" type="error" />
+                  </FormItem>
+                </Row>
+                <Row type="flex" justify="center" align="middle">
+                  <Button type="primary" htmlType="submit">
+                    Log In
+                  </Button>
+                </Row>
+              </MainContent>
+            </Content>
+          </Layout>
           <AppFooter />
         </Form>
       )}

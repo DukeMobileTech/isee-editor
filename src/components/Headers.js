@@ -2,7 +2,7 @@ import { Button, Divider, Icon, Layout, Menu } from "antd";
 
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { CenteredH1, CenteredH2 } from "../utils/Styles";
+import { CenteredH2 } from "../utils/Styles";
 import { ProjectContext } from "../context/ProjectContext";
 
 const Logo = styled.div`
@@ -83,10 +83,6 @@ export const AppHeader = props => {
       )}
     </Layout.Header>
   );
-};
-
-export const ProjectHeader = ({ project }) => {
-  return <CenteredH1>{project && project.name}</CenteredH1>;
 };
 
 export const InstrumentHeader = ({ instrument }) => {

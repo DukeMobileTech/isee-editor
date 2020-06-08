@@ -3,16 +3,6 @@ import { Button, Col, Icon, Row } from "antd";
 import React from "react";
 import { GREEN, WHITE } from "./Colors";
 
-export const CenteredSubmitButton = props => {
-  return (
-    <div className="ant-col ant-form-item-control-wrapper ant-col-sm-16 ant-col-sm-offset-8">
-      <Button type="primary" htmlType="submit">
-        {props.text}
-      </Button>
-    </div>
-  );
-};
-
 export const RightSubmitButton = () => {
   return (
     <Col offset={22}>

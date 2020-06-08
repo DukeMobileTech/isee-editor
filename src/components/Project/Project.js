@@ -6,7 +6,6 @@ import { deleteInstrument, getInstruments } from "../../utils/api/instrument";
 import InstrumentForm from "../Instrument/InstrumentForm";
 import { Link } from "react-router-dom";
 import { ProjectContext } from "../../context/ProjectContext";
-import { ProjectHeader } from "../Headers";
 
 const { Column } = Table;
 
@@ -21,7 +20,6 @@ const Project = ({ match }) => {
   );
   sessionStorage.setItem("projectId", projectId);
   setCurrentProject(projectId);
-  const project = projects.find(project => project.id === Number(projectId));
 
   useEffect(() => {
     fetchInstruments();
@@ -71,7 +69,6 @@ const Project = ({ match }) => {
   } else {
     return (
       <Fragment>
-        <ProjectHeader project={project} />
         <Table dataSource={instruments} rowKey={instrument => instrument.id}>
           <Column
             title="Title"
