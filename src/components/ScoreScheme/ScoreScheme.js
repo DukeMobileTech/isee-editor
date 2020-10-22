@@ -80,7 +80,7 @@ const ScoreScheme = props => {
           key="3"
         >
           <Spin spinning={loading}>
-            <Row type="flex" justify="center" align="center">
+            <Row type="flex" justify="center">
               <Button
                 title="Domain Excel Download"
                 type="primary"

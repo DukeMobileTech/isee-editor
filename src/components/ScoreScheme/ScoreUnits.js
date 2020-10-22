@@ -42,11 +42,25 @@ const ScoreUnits = props => {
       sorter: (a, b) => a.domain_title.localeCompare(b.domain_title)
     },
     {
+      title: "Domain",
+      dataIndex: "domain_name",
+      ...getColumnSearchProps("domain_name", searchText, setSearchText),
+      sortDirections: ["descend", "ascend"],
+      sorter: (a, b) => a.domain_name.localeCompare(b.domain_name)
+    },
+    {
       title: "Subdomain",
       dataIndex: "subdomain_title",
       ...getColumnSearchProps("subdomain_title", searchText, setSearchText),
       sortDirections: ["descend", "ascend"],
       sorter: (a, b) => a.subdomain_title.localeCompare(b.subdomain_title)
+    },
+    {
+      title: "Subdomain",
+      dataIndex: "subdomain_name",
+      ...getColumnSearchProps("subdomain_name", searchText, setSearchText),
+      sortDirections: ["descend", "ascend"],
+      sorter: (a, b) => a.subdomain_name.localeCompare(b.subdomain_name)
     },
     {
       title: "Title",
