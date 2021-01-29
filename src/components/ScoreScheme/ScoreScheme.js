@@ -6,6 +6,7 @@ import Domains from "../Domain/Domains";
 import { LeftCancelButton } from "../../utils/Buttons";
 import { getScoreSchemeExcel } from "../../utils/api/score_scheme";
 import fileDownload from "js-file-download";
+import RedFlags from "../RedFlag/RedFlags";
 
 const ScoreScheme = props => {
   const project = props.project;
@@ -90,6 +91,21 @@ const ScoreScheme = props => {
               </Button>
             </Row>
           </Spin>
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab={
+            <span>
+              <Icon type="warning" />
+              Red Flags
+            </span>
+          }
+          key="4"
+        >
+          <RedFlags
+            project={project}
+            instrument={instrument}
+            scoreScheme={scoreScheme}
+          />
         </Tabs.TabPane>
       </Tabs>
     </Fragment>

@@ -46,3 +46,9 @@ export const getScoreSchemeExcel = (instrument, scoreScheme) => {
     }
   );
 };
+
+export const getScoreSchemeRedFlags = (instrument, scoreSchemeId) => {
+  return instance.get(
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/red_flags`
+  );
+};

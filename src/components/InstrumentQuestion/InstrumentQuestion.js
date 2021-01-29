@@ -8,7 +8,6 @@ import NextQuestion from "../NextQuestion/NextQuestion";
 import MultipleSkip from "../MultipleSkip/MultipleSkip";
 import LoopQuestion from "../LoopQuestion/LoopQuestion";
 import ConditionSkip from "../ConditionSkip/ConditionSkip";
-import RedFlag from "../RedFlag/RedFlag";
 
 const { TabPane } = Tabs;
 
@@ -125,20 +124,6 @@ const InstrumentQuestion = props => {
               instrumentQuestion={instrumentQuestion}
               projectId={props.projectId}
               display={props.display}
-            />
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
-                <Icon type="flag" />
-                Red Flags
-              </span>
-            }
-            key="6"
-          >
-            <RedFlag
-              instrumentQuestion={instrumentQuestion}
-              projectId={props.projectId}
             />
           </TabPane>
         </Tabs>

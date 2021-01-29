@@ -8,6 +8,8 @@ import { Field, Form, Formik } from "formik";
 import React, { useContext } from "react";
 import { createRedFlag, updateRedFlag } from "../../utils/api/red_flag";
 import { InstructionContext } from "../../context/InstructionContext";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { OptionSetContext } from "../../context/OptionSetContext";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -23,33 +25,39 @@ const RedFlagSchema = Yup.object().shape({
 
 const RedFlagForm = props => {
   const redFlag = props.redFlag;
-  const instrumentQuestion = props.instrumentQuestion;
+  const scoreScheme = props.scoreScheme;
   // eslint-disable-next-line no-unused-vars
   const [instructions, setInstructions] = useContext(InstructionContext);
+  // eslint-disable-next-line no-unused-vars
+  const [instrumentQuestions, setInstrumentQuestions] = useContext(
+    InstrumentQuestionContext
+  );
+  // eslint-disable-next-line no-unused-vars
+  const [optionSets, setOptionSets] = useContext(OptionSetContext);
 
   return (
     <Formik
       initialValues={{
-        instrument_question_id: instrumentQuestion.id,
-        option_identifier: redFlag.option_identifier || "",
-        instruction_id: redFlag.instruction_id || "",
-        selected: redFlag.selected || true
+        id: (redFlag && redFlag.id) || "",
+        instrument_question_id:
+          (redFlag && redFlag.instrument_question_id) || "",
+        score_scheme_id: (redFlag && redFlag.score_scheme_id) || scoreScheme.id,
+        option_identifier: (redFlag && redFlag.option_identifier) || "",
+        instruction_id: (redFlag && redFlag.instruction_id) || "",
+        selected: (redFlag && redFlag.selected) || true
       }}
       validationSchema={RedFlagSchema}
       onSubmit={(values, { setErrors }) => {
         const editRedFlag = {
-          id: redFlag.id,
+          id: values.id,
           instrument_question_id: values.instrument_question_id,
+          score_scheme_id: values.score_scheme_id,
           option_identifier: values.option_identifier,
           instruction_id: values.instruction_id,
           selected: values.selected
         };
         if (editRedFlag.id) {
-          updateRedFlag(
-            props.projectId,
-            instrumentQuestion.instrument_id,
-            editRedFlag
-          )
+          updateRedFlag(props.instrument, scoreScheme.id, editRedFlag)
             .then(response => {
               if (response.status === 204) {
                 props.fetchRedFlags();
@@ -59,12 +67,7 @@ const RedFlagForm = props => {
               setErrors(error);
             });
         } else {
-          createRedFlag(
-            props.projectId,
-            instrumentQuestion.instrument_id,
-            instrumentQuestion.id,
-            editRedFlag
-          )
+          createRedFlag(props.instrument, scoreScheme.id, editRedFlag)
             .then(response => {
               if (response.status === 201) {
                 props.fetchRedFlags();
@@ -79,6 +82,35 @@ const RedFlagForm = props => {
         <Form>
           <DRow>
             <Col span={4}>
+              <Text strong>Question</Text>
+            </Col>
+            <Col span={14}>
+              <Field
+                className="ant-input"
+                name="instrument_question_id"
+                component="select"
+              >
+                <option></option>
+                {instrumentQuestions &&
+                  instrumentQuestions.map(iq => {
+                    return (
+                      <option
+                        key={iq.id}
+                        name="instrument_question_id"
+                        value={iq.id}
+                      >
+                        {iq.identifier}
+                      </option>
+                    );
+                  })}
+              </Field>
+            </Col>
+            <Col span={6}>
+              <AlertErrorMessage name="instrument_question_id" type="error" />
+            </Col>
+          </DRow>
+          <DRow>
+            <Col span={4}>
               <Text strong>Option</Text>
             </Col>
             <Col span={14}>
@@ -88,17 +120,27 @@ const RedFlagForm = props => {
                 component="select"
               >
                 <option></option>
-                {instrumentQuestion.options.map(option => {
-                  return (
-                    <option
-                      key={option.id}
-                      name="option_identifier"
-                      value={option.identifier}
-                    >
-                      {option.text.replace(/<[^>]+>/g, "")}
-                    </option>
-                  );
-                })}
+                {values.instrument_question_id &&
+                  optionSets &&
+                  optionSets
+                    .find(
+                      os =>
+                        os.id ===
+                        instrumentQuestions.find(
+                          iq => iq.id === Number(values.instrument_question_id)
+                        ).option_set_id
+                    )
+                    .option_in_option_sets.map(oios => {
+                      return (
+                        <option
+                          key={oios.option.id}
+                          name="option_identifier"
+                          value={oios.option.identifier}
+                        >
+                          {oios.option.text.replace(/<[^>]+>/g, "")}
+                        </option>
+                      );
+                    })}
               </Field>
             </Col>
             <Col span={6}>

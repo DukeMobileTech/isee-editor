@@ -1,4 +1,4 @@
-import { Button, Divider, Icon, Drawer, Table, Typography } from "antd";
+import { Button, Divider, Icon, Drawer, Table, Typography, Row } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import { DeleteButton, EditButton } from "../../utils/Buttons";
 import { getDomains, deleteDomain } from "../../utils/api/domain";
@@ -63,14 +63,16 @@ const Domains = props => {
   } else {
     return (
       <Fragment>
-        <Button
-          title="New Domain"
-          style={{ float: "right", margin: "5px" }}
-          type="primary"
-          onClick={onNewDomain}
-        >
-          <Icon type="plus" />
-        </Button>
+        <Row>
+          <Button
+            title="New Domain"
+            style={{ float: "right", margin: "5px" }}
+            type="primary"
+            onClick={onNewDomain}
+          >
+            <Icon type="plus" />
+          </Button>
+        </Row>
         <Table
           size="small"
           bordered

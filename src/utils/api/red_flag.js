@@ -3,28 +3,28 @@ import { instance } from "./api";
 /**
  * RedFlag
  */
-export const getRedFlags = (projectId, instrumentId, iqId) => {
+export const getRedFlags = (instrument, scoreSchemeId) => {
   return instance.get(
-    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${iqId}/red_flags`
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/red_flags`
   );
 };
 
-export const createRedFlag = (projectId, instrumentId, iqId, redFlag) => {
+export const createRedFlag = (instrument, scoreSchemeId, redFlag) => {
   return instance.post(
-    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${iqId}/red_flags`,
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/red_flags`,
     { red_flag: redFlag }
   );
 };
 
-export const updateRedFlag = (projectId, instrumentId, redFlag) => {
+export const updateRedFlag = (instrument, scoreSchemeId, redFlag) => {
   return instance.put(
-    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${redFlag.instrument_question_id}/red_flags/${redFlag.id}`,
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/red_flags/${redFlag.id}`,
     { red_flag: redFlag }
   );
 };
 
-export const deleteRedFlag = (projectId, instrumentId, redFlag) => {
+export const deleteRedFlag = (instrument, scoreSchemeId, redFlag) => {
   return instance.delete(
-    `/projects/${projectId}/instruments/${instrumentId}/instrument_questions/${redFlag.instrument_question_id}/red_flags/${redFlag.id}`
+    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/red_flags/${redFlag.id}`
   );
 };
