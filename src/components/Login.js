@@ -31,7 +31,7 @@ const Login = () => {
       onSubmit={(values, { resetForm }) => {
         axios
           .create({
-            baseURL: process.env.REACT_APP_BASE_URL,
+            baseURL: `${process.env.REACT_APP_BASE_URL}/api/v4/`,
             responseType: "json"
           })
           .post("/user_token", {

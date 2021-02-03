@@ -71,7 +71,13 @@ export const AppHeader = props => {
             <a href={`/projects/${currentProjectId}`}>Instruments</a>
           </Menu.Item>
           <Menu.Item key="3">
-            <a href="/admin">Admin</a>
+            <a
+              href={`${process.env.REACT_APP_BASE_URL}/admin`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Admin
+            </a>
           </Menu.Item>
           <UserMenuItem {...props} />
         </Menu>
