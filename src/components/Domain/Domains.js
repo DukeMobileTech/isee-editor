@@ -4,6 +4,7 @@ import { DeleteButton, EditButton } from "../../utils/Buttons";
 import { getDomains, deleteDomain } from "../../utils/api/domain";
 import DomainForm from "./DomainForm";
 import Subdomains from "../Subdomain/Subdomains";
+import Translations from "../DomainTranslation/Translations";
 
 const Domains = props => {
   const project = props.project;
@@ -13,6 +14,7 @@ const Domains = props => {
   const [visible, setVisible] = useState(false);
   const [domain, setDomain] = useState(null);
   const [showDomain, setShowDomain] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
 
   useEffect(() => {
     fetchDomains();
@@ -49,7 +51,21 @@ const Domains = props => {
     setShowDomain(true);
   };
 
-  if (showDomain) {
+  const handleDomainTranslations = () => {
+    setShowTranslations(!showTranslations);
+  };
+
+  if (showTranslations) {
+    return (
+      <Translations
+        projectId={project.id}
+        scoreScheme={scoreScheme}
+        domains={domains}
+        setShowTranslations={setShowTranslations}
+        showTranslations={showTranslations}
+      />
+    );
+  } else if (showDomain) {
     return (
       <Subdomains
         domain={domain}
@@ -64,6 +80,14 @@ const Domains = props => {
     return (
       <Fragment>
         <Row>
+          <Button
+            title="Show Translations"
+            type="primary"
+            onClick={handleDomainTranslations}
+            style={{ marginRight: "2px" }}
+          >
+            <Icon type="global" />
+          </Button>
           <Button
             title="New Domain"
             style={{ float: "right", margin: "5px" }}

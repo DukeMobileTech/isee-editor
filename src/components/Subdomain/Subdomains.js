@@ -21,6 +21,7 @@ import SubdomainForm from "./SubdomainForm";
 import { deleteSubdomain } from "../../utils/api/subdomain";
 import { CenteredH4, CenteredH3 } from "../../utils/Styles";
 import { getDomain } from "../../utils/api/domain";
+import Translations from "../SubdomainTranslation/Translations";
 
 const Subdomains = props => {
   const instrument = props.instrument;
@@ -30,6 +31,7 @@ const Subdomains = props => {
   const [visible, setVisible] = useState(false);
   const [subdomain, setSubdomain] = useState(null);
   const [show, setShow] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
 
   const fetchDomain = async () => {
     handleCancel();
@@ -71,7 +73,24 @@ const Subdomains = props => {
     );
   };
 
-  if (show) {
+  const handleTranslations = () => {
+    setShowTranslations(!showTranslations);
+  };
+
+  if (showTranslations) {
+    return (
+      <Fragment>
+        <CenteredH3>{`${domain.title} ${domain.name}`}</CenteredH3>
+        <Translations
+          instrument={props.instrument}
+          domain={domain}
+          subdomains={subdomains}
+          setShowTranslations={setShowTranslations}
+          showTranslations={showTranslations}
+        />
+      </Fragment>
+    );
+  } else if (show) {
     return (
       <ScoreUnits
         instrument={instrument}
@@ -104,11 +123,23 @@ const Subdomains = props => {
         </Layout.Sider>
         <Layout.Content>
           <CenteredH3>{`${domain.title} ${domain.name}`}</CenteredH3>
-          <Row style={{ margin: "5px" }}>
+          <Row
+            gutter={8}
+            type="flex"
+            justify="space-between"
+            align="middle"
+            style={{ margin: "5px" }}
+          >
             <LeftCancelButton handleClick={props.handleCancel} />
             <Button
+              title="Show Translations"
+              type="primary"
+              onClick={handleTranslations}
+            >
+              <Icon type="global" />
+            </Button>
+            <Button
               title="New Subdomain"
-              style={{ float: "right" }}
               type="primary"
               onClick={() => handleEditSubdomain()}
             >
