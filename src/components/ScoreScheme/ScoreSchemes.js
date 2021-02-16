@@ -1,5 +1,5 @@
 import { DeleteButton, EditButton, AddButton } from "../../utils/Buttons";
-import { Divider, Table, Button } from "antd";
+import { Divider, Table } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   deleteScoreScheme,
@@ -7,6 +7,7 @@ import {
 } from "../../utils/api/score_scheme";
 import ScoreSchemeForm from "./ScoreSchemeForm";
 import ScoreScheme from "./ScoreScheme";
+import { Link } from "react-router-dom";
 
 const { Column } = Table;
 
@@ -56,11 +57,6 @@ const ScoreSchemes = props => {
       });
   };
 
-  const handleShowScheme = scheme => {
-    setScoreScheme(scheme);
-    setShowScheme(true);
-  };
-
   if (showScheme) {
     return (
       <ScoreScheme
@@ -88,9 +84,11 @@ const ScoreSchemes = props => {
             title="Title"
             dataIndex="title"
             render={(text, scheme) => (
-              <Button type="link" onClick={() => handleShowScheme(scheme)}>
+              <Link
+                to={`/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scheme.id}`}
+              >
                 {scheme.title}
-              </Button>
+              </Link>
             )}
           />
           <Column

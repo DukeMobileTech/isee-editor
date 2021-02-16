@@ -32,7 +32,9 @@ const ScoreUnitSchema = Yup.object().shape({
 });
 
 const EditScoreUnit = props => {
-  const instrument = props.instrument;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
+  const scoreSchemeId = props.scoreSchemeId;
   const scoreUnit = props.scoreUnit;
   const [domains, setDomains] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -48,19 +50,16 @@ const EditScoreUnit = props => {
   }, []);
 
   const fetchDomains = async () => {
-    const result = await getDomains(
-      instrument.project_id,
-      instrument.id,
-      props.scoreSchemeId
-    );
+    const result = await getDomains(projectId, instrumentId, scoreSchemeId);
     setDomains(result.data);
   };
 
   const handleDeleteOptionScore = (optionScore, values, setFieldValue) => {
     if (optionScore.id != null) {
       deleteOptionScore(
-        instrument,
-        props.scoreSchemeId,
+        projectId,
+        instrumentId,
+        scoreSchemeId,
         scoreUnit,
         optionScore.id
       )
@@ -85,15 +84,17 @@ const EditScoreUnit = props => {
   const handleUpdateOptionScore = optionScore => {
     if (optionScore.id != null) {
       updateOptionScore(
-        instrument,
-        props.scoreSchemeId,
+        projectId,
+        instrumentId,
+        scoreSchemeId,
         scoreUnit,
         optionScore
       ).then(props.fetchScoreUnits());
     } else {
       createOptionScore(
-        instrument,
-        props.scoreSchemeId,
+        projectId,
+        instrumentId,
+        scoreSchemeId,
         scoreUnit,
         optionScore
       ).then(props.fetchScoreUnits());
@@ -127,7 +128,7 @@ const EditScoreUnit = props => {
       }}
       validationSchema={ScoreUnitSchema}
       onSubmit={(values, { setErrors }) => {
-        updateScoreUnit(instrument, props.scoreSchemeId, {
+        updateScoreUnit(projectId, instrumentId, scoreSchemeId, {
           id: scoreUnit.id,
           domain_id: values.domain_id,
           subdomain_id: values.subdomain_id,
@@ -375,6 +376,7 @@ const EditScoreUnit = props => {
                     className="ant-input"
                     name={`option_scores.${index}.notes`}
                     component="textarea"
+                    placeholder=""
                   />
                 </Col>
                 <Col span={4}>

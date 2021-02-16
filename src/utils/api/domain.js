@@ -15,22 +15,22 @@ export const getDomain = (projectId, instrumentId, scoreSchemeId, id) => {
   );
 };
 
-export const createDomain = (instrument, domain) => {
+export const createDomain = (projectId, instrumentId, domain) => {
   return instance.post(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains`,
+    `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${domain.score_scheme_id}/domains`,
     { domain: domain }
   );
 };
 
-export const updateDomain = (instrument, domain) => {
+export const updateDomain = (projectId, instrumentId, domain) => {
   return instance.put(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}`,
+    `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}`,
     { domain: domain }
   );
 };
 
-export const deleteDomain = (instrument, domain) => {
+export const deleteDomain = (projectId, instrumentId, domain) => {
   return instance.delete(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}`
+    `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}`
   );
 };

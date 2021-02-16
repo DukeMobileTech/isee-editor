@@ -24,7 +24,8 @@ import { getDomain } from "../../utils/api/domain";
 import Translations from "../SubdomainTranslation/Translations";
 
 const Subdomains = props => {
-  const instrument = props.instrument;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
   const [domain, setDomain] = useState(props.domain);
   const [subdomains, setSubdomains] = useState(props.domain.subdomains);
@@ -36,8 +37,8 @@ const Subdomains = props => {
   const fetchDomain = async () => {
     handleCancel();
     const result = await getDomain(
-      instrument.project_id,
-      instrument.id,
+      projectId,
+      instrumentId,
       scoreScheme.id,
       domain.id
     );
@@ -68,9 +69,12 @@ const Subdomains = props => {
   };
 
   const handleDeleteSubdomain = subdomain => {
-    deleteSubdomain(instrument, scoreScheme.id, subdomain).then(res =>
-      fetchDomain()
-    );
+    deleteSubdomain(
+      projectId,
+      instrumentId,
+      scoreScheme.id,
+      subdomain
+    ).then(res => fetchDomain());
   };
 
   const handleTranslations = () => {
@@ -82,7 +86,8 @@ const Subdomains = props => {
       <Fragment>
         <CenteredH3>{`${domain.title} ${domain.name}`}</CenteredH3>
         <Translations
-          instrument={props.instrument}
+          instrumentId={instrumentId}
+          projectId={projectId}
           domain={domain}
           subdomains={subdomains}
           setShowTranslations={setShowTranslations}
@@ -93,7 +98,8 @@ const Subdomains = props => {
   } else if (show) {
     return (
       <ScoreUnits
-        instrument={instrument}
+        projectId={projectId}
+        instrumentId={instrumentId}
         scoreScheme={scoreScheme}
         domain={domain}
         subdomain={subdomain}
@@ -123,6 +129,7 @@ const Subdomains = props => {
         </Layout.Sider>
         <Layout.Content>
           <CenteredH3>{`${domain.title} ${domain.name}`}</CenteredH3>
+          <CenteredH4>Subdomains</CenteredH4>
           <Row
             gutter={8}
             type="flex"
@@ -205,7 +212,8 @@ const Subdomains = props => {
               subdomain={subdomain}
               visible={visible}
               setVisible={setVisible}
-              instrument={instrument}
+              instrumentId={instrumentId}
+              projectId={projectId}
               scoreScheme={scoreScheme}
               fetchDomain={fetchDomain}
             />

@@ -48,7 +48,8 @@ const SubdomainTable = props => {
         return (
           <SubdomainTranslations
             subdomain={subdomain}
-            instrument={props.instrument}
+            projectId={props.projectId}
+            instrumentId={props.instrumentId}
             translations={subdomainTranslations}
             language={props.language}
             domain={props.domain}
@@ -80,7 +81,8 @@ const Translations = props => {
       if (language !== null) {
         setLoading(true);
         const result = await getSubdomainTranslations(
-          props.instrument,
+          props.projectId,
+          props.instrumentId,
           props.domain,
           language
         );
@@ -103,7 +105,8 @@ const Translations = props => {
         handleChange={handleChange}
       />
       <SubdomainTable
-        instrument={props.instrument}
+        projectId={props.projectId}
+        instrumentId={props.instrumentId}
         domain={props.domain}
         translations={translations}
         language={language}

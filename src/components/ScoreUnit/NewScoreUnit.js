@@ -27,7 +27,6 @@ const ScoreUnitSchema = Yup.object().shape({
 });
 
 const NewScoreUnit = props => {
-  const instrument = props.instrument;
   const subdomain = props.subdomain;
   const scoreUnit = props.scoreUnit;
   // eslint-disable-next-line no-unused-vars
@@ -61,7 +60,12 @@ const NewScoreUnit = props => {
           notes: values.notes,
           options: values.options
         };
-        createScoreUnit(instrument, props.scoreSchemeId, scoreUnit)
+        createScoreUnit(
+          props.projectId,
+          props.instrumentId,
+          props.scoreSchemeId,
+          scoreUnit
+        )
           .then(response => {
             if (response.status === 201) {
               props.fetchScoreUnits();

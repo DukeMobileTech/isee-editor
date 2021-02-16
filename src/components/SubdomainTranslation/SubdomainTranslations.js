@@ -13,7 +13,8 @@ import {
 const EditableTable = props => {
   const language = props.language;
   const subdomain = props.subdomain;
-  const instrument = props.instrument;
+  const instrumentId = props.instrumentId;
+  const projectId = props.projectId;
   const domain = props.domain;
   const [translations, setTranslations] = useState(props.translations);
   const [editingKey, setEditingKey] = useState("");
@@ -67,24 +68,28 @@ const EditableTable = props => {
         if (record.id === newId) {
           row.subdomain_id = subdomain.id;
           row.language = language;
-          createSubdomainTranslation(instrument, domain, row).then(result => {
-            newData.splice(index, 1, {
-              ...item,
-              ...result.data
-            });
-            setEditingKey("");
-            setTranslations(newData);
-          });
+          createSubdomainTranslation(projectId, instrumentId, domain, row).then(
+            result => {
+              newData.splice(index, 1, {
+                ...item,
+                ...result.data
+              });
+              setEditingKey("");
+              setTranslations(newData);
+            }
+          );
         } else {
           row.id = record.id;
           newData.splice(index, 1, {
             ...item,
             ...row
           });
-          updateSubdomainTranslation(instrument, domain, row).then(result => {
-            setEditingKey("");
-            setTranslations(newData);
-          });
+          updateSubdomainTranslation(projectId, instrumentId, domain, row).then(
+            result => {
+              setEditingKey("");
+              setTranslations(newData);
+            }
+          );
         }
       } else {
         newData.push(row);
@@ -108,10 +113,12 @@ const EditableTable = props => {
       translations.splice(translations.indexOf(record), 1);
       setTranslations([...translations]);
     } else {
-      deleteSubdomainTranslation(instrument, domain, record).then(res => {
-        const dataSource = [...translations];
-        setTranslations(dataSource.filter(item => item.id !== record.id));
-      });
+      deleteSubdomainTranslation(projectId, instrumentId, domain, record).then(
+        res => {
+          const dataSource = [...translations];
+          setTranslations(dataSource.filter(item => item.id !== record.id));
+        }
+      );
     }
   };
 
@@ -132,7 +139,8 @@ const SubdomainTranslations = props => {
   return (
     <EditableFormTable
       subdomain={props.subdomain}
-      instrument={props.instrument}
+      projectId={props.projectId}
+      instrumentId={props.instrumentId}
       translations={props.translations}
       language={props.language}
       domain={props.domain}

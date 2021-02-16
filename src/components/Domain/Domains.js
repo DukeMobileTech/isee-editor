@@ -7,8 +7,8 @@ import Subdomains from "../Subdomain/Subdomains";
 import Translations from "../DomainTranslation/Translations";
 
 const Domains = props => {
-  const project = props.project;
-  const instrument = props.instrument;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
   const [domains, setDomains] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -23,7 +23,7 @@ const Domains = props => {
 
   const fetchDomains = async () => {
     handleCancel();
-    const result = await getDomains(project.id, instrument.id, scoreScheme.id);
+    const result = await getDomains(projectId, instrumentId, scoreScheme.id);
     setDomains(result.data);
   };
 
@@ -43,7 +43,7 @@ const Domains = props => {
   };
 
   const handleDeleteDomain = domain => {
-    deleteDomain(instrument, domain).then(res => fetchDomains());
+    deleteDomain(projectId, instrumentId, domain).then(res => fetchDomains());
   };
 
   const handleShowDomain = domain => {
@@ -58,7 +58,7 @@ const Domains = props => {
   if (showTranslations) {
     return (
       <Translations
-        projectId={project.id}
+        projectId={projectId}
         scoreScheme={scoreScheme}
         domains={domains}
         setShowTranslations={setShowTranslations}
@@ -70,7 +70,8 @@ const Domains = props => {
       <Subdomains
         domain={domain}
         domains={domains}
-        instrument={instrument}
+        projectId={projectId}
+        instrumentId={instrumentId}
         scoreScheme={scoreScheme}
         fetchDomains={fetchDomains}
         handleCancel={handleCancel}
@@ -155,7 +156,8 @@ const Domains = props => {
             visible={visible}
             setVisible={setVisible}
             scoreSchemeId={scoreScheme.id}
-            instrument={instrument}
+            projectId={projectId}
+            instrumentId={instrumentId}
             fetchDomains={fetchDomains}
             domain={domain}
           />

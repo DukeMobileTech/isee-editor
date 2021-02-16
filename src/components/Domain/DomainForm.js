@@ -32,13 +32,17 @@ const DomainForm = props => {
           score_scheme_id: props.scoreSchemeId
         };
         if (values.id) {
-          updateDomain(props.instrument, domainObj).then(res =>
-            props.fetchDomains()
-          );
+          updateDomain(
+            props.projectId,
+            props.instrumentId,
+            domainObj
+          ).then(res => props.fetchDomains());
         } else {
-          createDomain(props.instrument, domainObj).then(res =>
-            props.fetchDomains()
-          );
+          createDomain(
+            props.projectId,
+            props.instrumentId,
+            domainObj
+          ).then(res => props.fetchDomains());
         }
       }}
       render={() => (

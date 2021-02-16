@@ -24,6 +24,8 @@ const RedFlagSchema = Yup.object().shape({
 });
 
 const RedFlagForm = props => {
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
   const redFlag = props.redFlag;
   const scoreScheme = props.scoreScheme;
   // eslint-disable-next-line no-unused-vars
@@ -44,7 +46,7 @@ const RedFlagForm = props => {
         score_scheme_id: (redFlag && redFlag.score_scheme_id) || scoreScheme.id,
         option_identifier: (redFlag && redFlag.option_identifier) || "",
         instruction_id: (redFlag && redFlag.instruction_id) || "",
-        selected: (redFlag && redFlag.selected) || true
+        selected: redFlag ? redFlag.selected : true
       }}
       validationSchema={RedFlagSchema}
       onSubmit={(values, { setErrors }) => {
@@ -57,7 +59,7 @@ const RedFlagForm = props => {
           selected: values.selected
         };
         if (editRedFlag.id) {
-          updateRedFlag(props.instrument, scoreScheme.id, editRedFlag)
+          updateRedFlag(projectId, instrumentId, scoreScheme.id, editRedFlag)
             .then(response => {
               if (response.status === 204) {
                 props.fetchRedFlags();
@@ -67,7 +69,7 @@ const RedFlagForm = props => {
               setErrors(error);
             });
         } else {
-          createRedFlag(props.instrument, scoreScheme.id, editRedFlag)
+          createRedFlag(projectId, instrumentId, scoreScheme.id, editRedFlag)
             .then(response => {
               if (response.status === 201) {
                 props.fetchRedFlags();

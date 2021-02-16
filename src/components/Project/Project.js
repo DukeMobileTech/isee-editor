@@ -6,6 +6,7 @@ import { deleteInstrument, getInstruments } from "../../utils/api/instrument";
 import InstrumentForm from "../Instrument/InstrumentForm";
 import { Link } from "react-router-dom";
 import { ProjectContext } from "../../context/ProjectContext";
+import { CenteredH4 } from "../../utils/Styles";
 
 const { Column } = Table;
 
@@ -69,6 +70,7 @@ const Project = ({ match }) => {
   } else {
     return (
       <Fragment>
+        <CenteredH4>Instruments</CenteredH4>
         <Table dataSource={instruments} rowKey={instrument => instrument.id}>
           <Column
             title="Title"
@@ -83,12 +85,12 @@ const Project = ({ match }) => {
           />
           <Column title="Project" dataIndex="project" key="project" />
           <Column
-            title="Version #"
+            title="Version Number"
             dataIndex="current_version_number"
             key="current_version_number"
           />
           <Column
-            title="Num of Questions"
+            title="Question Count"
             dataIndex="question_count"
             key="question_count"
           />

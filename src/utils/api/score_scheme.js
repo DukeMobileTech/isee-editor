@@ -9,9 +9,15 @@ export const getScoreSchemes = (projectId, instrumentId) => {
   );
 };
 
-export const getScoreSchemeUnits = (instrument, scoreSchemeId) => {
+export const getScoreScheme = (projectId, instrumentId, id) => {
   return instance.get(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/score_units`
+    `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${id}`
+  );
+};
+
+export const getScoreSchemeUnits = (projectId, instrumentId, scoreSchemeId) => {
+  return instance.get(
+    `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${scoreSchemeId}/score_units`
   );
 };
 
@@ -35,20 +41,14 @@ export const deleteScoreScheme = (projectId, instrumentId, id) => {
   );
 };
 
-export const getScoreSchemeExcel = (instrument, scoreScheme) => {
+export const getScoreSchemeExcel = (projectId, instrumentId, id) => {
   return instance.get(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreScheme.id}/download`,
+    `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${id}/download`,
     {
       responseType: "arraybuffer",
       headers: {
         Accept: "application/xlsx"
       }
     }
-  );
-};
-
-export const getScoreSchemeRedFlags = (instrument, scoreSchemeId) => {
-  return instance.get(
-    `/projects/${instrument.project_id}/instruments/${instrument.id}/score_schemes/${scoreSchemeId}/red_flags`
   );
 };

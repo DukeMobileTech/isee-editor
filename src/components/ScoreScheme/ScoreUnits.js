@@ -7,7 +7,8 @@ import { EditButton } from "../../utils/Buttons";
 import EditScoreUnit from "../ScoreUnit/EditScoreUnit";
 
 const ScoreUnits = props => {
-  const instrument = props.instrument;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,7 +24,11 @@ const ScoreUnits = props => {
 
   const fetchScoreUnits = async (status = false, unit = null) => {
     setLoading(true);
-    const result = await getScoreSchemeUnits(instrument, scoreScheme.id);
+    const result = await getScoreSchemeUnits(
+      projectId,
+      instrumentId,
+      scoreScheme.id
+    );
     setScoreUnits(result.data);
     setLoading(false);
   };
@@ -143,7 +148,8 @@ const ScoreUnits = props => {
       >
         <EditScoreUnit
           scoreUnit={scoreUnit}
-          instrument={instrument}
+          projectId={projectId}
+          instrumentId={instrumentId}
           scoreSchemeId={scoreScheme.id}
           fetchScoreUnits={fetchScoreUnits}
           visible={editScoreUnit}

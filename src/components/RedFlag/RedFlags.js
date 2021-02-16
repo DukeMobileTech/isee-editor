@@ -1,13 +1,13 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Button, Icon, Spin, Table, Row, Drawer } from "antd";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
-import { getScoreSchemeRedFlags } from "../../utils/api/score_scheme";
 import RedFlagForm from "./RedFlagForm";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
-import { deleteRedFlag } from "../../utils/api/red_flag";
+import { deleteRedFlag, getRedFlags } from "../../utils/api/red_flag";
 
 const RedFlags = props => {
-  const instrument = props.instrument;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -120,7 +120,7 @@ const RedFlags = props => {
 
   const fetchRedFlags = async () => {
     setLoading(true);
-    const result = await getScoreSchemeRedFlags(instrument, scoreScheme.id);
+    const result = await getRedFlags(projectId, instrumentId, scoreScheme.id);
     setRedFlags(result.data);
     setLoading(false);
     handleCancel();
@@ -140,7 +140,7 @@ const RedFlags = props => {
   };
 
   const handleRedFlagDelete = rf => {
-    deleteRedFlag(instrument, scoreScheme.id, rf)
+    deleteRedFlag(projectId, instrumentId, scoreScheme.id, rf)
       .then(res => {
         fetchRedFlags();
       })
@@ -189,7 +189,8 @@ const RedFlags = props => {
         >
           <RedFlagForm
             redFlag={redFlag}
-            instrument={instrument}
+            projectId={projectId}
+            instrumentId={instrumentId}
             scoreScheme={scoreScheme}
             handleCancel={handleCancel}
             fetchRedFlags={fetchRedFlags}

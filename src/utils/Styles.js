@@ -22,3 +22,7 @@ export const CenteredH3 = styled.h3`
 export const CenteredH4 = styled.h4`
   text-align: center;
 `;
+
+export const CenteredH5 = styled.h5`
+  text-align: center;
+`;

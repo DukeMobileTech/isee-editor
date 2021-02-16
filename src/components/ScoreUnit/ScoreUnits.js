@@ -15,12 +15,13 @@ import {
 import NewScoreUnit from "./NewScoreUnit";
 import EditScoreUnit from "./EditScoreUnit";
 import { customExpandIcon } from "../../utils/Utils";
-import { CenteredH4, CenteredH3 } from "../../utils/Styles";
+import { CenteredH4, CenteredH3, CenteredH5 } from "../../utils/Styles";
 
 const { Column } = Table;
 
 const ScoreUnits = props => {
-  const instrument = props.instrument;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
   const domain = props.domain;
   const subdomains = props.subdomains;
@@ -37,7 +38,8 @@ const ScoreUnits = props => {
 
   const fetchScoreUnits = async () => {
     const result = await getScoreUnits(
-      instrument,
+      projectId,
+      instrumentId,
       scoreScheme.id,
       subdomain.id
     );
@@ -47,9 +49,12 @@ const ScoreUnits = props => {
   const handleSubdomainClick = item => {
     const clicked = subdomains.find(sd => sd.id === Number(item.key));
     setSubdomain(clicked);
-    getScoreUnits(instrument, scoreScheme.id, clicked.id).then(res =>
-      setScoreUnits(res.data)
-    );
+    getScoreUnits(
+      projectId,
+      instrumentId,
+      scoreScheme.id,
+      clicked.id
+    ).then(res => setScoreUnits(res.data));
   };
 
   const onNew = () => {
@@ -72,14 +77,16 @@ const ScoreUnits = props => {
   };
 
   const handleCopyUnit = scoreUnit => {
-    copyScoreUnit(instrument, scoreScheme.id, scoreUnit).then(response => {
-      scoreUnits.unshift(response.data);
-      setScoreUnits([...scoreUnits]);
-    });
+    copyScoreUnit(projectId, instrumentId, scoreScheme.id, scoreUnit).then(
+      response => {
+        scoreUnits.unshift(response.data);
+        setScoreUnits([...scoreUnits]);
+      }
+    );
   };
 
   const handleDeleteScoreUnit = scoreUnit => {
-    deleteScoreUnit(instrument, scoreScheme.id, scoreUnit)
+    deleteScoreUnit(projectId, instrumentId, scoreScheme.id, scoreUnit)
       .then(res => {
         let index = scoreUnits.indexOf(scoreUnit);
         scoreUnits.splice(index, 1);
@@ -112,6 +119,7 @@ const ScoreUnits = props => {
       <Layout.Content>
         <CenteredH3>{`${domain.title} ${domain.name}`}</CenteredH3>
         <CenteredH4>{`${subdomain.title} ${subdomain.name}`}</CenteredH4>
+        <CenteredH5>Score Units</CenteredH5>
         <Row style={{ margin: "5px" }}>
           <LeftCancelButton handleClick={props.handleCancel} />
           <Button
@@ -206,7 +214,8 @@ const ScoreUnits = props => {
         >
           <NewScoreUnit
             subdomain={subdomain}
-            instrument={instrument}
+            projectId={projectId}
+            instrumentId={instrumentId}
             handleCancel={onCancelNew}
             scoreSchemeId={scoreScheme.id}
             fetchScoreUnits={fetchScoreUnits}
@@ -227,7 +236,8 @@ const ScoreUnits = props => {
           <EditScoreUnit
             scoreUnit={scoreUnit}
             subdomain={subdomain}
-            instrument={instrument}
+            projectId={projectId}
+            instrumentId={instrumentId}
             handleCancel={onCancelEdit}
             scoreSchemeId={scoreScheme.id}
             fetchScoreUnits={fetchScoreUnits}

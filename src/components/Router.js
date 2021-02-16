@@ -5,6 +5,7 @@ import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
 import Bank from "./Bank";
 import Projects from "./Project/Projects";
+import ScoreScheme from "./ScoreScheme/ScoreScheme";
 
 const Router = () => {
   return (
@@ -15,6 +16,11 @@ const Router = () => {
         <Route
           path="/projects/:project_id/instruments/:id"
           component={Instrument}
+          exact
+        />
+        <Route
+          path="/projects/:project_id/instruments/:instrument_id/score_schemes/:id"
+          component={ScoreScheme}
           exact
         />
         <Route path="/banks/:tab?" component={Bank} exact />

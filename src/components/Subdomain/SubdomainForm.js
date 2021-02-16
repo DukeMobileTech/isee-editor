@@ -15,6 +15,8 @@ const SubdomainSchema = Yup.object().shape({
 
 const SubdomainForm = props => {
   const subdomain = props.subdomain;
+  const projectId = props.projectId;
+  const instrumentId = props.instrumentId;
 
   const onCancel = () => {
     props.fetchDomain();
@@ -39,13 +41,15 @@ const SubdomainForm = props => {
         };
         if (values.id) {
           updateSubdomain(
-            props.instrument,
+            projectId,
+            instrumentId,
             props.scoreScheme.id,
             obj
           ).then(res => onCancel());
         } else {
           createSubdomain(
-            props.instrument,
+            projectId,
+            instrumentId,
             props.scoreScheme.id,
             obj
           ).then(res => onCancel());
