@@ -1,18 +1,18 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Project from "./Project/Project";
 import Error from "./Error";
 import Instrument from "./Instrument/Instrument";
 import Bank from "./Bank";
-import Projects from "./Project/Projects";
 import ScoreScheme from "./ScoreScheme/ScoreScheme";
+import Projects from "../containers/Project";
+import Instruments from "../containers/Project/show";
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Switch>
         <Route path="/" component={Projects} exact />
-        <Route path="/projects/:project_id" component={Project} exact />
+        <Route path="/projects/:project_id" component={Instruments} exact />
         <Route
           path="/projects/:project_id/instruments/:id"
           component={Instrument}

@@ -38,7 +38,6 @@ const Login = () => {
             auth: { email: values.email, password: values.password }
           })
           .then(response => {
-            console.log("response", response);
             sessionStorage.setItem("email", values.email);
             sessionStorage.setItem("jwt", response.data.jwt);
             window.location = "/";

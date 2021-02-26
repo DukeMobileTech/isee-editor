@@ -1,53 +1,36 @@
-import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
-import { Divider, Table } from "antd";
-import React, { Fragment, useEffect, useState, useContext } from "react";
-import { deleteInstrument, getInstruments } from "../../utils/api/instrument";
-
-import InstrumentForm from "../Instrument/InstrumentForm";
-import { Link } from "react-router-dom";
-import { ProjectContext } from "../../context/ProjectContext";
+import React, { useEffect, useState, useContext } from "react";
+import { Divider, Spin, Table } from "antd";
+import { connect } from "react-redux";
+import {
+  deleteInstrument,
+  loadInstruments
+} from "../../redux/actions/instruments";
 import { CenteredH4 } from "../../utils/Styles";
+import { Link } from "react-router-dom";
+import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
+import InstrumentForm from "../Instrument/InstrumentForm";
+import { ProjectContext } from "../../context/ProjectContext";
 
 const { Column } = Table;
 
-const Project = ({ match }) => {
-  const projectId = match.params.project_id;
-  const [instruments, setInstruments] = useState([]);
+const Instruments = ({
+  isLoading,
+  instruments,
+  projectId,
+  loadInstruments,
+  deleteInstrument
+}) => {
   const [showForm, setShowForm] = useState(false);
   const [instrument, setInstrument] = useState(null);
   // eslint-disable-next-line no-unused-vars
-  const [projects, currentProject, setCurrentProject] = useContext(
-    ProjectContext
-  );
+  const [currentProjectId, setCurrentProjectId] = useContext(ProjectContext);
   sessionStorage.setItem("projectId", projectId);
-  setCurrentProject(projectId);
+  setCurrentProjectId(projectId);
 
   useEffect(() => {
-    fetchInstruments();
+    loadInstruments(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchInstruments = async () => {
-    setShowForm(false);
-    const results = await getInstruments(projectId);
-    setInstruments(results.data);
-  };
-
-  const handleDeleteInstrument = instrument => {
-    deleteInstrument(instrument.project_id, instrument.id)
-      .then(results => {
-        let index = instruments.indexOf(instrument);
-        instruments.splice(index, 1);
-        setInstruments([...instruments]);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const handleCancel = () => {
-    setShowForm(false);
-  };
+  }, [projectId]);
 
   const handleEditInstrument = instrument => {
     setInstrument(instrument);
@@ -59,17 +42,18 @@ const Project = ({ match }) => {
     setShowForm(true);
   };
 
+  const handleCancel = () => {
+    setShowForm(false);
+    setInstrument(null);
+  };
+
   if (showForm) {
     return (
-      <InstrumentForm
-        instrument={instrument}
-        handleCancel={handleCancel}
-        fetchInstruments={fetchInstruments}
-      />
+      <InstrumentForm instrument={instrument} handleCancel={handleCancel} />
     );
   } else {
     return (
-      <Fragment>
+      <Spin spinning={isLoading}>
         <CenteredH4>Instruments</CenteredH4>
         <Table dataSource={instruments} rowKey={instrument => instrument.id}>
           <Column
@@ -116,7 +100,7 @@ const Project = ({ match }) => {
                         `Are you sure you want to delete ${instrument.title}?`
                       )
                     )
-                      handleDeleteInstrument(instrument);
+                      deleteInstrument(projectId, instrument.id);
                   }}
                 />
               </span>
@@ -124,9 +108,29 @@ const Project = ({ match }) => {
           />
         </Table>
         <FolderAddButton handleClick={handleNewInstrument} />
-      </Fragment>
+      </Spin>
     );
   }
 };
 
-export default Project;
+function mapStateToProps(state, ownProps) {
+  const { isLoading, instruments, loadInstruments, deleteInstrument } = state;
+  const projectId = ownProps.match.params.project_id;
+  return {
+    isLoading,
+    instruments,
+    projectId,
+    loadInstruments,
+    deleteInstrument
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadInstruments: projectId => dispatch(loadInstruments(projectId)),
+    deleteInstrument: (projectId, id) =>
+      dispatch(deleteInstrument(projectId, id))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Instruments);

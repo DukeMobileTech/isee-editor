@@ -9,11 +9,17 @@ import AppProviders from "./context/AppProviders";
 import { IntlProvider } from "react-intl";
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import configureStore from "./redux/store";
+
+const store = configureStore();
 
 ReactDOM.render(
   <IntlProvider locale="en">
     <AppProviders>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </AppProviders>
   </IntlProvider>,
   document.getElementById("root")

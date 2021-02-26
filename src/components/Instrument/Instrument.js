@@ -12,7 +12,6 @@ import { getQuestionSets } from "../../utils/api/question_set";
 import PdfDownload from "./PdfDownload";
 import { getInstrumentQuestions } from "../../utils/api/instrument_question";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
-import { ProjectContext } from "../../context/ProjectContext";
 import { InstrumentHeader } from "../Headers";
 import InstrumentQuestions from "../InstrumentQuestion/InstrumentQuestions";
 import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
@@ -23,11 +22,6 @@ const { TabPane } = Tabs;
 const Instrument = ({ match }) => {
   const projectId = match.params.project_id;
   const instrumentId = match.params.id;
-  // eslint-disable-next-line no-unused-vars
-  const [projects, currentProject, setCurrentProject] = useContext(
-    ProjectContext
-  );
-  const project = projects.find(project => project.id === Number(projectId));
   const [loading, setLoading] = useState(true);
   const [instrument, setInstrument] = useState({});
   const [selectedKey, setSelectedKey] = useState("1");
@@ -150,7 +144,7 @@ const Instrument = ({ match }) => {
                 }
                 key="4"
               >
-                <ScoreSchemes project={project} instrument={instrument} />
+                <ScoreSchemes projectId={projectId} instrument={instrument} />
               </TabPane>
             </Tabs>
           </Spin>

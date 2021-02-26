@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 const { Column } = Table;
 
 const ScoreSchemes = props => {
-  const project = props.project;
+  const projectId = props.projectId;
   const instrument = props.instrument;
   const [scoreSchemes, setScoreSchemes] = useState([]);
   const [scoreScheme, setScoreScheme] = useState(null);
@@ -26,7 +26,7 @@ const ScoreSchemes = props => {
 
   const fetchScoreSchemes = async () => {
     handleCancel();
-    const result = await getScoreSchemes(project.id, instrument.id);
+    const result = await getScoreSchemes(projectId, instrument.id);
     setScoreSchemes(result.data);
   };
 
@@ -60,7 +60,6 @@ const ScoreSchemes = props => {
   if (showScheme) {
     return (
       <ScoreScheme
-        project={project}
         instrument={instrument}
         scoreScheme={scoreScheme}
         handleCancel={handleCancel}
