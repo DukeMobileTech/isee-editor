@@ -25,7 +25,8 @@ const InstrumentForm = ({
   createInstrument,
   updateInstrument,
   handleCancel,
-  instrument
+  instrument,
+  projectId
 }) => {
   return (
     <Formik
@@ -45,7 +46,7 @@ const InstrumentForm = ({
           published: values.published
         };
         if (values.id) {
-          updateInstrument(values.project_id, values.id, instrumentObj);
+          updateInstrument(projectId, values.id, instrumentObj);
           handleCancel();
         } else {
           createInstrument(values.project_id, instrumentObj);
@@ -128,12 +129,14 @@ function mapStateToProps(state, ownProps) {
   const { projects, createInstrument, updateInstrument } = state;
   const instrument = ownProps.instrument;
   const handleCancel = ownProps.handleCancel;
+  const projectId = ownProps.projectId;
   return {
     projects,
     createInstrument,
     updateInstrument,
     handleCancel,
-    instrument
+    instrument,
+    projectId
   };
 }
 

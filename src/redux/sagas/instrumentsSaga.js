@@ -53,7 +53,7 @@ export function* handleInstrumentUpdate(action) {
       action.id,
       action.instrument
     );
-    yield put(setInstrument(results.data));
+    yield put(setInstrument(results.data, action.projectId));
   } catch (error) {
     yield put(setInstrumentsError(error.toString()));
   }

@@ -24,11 +24,11 @@ const Instruments = ({
   const [instrument, setInstrument] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [currentProjectId, setCurrentProjectId] = useContext(ProjectContext);
-  sessionStorage.setItem("projectId", projectId);
-  setCurrentProjectId(projectId);
 
   useEffect(() => {
     loadInstruments(projectId);
+    sessionStorage.setItem("projectId", projectId);
+    setCurrentProjectId(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
@@ -49,7 +49,11 @@ const Instruments = ({
 
   if (showForm) {
     return (
-      <InstrumentForm instrument={instrument} handleCancel={handleCancel} />
+      <InstrumentForm
+        projectId={projectId}
+        instrument={instrument}
+        handleCancel={handleCancel}
+      />
     );
   } else {
     return (
@@ -115,7 +119,7 @@ const Instruments = ({
 
 function mapStateToProps(state, ownProps) {
   const { isLoading, instruments, loadInstruments, deleteInstrument } = state;
-  const projectId = ownProps.match.params.project_id;
+  const projectId = Number(ownProps.match.params.project_id);
   return {
     isLoading,
     instruments,

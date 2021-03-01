@@ -33,9 +33,10 @@ const updateInstrument = (projectId, id, instrument) => ({
   instrument
 });
 
-const setInstrument = instrument => ({
+const setInstrument = (instrument, currentProjectId) => ({
   type: INSTRUMENTS.UPDATE_SUCCESS,
-  instrument
+  instrument,
+  currentProjectId
 });
 
 const deleteInstrument = (projectId, id) => ({

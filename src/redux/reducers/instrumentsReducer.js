@@ -10,9 +10,11 @@ export default function(state = [], action) {
       return state.slice().filter(ins => ins.id !== action.id);
     case INSTRUMENTS.UPDATE_SUCCESS:
       const index = state.findIndex(ins => ins.id === action.instrument.id);
-      const instruments = state.slice();
+      const instruments = [...state];
       instruments.splice(index, 1, action.instrument);
-      return instruments;
+      return instruments.filter(
+        ins => ins.project_id === action.currentProjectId
+      );
     default:
       return state;
   }

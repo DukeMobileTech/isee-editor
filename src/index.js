@@ -4,21 +4,25 @@ import "./index.css";
 
 import * as serviceWorker from "./serviceWorker";
 
-import { App } from "./App";
-import AppProviders from "./context/AppProviders";
-import { IntlProvider } from "react-intl";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import configureStore from "./redux/store";
+import { IntlProvider } from "react-intl";
+import { PersistGate } from "redux-persist/integration/react";
 
-const store = configureStore();
+import configureStore from "./redux/store";
+import { App } from "./App";
+import AppProviders from "./context/AppProviders";
+
+const { store, persistor } = configureStore();
 
 ReactDOM.render(
   <IntlProvider locale="en">
     <AppProviders>
       <Provider store={store}>
-        <App />
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
       </Provider>
     </AppProviders>
   </IntlProvider>,
