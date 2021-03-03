@@ -1,10 +1,17 @@
-import { Button, Divider, Icon, Row, Spin, Typography } from "antd";
+import { Button, Divider, Row, Spin, Typography } from "antd";
 import React, { Fragment, useContext, useState } from "react";
+import {
+  DeleteOutlined,
+  GlobalOutlined,
+  DatabaseOutlined,
+  FolderAddOutlined,
+  EditOutlined
+} from "@ant-design/icons";
+
 import {
   deleteQuestionSet,
   getQuestionSets
 } from "../../utils/api/question_set";
-
 import { TranslationAddButtons } from "../../utils/Buttons";
 import FolderForm from "./FolderForm";
 import QuestionSet from "./QuestionSet";
@@ -86,7 +93,7 @@ const QuestionSets = props => {
               handleEditQuestionSet(qSet);
             }}
           >
-            <Icon type="edit" />
+            <EditOutlined />
           </Button>
           <Divider type="vertical" />
           <Button
@@ -97,7 +104,7 @@ const QuestionSets = props => {
               handleNewFolder(qSet);
             }}
           >
-            <Icon type="folder-add" />
+            <FolderAddOutlined />
           </Button>
           <Divider type="vertical" />
           <Button
@@ -108,7 +115,7 @@ const QuestionSets = props => {
               props.questionSubset(null, qSet);
             }}
           >
-            <Icon type="database" />
+            <DatabaseOutlined />
           </Button>
           <Divider type="vertical" />
           <Button
@@ -119,7 +126,7 @@ const QuestionSets = props => {
               handleTranslations(qSet);
             }}
           >
-            <Icon type="global" />
+            <GlobalOutlined />
           </Button>
           <Divider type="vertical" />
           <Button
@@ -134,7 +141,7 @@ const QuestionSets = props => {
                 handleDeleteQuestionSet(qSet);
             }}
           >
-            <Icon type="delete" />
+            <DeleteOutlined />
           </Button>
         </span>
       </Row>

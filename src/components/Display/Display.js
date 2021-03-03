@@ -1,5 +1,11 @@
-import { Button, Col, Icon, Row, Spin, Table, Layout, Menu } from "antd";
+import { Button, Col, Row, Spin, Table, Layout, Menu } from "antd";
 import React, { useEffect, useState } from "react";
+import {
+  ImportOutlined,
+  PlusOutlined,
+  TableOutlined,
+  OrderedListOutlined
+} from "@ant-design/icons";
 
 import { CenteredH2, CenteredH4, CenteredH3 } from "../../utils/Styles";
 import ExpandedQuestion from "../utils/ExpandedQuestion";
@@ -233,7 +239,7 @@ const Display = props => {
                 onClick={tabulateQuestions}
                 title="Show Tables"
               >
-                <Icon type="table" />
+                <TableOutlined />
               </Button>
               <TranslationButton handleClick={handleTranslations} />
               <Button
@@ -242,7 +248,7 @@ const Display = props => {
                 onClick={reorderQuestions}
                 title="Renumber Questions"
               >
-                <Icon type="ordered-list" />
+                <OrderedListOutlined />
               </Button>
             </Row>
             <Table
@@ -306,7 +312,7 @@ const Display = props => {
             <Row style={{ marginTop: "3px" }} gutter={16}>
               <Col span={12}>
                 <Button type="primary" onClick={handleImportInstrumentQuestion}>
-                  <Icon type="import" /> Import Questions
+                  <ImportOutlined /> Import Questions
                 </Button>
               </Col>
               <Col span={12}>
@@ -315,7 +321,7 @@ const Display = props => {
                   type="primary"
                   onClick={handleCreateInstrumentQuestion}
                 >
-                  <Icon type="plus" /> Create Question
+                  <PlusOutlined /> Create Question
                 </Button>
               </Col>
             </Row>

@@ -2,11 +2,12 @@ import * as Yup from "yup";
 
 import { RightSubmitButton } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
-import { Button, Col, Icon, Select, Typography, Modal } from "antd";
+import { Button, Col, Select, Typography, Modal } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useState, useContext, useEffect } from "react";
-import { createOptionSet, updateOptionSet } from "../../utils/api/option_set";
+import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 
+import { createOptionSet, updateOptionSet } from "../../utils/api/option_set";
 import AddOptions from "./AddOptions";
 import { deleteOptionInOptionSet } from "../../utils/api/option_in_option_set";
 import { OptionContext } from "../../context/OptionContext";
@@ -76,9 +77,9 @@ const OptionSetForm = props => {
 
   const AddOptionIcon = () => {
     if (addOptions) {
-      return <Icon type="close" style={{ color: "red" }} />;
+      return <CloseOutlined style={{ color: "red" }} />;
     } else {
-      return <Icon type="plus" />;
+      return <PlusOutlined />;
     }
   };
 

@@ -1,5 +1,6 @@
-import { Button, Col, Icon, Select, Typography } from "antd";
 import React from "react";
+import { Button, Col, Select, Typography } from "antd";
+import { LeftOutlined } from "@ant-design/icons";
 
 import { DRow } from "../../utils/Utils";
 import { languages } from "../../utils/Constants";
@@ -12,7 +13,7 @@ export const TranslationsHeader = ({ handleClick, handleChange }) => {
     <DRow>
       <Col span={12}>
         <Button title="Back" onClick={handleClick}>
-          <Icon type="left" />
+          <LeftOutlined />
         </Button>
       </Col>
       <Col span={6}>

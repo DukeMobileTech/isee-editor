@@ -1,21 +1,12 @@
-import {
-  Button,
-  Col,
-  Divider,
-  List,
-  Row,
-  Icon,
-  Drawer,
-  Layout,
-  Menu
-} from "antd";
+import React, { useContext, useState, useEffect } from "react";
+import { Button, Col, Divider, List, Row, Drawer, Layout, Menu } from "antd";
+import { DragOutlined, PlusOutlined, GlobalOutlined } from "@ant-design/icons";
+
 import {
   DeleteButton,
   EditButton,
   LeftCancelButton
 } from "../../utils/Buttons";
-import React, { useContext, useState, useEffect } from "react";
-
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import DisplayForm from "./DisplayForm";
 import { deleteDisplay } from "../../utils/api/display";
@@ -173,10 +164,10 @@ const Displays = props => {
               type="primary"
               onClick={handleTranslations}
             >
-              <Icon type="global" />
+              <GlobalOutlined />
             </Button>
             <Button type="primary" title="Add New" onClick={handleNewDisplay}>
-              <Icon type="plus" />
+              <PlusOutlined />
             </Button>
           </Row>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -208,7 +199,7 @@ const Displays = props => {
                           >
                             <List.Item>
                               <Col span={1}>
-                                <Icon type="drag" />
+                                <DragOutlined />
                               </Col>
                               <Col span={19}>
                                 <Button

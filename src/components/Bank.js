@@ -1,5 +1,13 @@
 import React, { useContext, useEffect } from "react";
-import { Tabs, Icon } from "antd";
+import { Tabs } from "antd";
+import {
+  CheckSquareOutlined,
+  OrderedListOutlined,
+  QuestionOutlined,
+  UnorderedListOutlined,
+  StopOutlined
+} from "@ant-design/icons";
+
 import QuestionSets from "./QuestionSet/QuestionSets";
 import OptionSets from "./OptionSet/OptionSets";
 import Validations from "./QuestionSet/Validations";
@@ -80,7 +88,7 @@ const Bank = ({ match, history }) => {
       <TabPane
         tab={
           <span>
-            <Icon type="ordered-list" />
+            <OrderedListOutlined />
             Question Sets
           </span>
         }
@@ -91,7 +99,7 @@ const Bank = ({ match, history }) => {
       <TabPane
         tab={
           <span>
-            <Icon type="question" />
+            <QuestionOutlined />
             Questions
           </span>
         }
@@ -102,7 +110,7 @@ const Bank = ({ match, history }) => {
       <TabPane
         tab={
           <span>
-            <Icon type="ordered-list" />
+            <OrderedListOutlined />
             Option Sets
           </span>
         }
@@ -113,7 +121,7 @@ const Bank = ({ match, history }) => {
       <TabPane
         tab={
           <span>
-            <Icon type="unordered-list" />
+            <UnorderedListOutlined />
             Options
           </span>
         }
@@ -124,7 +132,7 @@ const Bank = ({ match, history }) => {
       <TabPane
         tab={
           <span>
-            <Icon type="stop" />
+            <StopOutlined />
             Instructions
           </span>
         }
@@ -135,7 +143,7 @@ const Bank = ({ match, history }) => {
       <TabPane
         tab={
           <span>
-            <Icon type="check-square" />
+            <CheckSquareOutlined />
             Validations
           </span>
         }

@@ -1,4 +1,3 @@
-import { Form } from "antd";
 import React, { useState } from "react";
 import {
   CellActions,
@@ -9,8 +8,10 @@ import {
   updateSubdomainTranslation,
   deleteSubdomainTranslation
 } from "../../utils/api/subdomain_translation";
+import { Form } from "antd";
 
 const EditableTable = props => {
+  const [form] = Form.useForm();
   const language = props.language;
   const subdomain = props.subdomain;
   const instrumentId = props.instrumentId;
@@ -56,11 +57,9 @@ const EditableTable = props => {
     setEditingKey("");
   };
 
-  const save = (form, record) => {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
+  const save = async (form, record) => {
+    try {
+      const row = await form.validateFields();
       const newData = [...translations];
       const index = newData.findIndex(item => record.id === item.id);
       if (index > -1) {
@@ -96,7 +95,9 @@ const EditableTable = props => {
         setEditingKey("");
         setTranslations(newData);
       }
-    });
+    } catch (errInfo) {
+      console.log("Validate Failed:", errInfo);
+    }
   };
 
   const edit = key => {
@@ -124,7 +125,7 @@ const EditableTable = props => {
 
   return (
     <EditableTranslationsProvider
-      form={props.form}
+      form={form}
       columns={columns}
       language={language}
       translations={translations}
@@ -135,9 +136,8 @@ const EditableTable = props => {
 };
 
 const SubdomainTranslations = props => {
-  const EditableFormTable = Form.create()(EditableTable);
   return (
-    <EditableFormTable
+    <EditableTable
       subdomain={props.subdomain}
       projectId={props.projectId}
       instrumentId={props.instrumentId}

@@ -1,4 +1,3 @@
-import { Form } from "antd";
 import React, { useState, useContext } from "react";
 import {
   createInstruction,
@@ -10,8 +9,10 @@ import Translations from "../InstructionTranslation/Translations";
 import { InstructionContext } from "../../context/InstructionContext";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
 import ErrorAlert from "../utils/Errors";
+import { Form } from "antd";
 
 const EditableTable = props => {
+  const [form] = Form.useForm();
   const newId = "new";
   const [instructions, setInstructions] = useState(props.instructions);
   const [editingKey, setEditingKey] = useState("");
@@ -72,11 +73,9 @@ const EditableTable = props => {
     setEditingKey("");
   };
 
-  const save = (form, record) => {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
+  const save = async (form, record) => {
+    try {
+      const row = await form.validateFields();
       const newData = [...instructions];
       const index = newData.findIndex(item => record.id === item.id);
       if (index > -1) {
@@ -113,7 +112,9 @@ const EditableTable = props => {
         setEditingKey("");
         setInstructions(newData);
       }
-    });
+    } catch (errInfo) {
+      console.log("Validate Failed:", errInfo);
+    }
   };
 
   const edit = key => {
@@ -152,7 +153,7 @@ const EditableTable = props => {
   } else {
     return (
       <EditableProvider
-        form={props.form}
+        form={form}
         columns={columns}
         data={instructions}
         isEditing={isEditing}
@@ -179,9 +180,8 @@ const Instructions = () => {
       />
     );
   } else {
-    const EditableFormTable = Form.create()(EditableTable);
     return (
-      <EditableFormTable
+      <EditableTable
         instructions={instructions}
         setShowTranslations={setShowTranslations}
         showTranslations={showTranslations}

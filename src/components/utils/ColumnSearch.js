@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Icon, Input, Row } from "antd";
+import { Button, Input, Row } from "antd";
 import Highlighter from "react-highlight-words";
+import { SearchOutlined } from "@ant-design/icons";
 
 export const getColumnSearchProps = (dataIndex, searchText, setSearchText) => ({
   filterDropdown: ({
@@ -51,7 +52,7 @@ export const getColumnSearchProps = (dataIndex, searchText, setSearchText) => ({
     );
   },
   filterIcon: filtered => (
-    <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
+    <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
   ),
   onFilter: (value, record) =>
     record[dataIndex]

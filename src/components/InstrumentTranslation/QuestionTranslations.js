@@ -1,4 +1,3 @@
-import { Form } from "antd";
 import React, { useState } from "react";
 import {
   createQuestionTranslation,
@@ -9,8 +8,10 @@ import {
   CellActions,
   EditableTranslationsProvider
 } from "../utils/EditableCell";
+import { Form } from "antd";
 
 const EditableTable = props => {
+  const [form] = Form.useForm();
   const language = props.language;
   const question = props.question;
   const [translations, setTranslations] = useState(props.translations);
@@ -53,11 +54,9 @@ const EditableTable = props => {
     props.fetchQuestions();
   };
 
-  const save = (form, record) => {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
+  const save = async (form, record) => {
+    try {
+      const row = await form.validateFields();
       const newData = [...translations];
       const index = newData.findIndex(item => record.id === item.id);
       if (index > -1) {
@@ -80,7 +79,9 @@ const EditableTable = props => {
       } else {
         props.fetchQuestions();
       }
-    });
+    } catch (errInfo) {
+      console.log("Validate Failed:", errInfo);
+    }
   };
 
   const edit = key => {
@@ -104,7 +105,7 @@ const EditableTable = props => {
 
   return (
     <EditableTranslationsProvider
-      form={props.form}
+      form={form}
       columns={columns}
       language={language}
       translations={translations}
@@ -115,9 +116,8 @@ const EditableTable = props => {
 };
 
 const QuestionTranslations = props => {
-  const EditableFormTable = Form.create()(EditableTable);
   return (
-    <EditableFormTable
+    <EditableTable
       question={props.question}
       translations={props.translations}
       language={props.language}

@@ -1,4 +1,5 @@
-import { Icon, List, Col, Row } from "antd";
+import { List, Col, Row } from "antd";
+import { DragOutlined } from "@ant-design/icons";
 
 import React, { Fragment } from "react";
 import { orderQuestions } from "../../utils/api/folder";
@@ -55,7 +56,7 @@ const QuestionReorder = props => {
                       >
                         <List.Item>
                           <Col span={2}>
-                            <Icon type="drag" />
+                            <DragOutlined />
                             {question.position}
                           </Col>
                           <Col span={10}>{question.question_identifier}</Col>

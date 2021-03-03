@@ -1,5 +1,11 @@
-import { Modal, Collapse, Icon, Tabs, Typography } from "antd";
+import { Modal, Collapse, Tabs, Typography } from "antd";
 import React, { Fragment, useState } from "react";
+import {
+  FormOutlined,
+  FastForwardOutlined,
+  FilterOutlined,
+  RedoOutlined
+} from "@ant-design/icons";
 
 import { modalWidth } from "../../utils/Constants";
 import InstrumentQuestionForm from "./InstrumentQuestionForm";
@@ -57,7 +63,7 @@ const InstrumentQuestion = props => {
           <TabPane
             tab={
               <span>
-                <Icon type="form" />
+                <FormOutlined />
                 Question
               </span>
             }
@@ -72,7 +78,7 @@ const InstrumentQuestion = props => {
           <TabPane
             tab={
               <span>
-                <Icon type="fast-forward" />
+                <FastForwardOutlined />
                 Skip To
               </span>
             }
@@ -86,7 +92,7 @@ const InstrumentQuestion = props => {
           <TabPane
             tab={
               <span>
-                <Icon type="filter" />
+                <FilterOutlined />
                 Skip Multiple Nonconsecutive
               </span>
             }
@@ -100,7 +106,7 @@ const InstrumentQuestion = props => {
           <TabPane
             tab={
               <span>
-                <Icon type="redo" />
+                <RedoOutlined />
                 Loops
               </span>
             }
@@ -114,7 +120,7 @@ const InstrumentQuestion = props => {
           <TabPane
             tab={
               <span>
-                <Icon type="fast-forward" />
+                <FastForwardOutlined />
                 Multiple Questions Skip To
               </span>
             }

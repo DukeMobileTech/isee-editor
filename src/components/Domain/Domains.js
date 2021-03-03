@@ -1,5 +1,7 @@
-import { Button, Divider, Icon, Drawer, Table, Typography, Row } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
+import { Button, Divider, Drawer, Table, Typography, Row } from "antd";
+import { PlusOutlined, GlobalOutlined } from "@ant-design/icons";
+
 import { DeleteButton, EditButton } from "../../utils/Buttons";
 import { getDomains, deleteDomain } from "../../utils/api/domain";
 import DomainForm from "./DomainForm";
@@ -87,7 +89,7 @@ const Domains = props => {
             onClick={handleDomainTranslations}
             style={{ marginRight: "2px" }}
           >
-            <Icon type="global" />
+            <GlobalOutlined />
           </Button>
           <Button
             title="New Domain"
@@ -95,7 +97,7 @@ const Domains = props => {
             type="primary"
             onClick={onNewDomain}
           >
-            <Icon type="plus" />
+            <PlusOutlined />
           </Button>
         </Row>
         <Table

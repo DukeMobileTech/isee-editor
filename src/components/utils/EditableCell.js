@@ -5,19 +5,26 @@ import {
   Divider,
   Form,
   Input,
-  Icon,
   Popconfirm,
   Col,
   ConfigProvider,
   Row,
   Table
 } from "antd";
+import {
+  SaveOutlined,
+  UndoOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined
+} from "@ant-design/icons";
+
 import { TranslationButton, TranslationAddButtons } from "../../utils/Buttons";
 
-export const EditableContext = React.createContext();
+export const EditableContext = React.createContext(null);
 
 export const EditableCell = props => {
-  const renderCell = ({ getFieldDecorator, setFieldsValue }) => {
+  const renderCell = () => {
     const {
       editing,
       dataIndex,
@@ -32,32 +39,33 @@ export const EditableCell = props => {
       <td {...restProps}>
         {editing ? (
           dataIndex === "text" ? (
-            <Form.Item style={{ margin: 0 }}>
-              {getFieldDecorator(dataIndex, {
-                rules: [
-                  {
-                    required: true,
-                    message: `Please Input ${title}!`
-                  }
-                ],
-                initialValue: record[dataIndex]
-              })(
-                <ReactQuill
-                  onChange={value => setFieldsValue({ text: value })}
-                />
-              )}
+            <Form.Item
+              style={{ margin: 0 }}
+              name={dataIndex}
+              rules={[
+                {
+                  required: true,
+                  message: `Please Input ${title}!`
+                }
+              ]}
+              initialValue={record[dataIndex]}
+            >
+              <ReactQuill value={record[dataIndex]} />
             </Form.Item>
           ) : (
             <Form.Item style={{ margin: 0 }}>
-              {getFieldDecorator(dataIndex, {
-                rules: [
+              <Form.Item
+                name={dataIndex}
+                rules={[
                   {
                     required: true,
                     message: `Please Input ${title}!`
                   }
-                ],
-                initialValue: record[dataIndex]
-              })(<Input />)}
+                ]}
+                initialValue={record[dataIndex]}
+              >
+                <Input />
+              </Form.Item>
             </Form.Item>
           )
         ) : (
@@ -89,17 +97,19 @@ export const CellActions = ({
           <Button
             type="primary"
             title="Save"
-            onClick={() => save(form, record)}
+            onClick={() => {
+              save(form, record);
+            }}
             style={{ margin: 2 }}
           >
-            <Icon type="save" />
+            <SaveOutlined />
           </Button>
         )}
       </EditableContext.Consumer>
       <Divider type="vertical" />
       <Popconfirm title="Sure to cancel?" onConfirm={() => cancel(record.id)}>
         <Button title="Cancel" style={{ margin: 2 }}>
-          <Icon type="undo" />
+          <UndoOutlined />
         </Button>
       </Popconfirm>
     </span>
@@ -112,7 +122,7 @@ export const CellActions = ({
         onClick={() => edit(record.id)}
         style={{ margin: 2 }}
       >
-        <Icon type="edit" />
+        <EditOutlined />
       </Button>
       {handleTranslations && (
         <Fragment>
@@ -126,7 +136,7 @@ export const CellActions = ({
         onConfirm={() => handleDelete(record)}
       >
         <Button type="danger" title="Delete" style={{ margin: 2 }}>
-          <Icon type="delete" />
+          <DeleteOutlined />
         </Button>
       </Popconfirm>
     </span>
@@ -173,30 +183,36 @@ export const EditableTranslationsProvider = ({
   };
 
   return (
-    <EditableContext.Provider value={form}>
-      <Row gutter={8} type="flex" justify="space-between" align="middle">
-        <Col span={21}>
-          <ConfigProvider renderEmpty={true && customizeRenderEmpty}>
-            <Table
-              components={components}
-              bordered
-              dataSource={translations}
-              rowKey={translation => translation.id}
-              columns={tableColumns}
-              pagination={false}
-              size="small"
-            />
-          </ConfigProvider>
-        </Col>
-        <Col span={3}>
-          {language && (
-            <Button type="primary" title="New Translation" onClick={handleAdd}>
-              <Icon type="plus" />
-            </Button>
-          )}
-        </Col>
-      </Row>
-    </EditableContext.Provider>
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <Row gutter={8} type="flex" justify="space-between" align="middle">
+          <Col span={21}>
+            <ConfigProvider renderEmpty={true && customizeRenderEmpty}>
+              <Table
+                components={components}
+                bordered
+                dataSource={translations}
+                rowKey={translation => translation.id}
+                columns={tableColumns}
+                pagination={false}
+                size="small"
+              />
+            </ConfigProvider>
+          </Col>
+          <Col span={3}>
+            {language && (
+              <Button
+                type="primary"
+                title="New Translation"
+                onClick={handleAdd}
+              >
+                <PlusOutlined />
+              </Button>
+            )}
+          </Col>
+        </Row>
+      </EditableContext.Provider>
+    </Form>
   );
 };
 
@@ -231,22 +247,24 @@ export const EditableProvider = ({
   });
 
   return (
-    <EditableContext.Provider value={form}>
-      <TranslationAddButtons
-        handleTranslationClick={handleShowAllTranslations}
-        handleAddClick={handleAdd}
-      />
-      <Table
-        components={components}
-        bordered
-        dataSource={data}
-        rowKey={datum => datum.id}
-        columns={tableColumns}
-        pagination={{
-          onChange: cancel,
-          defaultPageSize: 25
-        }}
-      />
-    </EditableContext.Provider>
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <TranslationAddButtons
+          handleTranslationClick={handleShowAllTranslations}
+          handleAddClick={handleAdd}
+        />
+        <Table
+          components={components}
+          bordered
+          dataSource={data}
+          rowKey={datum => datum.id}
+          columns={tableColumns}
+          pagination={{
+            onChange: cancel,
+            defaultPageSize: 25
+          }}
+        />
+      </EditableContext.Provider>
+    </Form>
   );
 };

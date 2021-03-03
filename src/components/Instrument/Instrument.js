@@ -1,5 +1,11 @@
-import { Icon, Layout, Spin, Tabs } from "antd";
+import { Layout, Spin, Tabs } from "antd";
 import React, { Fragment, useContext, useEffect, useState } from "react";
+import {
+  CheckSquareOutlined,
+  OrderedListOutlined,
+  TabletOutlined,
+  LayoutOutlined
+} from "@ant-design/icons";
 
 import { InstructionContext } from "../../context/InstructionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
@@ -99,7 +105,7 @@ const Instrument = ({ match }) => {
               <TabPane
                 tab={
                   <span>
-                    <Icon type="ordered-list" />
+                    <OrderedListOutlined />
                     Sections
                   </span>
                 }
@@ -114,7 +120,7 @@ const Instrument = ({ match }) => {
               <TabPane
                 tab={
                   <span>
-                    <Icon type="tablet" />
+                    <TabletOutlined />
                     Preview
                   </span>
                 }
@@ -128,7 +134,7 @@ const Instrument = ({ match }) => {
               <TabPane
                 tab={
                   <span>
-                    <Icon type="layout" />
+                    <LayoutOutlined />
                     PDF
                   </span>
                 }
@@ -139,7 +145,7 @@ const Instrument = ({ match }) => {
               <TabPane
                 tab={
                   <span>
-                    <Icon type="check-square" /> Score Schemes
+                    <CheckSquareOutlined /> Score Schemes
                   </span>
                 }
                 key="4"

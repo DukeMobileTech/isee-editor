@@ -1,6 +1,7 @@
-import { EditButton, DeleteButton } from "../../utils/Buttons";
 import React, { Fragment } from "react";
 import { Divider } from "antd";
+
+import { EditButton, DeleteButton } from "../../utils/Buttons";
 
 export const EditDeleteBtnGroup = props => (
   <Fragment>

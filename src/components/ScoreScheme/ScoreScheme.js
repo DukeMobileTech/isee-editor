@@ -1,5 +1,12 @@
-import { Icon, Tabs, Row, Button, Spin } from "antd";
+import { Tabs, Row, Button, Spin } from "antd";
 import React, { Fragment, useState, useEffect } from "react";
+import {
+  WarningOutlined,
+  OrderedListOutlined,
+  ProjectOutlined,
+  DownloadOutlined
+} from "@ant-design/icons";
+
 import ScoreUnits from "./ScoreUnits";
 import { CenteredH3 } from "../../utils/Styles";
 import Domains from "../Domain/Domains";
@@ -59,7 +66,7 @@ const ScoreScheme = ({ match }) => {
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="ordered-list" />
+                <OrderedListOutlined />
                 Domains
               </span>
             }
@@ -74,7 +81,7 @@ const ScoreScheme = ({ match }) => {
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="project" />
+                <ProjectOutlined />
                 Score Units
               </span>
             }
@@ -89,7 +96,7 @@ const ScoreScheme = ({ match }) => {
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="download" />
+                <DownloadOutlined />
                 Download
               </span>
             }
@@ -110,7 +117,7 @@ const ScoreScheme = ({ match }) => {
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="warning" />
+                <WarningOutlined />
                 Red Flags
               </span>
             }

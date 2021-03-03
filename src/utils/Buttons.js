@@ -1,13 +1,25 @@
-import { Button, Col, Icon, Row } from "antd";
-
 import React from "react";
+import { Button, Col, Row } from "antd";
+import {
+  SaveOutlined,
+  LeftOutlined,
+  GlobalOutlined,
+  FolderOpenOutlined,
+  FolderAddOutlined,
+  PlusOutlined,
+  CopyOutlined,
+  OrderedListOutlined,
+  EditOutlined,
+  DeleteOutlined
+} from "@ant-design/icons";
+
 import { GREEN, WHITE } from "./Colors";
 
 export const RightSubmitButton = () => {
   return (
     <Col offset={22}>
       <Button type="primary" title="Submit" htmlType="submit">
-        <Icon type="save" />
+        <SaveOutlined />
       </Button>
     </Col>
   );
@@ -21,7 +33,7 @@ export const GreenSubmitButton = () => {
         title="Submit"
         htmlType="submit"
       >
-        <Icon type="save" style={{ color: WHITE }} />
+        <SaveOutlined style={{ color: WHITE }} />
       </Button>
     </Col>
   );
@@ -31,7 +43,7 @@ export const RightSaveButton = props => {
   return (
     <Col offset={22}>
       <Button type="primary" title="Save" onClick={props.handleClick}>
-        <Icon type="save" />
+        <SaveOutlined />
       </Button>
     </Col>
   );
@@ -41,7 +53,7 @@ export const LeftCancelButton = props => {
   return (
     <Col span={2}>
       <Button title="Back" onClick={props.handleClick}>
-        <Icon type="left" />
+        <LeftOutlined />
       </Button>
     </Col>
   );
@@ -51,7 +63,7 @@ export const FolderAddButton = props => {
   return (
     <Col offset={22}>
       <Button type="primary" title="New" onClick={props.handleClick}>
-        <Icon type="folder-add" />
+        <FolderAddOutlined />
       </Button>
     </Col>
   );
@@ -61,7 +73,7 @@ export const LeftCancelRightAddButtons = props => {
   return (
     <Row style={{ margin: "3px" }}>
       <Button title="Back" onClick={props.handleCancelClick}>
-        <Icon type="left" />
+        <LeftOutlined />
       </Button>
       <Button
         style={{ float: "right" }}
@@ -69,7 +81,7 @@ export const LeftCancelRightAddButtons = props => {
         title="New"
         onClick={props.handleAddClick}
       >
-        <Icon type="plus" />
+        <PlusOutlined />
       </Button>
     </Row>
   );
@@ -84,7 +96,7 @@ export const AddButton = props => {
         title="New"
         onClick={props.handleClick}
       >
-        <Icon type="plus" />
+        <PlusOutlined />
       </Button>
     </Row>
   );
@@ -98,7 +110,7 @@ export const TranslationAddButtons = props => {
         type="primary"
         onClick={props.handleTranslationClick}
       >
-        <Icon type="global" />
+        <GlobalOutlined />
       </Button>
       <Button
         style={{ float: "right" }}
@@ -106,7 +118,7 @@ export const TranslationAddButtons = props => {
         title="Add New"
         onClick={props.handleAddClick}
       >
-        <Icon type="plus" />
+        <PlusOutlined />
       </Button>
     </Row>
   );
@@ -125,7 +137,7 @@ export const TranslationOrderAddButtons = props => {
         type="primary"
         onClick={props.handleTranslationClick}
       >
-        <Icon type="global" />
+        <GlobalOutlined />
       </Button>
       <Button
         style={{ float: "middle" }}
@@ -133,7 +145,7 @@ export const TranslationOrderAddButtons = props => {
         onClick={props.handleReorderClick}
         title="Reorder"
       >
-        <Icon type="ordered-list" />
+        <OrderedListOutlined />
       </Button>
       <Button
         style={{ float: "right" }}
@@ -141,7 +153,7 @@ export const TranslationOrderAddButtons = props => {
         title="Add New"
         onClick={props.handleAddClick}
       >
-        <Icon type="plus" />
+        <PlusOutlined />
       </Button>
     </Row>
   );
@@ -155,7 +167,7 @@ export const SaveButton = props => {
       title="Save"
       onClick={props.handleClick}
     >
-      <Icon type="save" />
+      <SaveOutlined />
     </Button>
   );
 };
@@ -168,7 +180,7 @@ export const EditButton = props => {
       title="Edit"
       onClick={props.handleClick}
     >
-      <Icon type="edit" />
+      <EditOutlined />
     </Button>
   );
 };
@@ -181,7 +193,7 @@ export const DeleteButton = props => {
       title="Delete"
       onClick={props.handleClick}
     >
-      <Icon type="delete" />
+      <DeleteOutlined />
     </Button>
   );
 };
@@ -194,7 +206,7 @@ export const ViewButton = props => {
       title="Show"
       onClick={props.handleClick}
     >
-      <Icon type="folder-open" />
+      <FolderOpenOutlined />
     </Button>
   );
 };
@@ -202,7 +214,7 @@ export const ViewButton = props => {
 export const TranslationButton = props => {
   return (
     <Button type="primary" title="Translations" onClick={props.handleClick}>
-      <Icon type="global" />
+      <GlobalOutlined />
     </Button>
   );
 };
@@ -210,7 +222,7 @@ export const TranslationButton = props => {
 export const CopyButton = props => {
   return (
     <Button type="primary" title="Copy" onClick={props.handleClick}>
-      <Icon type="copy" />
+      <CopyOutlined />
     </Button>
   );
 };

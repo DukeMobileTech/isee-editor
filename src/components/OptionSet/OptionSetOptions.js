@@ -5,10 +5,11 @@ import {
   getListStyle,
   getItemStyle
 } from "../../utils/Utils";
-import { Col, Select, Icon } from "antd";
+import { Col, Select } from "antd";
 import { Field } from "formik";
 import { DeleteButton } from "../../utils/Buttons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragOutlined } from "@ant-design/icons";
 
 const OptionSetOptions = ({
   values,
@@ -69,7 +70,7 @@ const OptionSetOptions = ({
                           style={{ marginBottom: 8 }}
                         >
                           <Col span={4}>
-                            <Icon type="drag" />
+                            <DragOutlined />
                             {index + 1}
                           </Col>
                           <Col span={6}>

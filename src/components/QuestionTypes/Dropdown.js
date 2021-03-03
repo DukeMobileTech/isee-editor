@@ -1,6 +1,7 @@
 import React from "react";
 import { isDropDown } from "../../utils/Utils";
-import { Menu, Dropdown, Icon } from "antd";
+import { Menu, Dropdown } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
 export const DropDown = ({ iq }) => {
   if (!isDropDown(iq)) return null;
@@ -26,7 +27,7 @@ export const DropDown = ({ iq }) => {
   return (
     <Dropdown overlay={menu}>
       <p className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-        Dropdown <Icon type="down" />
+        Dropdown <DownOutlined />
       </p>
     </Dropdown>
   );

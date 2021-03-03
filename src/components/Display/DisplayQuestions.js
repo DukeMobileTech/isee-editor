@@ -1,6 +1,6 @@
-import { Col, List, Icon, Row } from "antd";
-
 import React, { Fragment } from "react";
+import { Col, List, Row } from "antd";
+import { DragOutlined } from "@ant-design/icons";
 
 import { CenteredH3 } from "../../utils/Styles";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -79,7 +79,7 @@ const DisplayQuestions = props => {
                       >
                         <List.Item>
                           <Col span={1}>
-                            <Icon type="drag" />
+                            <DragOutlined />
                           </Col>
                           <Col span={3}>{instrumentQuestion.position}</Col>
                           <Col span={3}>{instrumentQuestion.identifier}</Col>

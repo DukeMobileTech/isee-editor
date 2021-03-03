@@ -1,5 +1,7 @@
-import { Row, Table, Typography, Icon, Input, Button } from "antd";
+import { Row, Table, Typography, Input, Button } from "antd";
 import React, { useState, Fragment, useContext } from "react";
+import { SearchOutlined } from "@ant-design/icons";
+
 import {
   getOptionSet,
   deleteOptionSet,
@@ -120,7 +122,7 @@ const OptionSets = () => {
       </div>
     ),
     filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
     onFilter: (value, record) => {
       if (dataIndex === "option_in_option_sets") {

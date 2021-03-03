@@ -1,5 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Button, Icon, Spin, Table, Row, Drawer } from "antd";
+import { Button, Spin, Table, Row, Drawer } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
 import { getColumnSearchProps } from "../utils/ColumnSearch";
 import RedFlagForm from "./RedFlagForm";
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
@@ -164,7 +166,7 @@ const RedFlags = props => {
             type="primary"
             onClick={onNewRedFlag}
           >
-            <Icon type="plus" />
+            <PlusOutlined />
           </Button>
         </Row>
         <Table

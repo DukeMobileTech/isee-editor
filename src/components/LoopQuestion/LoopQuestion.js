@@ -1,5 +1,6 @@
-import { Button, Col, Icon, Row, Spin, Table } from "antd";
+import { Button, Col, Row, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
 
 import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 
@@ -103,7 +104,7 @@ const LoopQuestion = props => {
           <Col span={18}></Col>
           <Col span={6}>
             <Button type="primary" onClick={handleNewLoopQuestion}>
-              <Icon type="plus" /> New Loop Question
+              <PlusOutlined /> New Loop Question
             </Button>
           </Col>
         </Row>

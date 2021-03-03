@@ -1,10 +1,12 @@
-import { Icon, Row, Button, List, Col } from "antd";
+import React, { useState } from "react";
+import { Row, Button, List, Col } from "antd";
+import { DragOutlined, DatabaseOutlined } from "@ant-design/icons";
+
 import {
   DeleteButton,
   EditButton,
   TranslationButton
 } from "../../utils/Buttons";
-import React, { useState } from "react";
 import { deleteFolder, getFolders } from "../../utils/api/folder";
 import { orderFolders } from "../../utils/api/question_set";
 import FolderForm from "./FolderForm";
@@ -102,7 +104,7 @@ const QuestionSet = props => {
                       >
                         <List.Item>
                           <Col span={2}>
-                            <Icon type="drag" />
+                            <DragOutlined />
                           </Col>
                           <Col span={16}>{folder.title}</Col>
                           <Col span={6}>
@@ -125,7 +127,7 @@ const QuestionSet = props => {
                                   props.questionSubset(folder, null)
                                 }
                               >
-                                <Icon type="database" />
+                                <DatabaseOutlined />
                               </Button>
                               <TranslationButton
                                 handleClick={() =>

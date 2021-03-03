@@ -1,11 +1,13 @@
+import React, { Fragment, useEffect, useState } from "react";
+import { Divider, Table, Row, Button, Layout, Menu, Drawer } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
 import {
   DeleteButton,
   EditButton,
   CopyButton,
   LeftCancelButton
 } from "../../utils/Buttons";
-import { Divider, Table, Row, Button, Layout, Menu, Icon, Drawer } from "antd";
-import React, { Fragment, useEffect, useState } from "react";
 import {
   deleteScoreUnit,
   getScoreUnits,
@@ -128,7 +130,7 @@ const ScoreUnits = props => {
             onClick={onNew}
             title="New Score Unit"
           >
-            <Icon type="plus" />
+            <PlusOutlined />
           </Button>
         </Row>
         <Table

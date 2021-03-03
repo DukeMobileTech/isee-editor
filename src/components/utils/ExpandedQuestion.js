@@ -1,6 +1,6 @@
+import React, { useContext, useState } from "react";
 import { Tag, Typography, Button } from "antd";
 
-import React, { useContext, useState } from "react";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import OptionSetForm from "../OptionSet/OptionSetForm";
 import { InstructionContext } from "../../context/InstructionContext";

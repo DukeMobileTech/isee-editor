@@ -1,7 +1,7 @@
-import { Alert, Icon, Row } from "antd";
-
-import { ErrorMessage } from "formik";
 import React from "react";
+import { Alert, Row } from "antd";
+import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
+import { ErrorMessage } from "formik";
 
 export const AlertErrorMessage = props => {
   return (
@@ -47,13 +47,9 @@ export const getListStyle = isDraggingOver => ({
 
 export const customExpandIcon = props => {
   if (props.expanded) {
-    return (
-      <Icon type="caret-up" onClick={e => props.onExpand(props.record, e)} />
-    );
+    return <CaretUpOutlined onClick={e => props.onExpand(props.record, e)} />;
   } else {
-    return (
-      <Icon type="caret-down" onClick={e => props.onExpand(props.record, e)} />
-    );
+    return <CaretDownOutlined onClick={e => props.onExpand(props.record, e)} />;
   }
 };
 

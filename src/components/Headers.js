@@ -1,7 +1,8 @@
-import { Button, Divider, Icon, Layout, Menu } from "antd";
-
 import React, { useContext } from "react";
+import { Button, Divider, Layout, Menu } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+
 import { CenteredH2 } from "../utils/Styles";
 import { ProjectContext } from "../context/ProjectContext";
 
@@ -47,7 +48,7 @@ export const AppHeader = props => {
       >
         {sessionStorage.getItem("email") && sessionStorage.getItem("jwt") && (
           <span>
-            <Icon type="user" />
+            <UserOutlined />
             {sessionStorage.getItem("email")}
             <Divider type="vertical" />
             <Button type="danger" onClick={handleSignout}>

@@ -1,6 +1,7 @@
 import React, { useState, Fragment, useRef } from "react";
-import { Select, Divider, Icon, Button, Row, Input, Col } from "antd";
+import { Select, Divider, Button, Row, Input, Col } from "antd";
 import { createOption } from "../../utils/api/option";
+import { SaveOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -74,7 +75,7 @@ const AddOptions = props => {
             />
           </Col>
           <Button type="primary" onClick={e => submitOption(e)}>
-            <Icon type="save" />
+            <SaveOutlined />
           </Button>
         </Row>
       );
@@ -122,7 +123,7 @@ const AddOptions = props => {
             onMouseDown={e => e.preventDefault()}
             onClick={addNewOption}
           >
-            <Icon type="plus" />
+            <PlusOutlined />
             Create New Option
           </Button>
           <NewOption />

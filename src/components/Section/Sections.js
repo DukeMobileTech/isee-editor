@@ -1,5 +1,9 @@
 import * as Yup from "yup";
-import { Button, Col, Divider, Icon, List, Row, Drawer } from "antd";
+import React, { useContext, useState, Fragment, useEffect } from "react";
+import { Button, Col, Divider, List, Row, Drawer } from "antd";
+import { DragOutlined, PlusOutlined, GlobalOutlined } from "@ant-design/icons";
+import { Formik, Form, Field } from "formik";
+
 import {
   DeleteButton,
   EditButton,
@@ -13,7 +17,6 @@ import {
   AlertErrorMessage
 } from "../../utils/Utils";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import React, { useContext, useState, Fragment, useEffect } from "react";
 import {
   deleteSection,
   getSections,
@@ -24,7 +27,6 @@ import {
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import Displays from "./Displays";
 import Translations from "../SectionTranslation/Translations";
-import { Formik, Form, Field } from "formik";
 
 const SectionSchema = Yup.object().shape({
   title: Yup.string().required("Title is required")
@@ -133,7 +135,7 @@ const Sections = props => {
             onClick={handleSectionTranslations}
             style={{ marginRight: "2px" }}
           >
-            <Icon type="global" />
+            <GlobalOutlined />
           </Button>
           <Button
             style={{ float: "right" }}
@@ -141,7 +143,7 @@ const Sections = props => {
             title="Add New"
             onClick={handleNewSection}
           >
-            <Icon type="plus" />
+            <PlusOutlined />
           </Button>
         </Row>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -173,7 +175,7 @@ const Sections = props => {
                         >
                           <List.Item>
                             <Col span={1}>
-                              <Icon type="drag" />
+                              <DragOutlined />
                             </Col>
                             <Col span={19}>
                               <Button

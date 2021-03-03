@@ -1,5 +1,7 @@
 import * as Yup from "yup";
-
+import React, { useState, useEffect, useContext } from "react";
+import { Col, Typography, Divider } from "antd";
+import { Field, Form, Formik } from "formik";
 import {
   RightSubmitButton,
   SaveButton,
@@ -7,10 +9,6 @@ import {
   AddButton
 } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow, hasOtherOption } from "../../utils/Utils";
-import { Col, Typography, Divider } from "antd";
-import { Field, Form, Formik } from "formik";
-import React, { useState, useEffect, useContext } from "react";
-
 import { updateScoreUnit } from "../../utils/api/score_unit";
 import { scoreTypes, institutionTypes } from "../../utils/Constants";
 import { getDomains } from "../../utils/api/domain";

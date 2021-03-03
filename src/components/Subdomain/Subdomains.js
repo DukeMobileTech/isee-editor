@@ -1,20 +1,15 @@
+import React, { Fragment, useState } from "react";
 import {
   Divider,
   Button,
   Row,
   Layout,
   Menu,
-  Icon,
   Drawer,
   Table,
   Typography
 } from "antd";
-import {
-  DeleteButton,
-  EditButton,
-  LeftCancelButton
-} from "../../utils/Buttons";
-import React, { Fragment, useState } from "react";
+import { PlusOutlined, GlobalOutlined } from "@ant-design/icons";
 
 import ScoreUnits from "../ScoreUnit/ScoreUnits";
 import SubdomainForm from "./SubdomainForm";
@@ -22,6 +17,11 @@ import { deleteSubdomain } from "../../utils/api/subdomain";
 import { CenteredH4, CenteredH3 } from "../../utils/Styles";
 import { getDomain } from "../../utils/api/domain";
 import Translations from "../SubdomainTranslation/Translations";
+import {
+  DeleteButton,
+  EditButton,
+  LeftCancelButton
+} from "../../utils/Buttons";
 
 const Subdomains = props => {
   const projectId = props.projectId;
@@ -143,14 +143,14 @@ const Subdomains = props => {
               type="primary"
               onClick={handleTranslations}
             >
-              <Icon type="global" />
+              <GlobalOutlined />
             </Button>
             <Button
               title="New Subdomain"
               type="primary"
               onClick={() => handleEditSubdomain()}
             >
-              <Icon type="plus" />
+              <PlusOutlined />
             </Button>
           </Row>
           <Table
