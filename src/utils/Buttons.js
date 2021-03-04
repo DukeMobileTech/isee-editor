@@ -104,7 +104,7 @@ export const AddButton = props => {
 
 export const TranslationAddButtons = props => {
   return (
-    <Row style={{ margin: "3px" }}>
+    <Row gutter={8} type="flex" justify="space-between" style={{ margin: "3px" }}>
       <Button
         title="Show Translations"
         type="primary"

@@ -111,6 +111,7 @@ const ConditionSkipForm = props => {
                 render={({ field }) => (
                   <Select
                     {...field}
+                    style={{ width: '100%' }}
                     mode="multiple"
                     value={values.question_identifiers}
                     onChange={values => {
@@ -156,6 +157,7 @@ const ConditionSkipForm = props => {
                         render={({ field }) => (
                           <Select
                             {...field}
+                            style={{ width: '100%' }}
                             value={values.value_operators[index]}
                             onChange={val => {
                               setFieldValue(`value_operators.${index}`, val);
@@ -215,6 +217,7 @@ const ConditionSkipForm = props => {
                         render={({ field }) => (
                           <Select
                             {...field}
+                            style={{ width: '100%' }}
                             value={values.option_ids[index]}
                             onChange={val => {
                               setFieldValue(`option_ids.${index}`, val);

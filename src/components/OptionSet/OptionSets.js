@@ -274,7 +274,7 @@ const OptionSets = () => {
         <TranslationAddButtons
           handleTranslationClick={handleShowAllTranslations}
           handleAddClick={() =>
-            handleOptionSetForm({ option_in_option_sets: [] })
+            handleOptionSetForm({option_in_option_sets: []})
           }
         />
         <Table

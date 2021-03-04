@@ -159,6 +159,7 @@ const RedFlagForm = props => {
                 render={({ field }) => (
                   <Select
                     {...field}
+                    style={{ width: '100%' }}
                     showSearch
                     allowClear
                     optionFilterProp="children"

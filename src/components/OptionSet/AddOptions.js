@@ -1,27 +1,26 @@
-import React, { useState, Fragment, useRef } from "react";
-import { Select, Divider, Button, Row, Input, Col } from "antd";
+import React, { useState, Fragment } from "react";
+import { Form, Select, Divider, Button, Input } from "antd";
 import { createOption } from "../../utils/api/option";
-import { SaveOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 
-const { Option } = Select;
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
 
 const AddOptions = props => {
   const options = props.options;
   const optionSet = props.optionSet;
   const values = props.values;
   const [newOption, setNewOption] = useState(false);
-  const textInput = useRef("");
-  const identifierInput = useRef("");
-
-  const addNewOption = () => {
-    setNewOption(!newOption);
-  };
-
-  const submitOption = event => {
-    event.preventDefault();
+  
+  const onFinish = (values) => {
     let option = {
-      identifier: identifierInput.current.state.value,
-      text: textInput.current.state.value
+      identifier: values.identifier,
+      text: values.text
     };
     createOption(option).then(response => {
       if (response.status === 201) {
@@ -34,50 +33,59 @@ const AddOptions = props => {
     });
   };
 
+  const addNewOption = () => {
+    setNewOption(!newOption);
+  };
+
   const addOption = option => {
-    optionSet.option_in_option_sets.push({
+    const copy = [...values.option_in_option_sets, {
       option_id: option.id,
       option_set_id: optionSet.id,
       number_in_question: optionSet.option_in_option_sets.length + 1,
       special: false,
       option: option
-    });
+    }];
+
     props.resetForm({
-      id: values.id,
-      title: values.title,
-      instruction_id: values.instruction_id,
-      special: values.special,
-      option_in_option_sets: optionSet.option_in_option_sets
-    });
+        id: values.id,
+        title: values.title,
+        instruction_id: values.instruction_id,
+        special: values.special,
+        option_in_option_sets: copy
+      });
   };
 
   const NewOption = () => {
     if (newOption) {
       return (
-        <Row
-          style={{ marginBottom: "5px" }}
-          type="flex"
-          justify="space-around"
-          align="middle"
+        <Form
+          {...layout}
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
         >
-          <Col span={6}>
-            <Input
-              placeholder="Enter unique identifier"
-              ref={identifierInput}
-              onClick={() => identifierInput.current.focus()}
-            />
-          </Col>
-          <Col span={14}>
-            <Input.TextArea
-              placeholder="Enter text"
-              ref={textInput}
-              onClick={() => textInput.current.focus()}
-            />
-          </Col>
-          <Button type="primary" onClick={e => submitOption(e)}>
-            <SaveOutlined />
-          </Button>
-        </Row>
+          <Form.Item
+            label="Identifier"
+            name="identifier"
+            rules={[{ required: true, message: 'Please input the identifier!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Text"
+            name="text"
+            rules={[{ required: true, message: 'Please input the text!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       );
     } else {
       return <Fragment />;
@@ -133,9 +141,9 @@ const AddOptions = props => {
       {options &&
         options.map(option => {
           return (
-            <Option key={`${option.identifier}`}>
+            <Select.Option key={`${option.identifier}`}>
               {`${option.identifier} - ${option.text.replace(/<[^>]+>/g, "")}`}
-            </Option>
+            </Select.Option>
           );
         })}
     </Select>

@@ -285,6 +285,7 @@ const QuestionForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      style={{ width: '100%' }}
                       showSearch
                       allowClear
                       optionFilterProp="children"
@@ -345,6 +346,7 @@ const QuestionForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      style={{ width: '100%' }}
                       showSearch
                       allowClear
                       optionFilterProp="children"
@@ -387,6 +389,7 @@ const QuestionForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      style={{ width: '100%' }}
                       showSearch
                       allowClear
                       optionFilterProp="children"
@@ -447,6 +450,7 @@ const QuestionForm = props => {
                     render={({ field }) => (
                       <Select
                         {...field}
+                        style={{ width: '100%' }}
                         showSearch
                         optionFilterProp="children"
                         onChange={value =>

@@ -128,7 +128,7 @@ const Sections = props => {
   } else {
     return (
       <Fragment>
-        <Row style={{ margin: "3px" }}>
+        <Row gutter={8} type="flex" justify="space-between" style={{ margin: "5px" }}>
           <Button
             title="Show Translations"
             type="primary"

@@ -89,6 +89,7 @@ const IQForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      style={{ width: '100%' }}
                       mode="multiple"
                       value={neutralIds}
                       onChange={values => {

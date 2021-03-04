@@ -147,6 +147,7 @@ const NewMultipleSkipForm = props => {
                 render={({ field }) => (
                   <Select
                     {...field}
+                    style={{ width: '100%' }}
                     mode="multiple"
                     onChange={values => {
                       setFieldValue("skipQuestionIdentifiers", values);

@@ -108,14 +108,14 @@ const OptionSetForm = props => {
         }}
         validationSchema={OptionSetSchema}
         onSubmit={(values, { setErrors }) => {
-          const optionSet = {
+          const optionSetObj = {
             title: values.title,
             instruction_id: values.instruction_id,
             special: values.special,
             option_in_option_sets: values.option_in_option_sets
           };
           if (values.id) {
-            updateOptionSet(values.id, optionSet)
+            updateOptionSet(values.id, optionSetObj)
               .then(response => {
                 if (response.status === 200) {
                   props.fetchOptionSet(values.id);
@@ -129,7 +129,7 @@ const OptionSetForm = props => {
                 }
               });
           } else {
-            createOptionSet(optionSet)
+            createOptionSet(optionSetObj)
               .then(response => {
                 if (response.status === 200) {
                   props.fetchOptionSet(response.data.id);
@@ -172,6 +172,7 @@ const OptionSetForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      style={{ width: '100%' }}
                       showSearch
                       allowClear
                       optionFilterProp="children"

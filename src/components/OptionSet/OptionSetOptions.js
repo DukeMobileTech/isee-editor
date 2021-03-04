@@ -88,6 +88,7 @@ const OptionSetOptions = ({
                               render={({ field }) => (
                                 <Select
                                   {...field}
+                                  style={{ width: '100%' }}
                                   showSearch
                                   allowClear
                                   optionFilterProp="children"
@@ -129,6 +130,7 @@ const OptionSetOptions = ({
                               render={({ field }) => (
                                 <Select
                                   {...field}
+                                  style={{ width: '100%' }}
                                   mode="multiple"
                                   value={
                                     oios.exclusion_ids
@@ -157,7 +159,7 @@ const OptionSetOptions = ({
                                     (optionIn, idx) => {
                                       return (
                                         <Select.Option
-                                          key={optionIn.id}
+                                          key={`${optionIn.id}-${idx}`}
                                           value={`${optionIn.id}`}
                                         >
                                           {optionIn.option.text.replace(
