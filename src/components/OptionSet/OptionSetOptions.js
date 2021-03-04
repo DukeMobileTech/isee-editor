@@ -1,24 +1,24 @@
-import React from "react";
-import {
-  DRow,
-  AlertErrorMessage,
-  getListStyle,
-  getItemStyle
-} from "../../utils/Utils";
+import { DragOutlined } from "@ant-design/icons";
 import { Col, Select } from "antd";
 import { Field } from "formik";
+import React from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { DeleteButton } from "../../utils/Buttons";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { DragOutlined } from "@ant-design/icons";
+import {
+  AlertErrorMessage,
+  DRow,
+  getItemStyle,
+  getListStyle
+} from "../../utils/Utils";
 
 const OptionSetOptions = ({
   values,
   setFieldValue,
   instructions,
   handleDeleteOption,
-  resetForm
+  resetForm,
 }) => {
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     const copy = [...values.option_in_option_sets];
     copy.splice(
       result.destination.index,
@@ -33,7 +33,7 @@ const OptionSetOptions = ({
       title: values.title,
       instruction_id: values.instruction_id,
       special: values.special,
-      option_in_option_sets: copy
+      option_in_option_sets: copy,
     });
   };
 
@@ -77,7 +77,7 @@ const OptionSetOptions = ({
                             {oios.option && (
                               <span
                                 dangerouslySetInnerHTML={{
-                                  __html: oios.option.text
+                                  __html: oios.option.text,
                                 }}
                               />
                             )}
@@ -88,11 +88,11 @@ const OptionSetOptions = ({
                               render={({ field }) => (
                                 <Select
                                   {...field}
-                                  style={{ width: '100%' }}
+                                  style={{ width: "100%" }}
                                   showSearch
                                   allowClear
                                   optionFilterProp="children"
-                                  onChange={value =>
+                                  onChange={(value) =>
                                     setFieldValue(
                                       `option_in_option_sets.${index}.instruction_id`,
                                       value
@@ -105,8 +105,8 @@ const OptionSetOptions = ({
                                       .indexOf(input.toLowerCase()) >= 0
                                   }
                                 >
-                                  <Select.Option value=""></Select.Option>
-                                  {instructions.map(instruction => {
+                                  <Select.Option value="" />
+                                  {instructions.map((instruction) => {
                                     return (
                                       <Select.Option
                                         key={instruction.id}
@@ -130,14 +130,14 @@ const OptionSetOptions = ({
                               render={({ field }) => (
                                 <Select
                                   {...field}
-                                  style={{ width: '100%' }}
+                                  style={{ width: "100%" }}
                                   mode="multiple"
                                   value={
                                     oios.exclusion_ids
                                       ? oios.exclusion_ids.split(",")
                                       : []
                                   }
-                                  onChange={values => {
+                                  onChange={(values) => {
                                     setFieldValue(
                                       `option_in_option_sets.${index}.exclusion_ids`,
                                       [
@@ -147,14 +147,14 @@ const OptionSetOptions = ({
                                             .replace(/(^[,\s]+)|([,\s]+$)/g, "")
                                             .split(",")
                                             .filter(
-                                              val => val !== String(oios.id)
+                                              (val) => val !== String(oios.id)
                                             )
-                                        )
+                                        ),
                                       ].join(",")
                                     );
                                   }}
                                 >
-                                  <Select.Option value=""></Select.Option>
+                                  <Select.Option value="" />
                                   {values.option_in_option_sets.map(
                                     (optionIn, idx) => {
                                       return (
@@ -193,8 +193,9 @@ const OptionSetOptions = ({
                               handleClick={() => {
                                 if (
                                   window.confirm(
-                                    `Are you sure you want to remove ${oios.option &&
-                                      oios.option.text} from the set?`
+                                    `Are you sure you want to remove ${
+                                      oios.option && oios.option.text
+                                    } from the set?`
                                   )
                                 )
                                   handleDeleteOption(oios, values, resetForm);

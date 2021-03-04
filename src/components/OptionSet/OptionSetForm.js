@@ -1,28 +1,26 @@
-import * as Yup from "yup";
-
-import { RightSubmitButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
-import { Button, Col, Select, Typography, Modal } from "antd";
-import { Field, Form, Formik } from "formik";
-import React, { useState, useContext, useEffect } from "react";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
-
-import { createOptionSet, updateOptionSet } from "../../utils/api/option_set";
-import AddOptions from "./AddOptions";
-import { deleteOptionInOptionSet } from "../../utils/api/option_in_option_set";
-import { OptionContext } from "../../context/OptionContext";
+import { Button, Col, Modal, Select, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
+import React, { useContext, useEffect, useState } from "react";
+import * as Yup from "yup";
 import { InstructionContext } from "../../context/InstructionContext";
-import { modalWidth } from "../../utils/Constants";
-import OptionSetOptions from "./OptionSetOptions";
+import { OptionContext } from "../../context/OptionContext";
 import { getOptions } from "../../utils/api/option";
+import { deleteOptionInOptionSet } from "../../utils/api/option_in_option_set";
+import { createOptionSet, updateOptionSet } from "../../utils/api/option_set";
+import { RightSubmitButton } from "../../utils/Buttons";
+import { modalWidth } from "../../utils/Constants";
+import { AlertErrorMessage, DRow } from "../../utils/Utils";
+import AddOptions from "./AddOptions";
+import OptionSetOptions from "./OptionSetOptions";
 
 const { Text } = Typography;
 const { Option } = Select;
 const OptionSetSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required")
+  title: Yup.string().required("Title is required"),
 });
 
-const OptionSetForm = props => {
+const OptionSetForm = (props) => {
   const optionSet = props.optionSet;
   // eslint-disable-next-line no-unused-vars
   const [options, setOptions] = useContext(OptionContext);
@@ -33,7 +31,7 @@ const OptionSetForm = props => {
   useEffect(() => {
     const fetchOptions = () => {
       if (options.length === 0) {
-        getOptions().then(results => {
+        getOptions().then((results) => {
           setOptions(results.data);
         });
       }
@@ -44,7 +42,7 @@ const OptionSetForm = props => {
 
   const handleDeleteOption = (oios, values, resetForm) => {
     const index = optionSet.option_in_option_sets.findIndex(
-      item => oios.id === item.id
+      (item) => oios.id === item.id
     );
     let optionSetOptions = optionSet.option_in_option_sets;
 
@@ -52,10 +50,10 @@ const OptionSetForm = props => {
       optionSetOptions.splice(index, 1);
       if (oios.id) {
         deleteOptionInOptionSet(optionSet.id, oios.id)
-          .then(res => {
+          .then((res) => {
             resetOptionSetForm(optionSetOptions, values, resetForm);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       } else {
@@ -71,7 +69,7 @@ const OptionSetForm = props => {
       title: values.title,
       instruction_id: values.instruction_id,
       special: values.special,
-      option_in_option_sets: array
+      option_in_option_sets: array,
     });
   };
 
@@ -104,7 +102,7 @@ const OptionSetForm = props => {
           instruction_id: (optionSet && optionSet.instruction_id) || "",
           special: (optionSet && optionSet.special) || false,
           option_in_option_sets:
-            (optionSet && optionSet.option_in_option_sets) || []
+            (optionSet && optionSet.option_in_option_sets) || [],
         }}
         validationSchema={OptionSetSchema}
         onSubmit={(values, { setErrors }) => {
@@ -112,16 +110,16 @@ const OptionSetForm = props => {
             title: values.title,
             instruction_id: values.instruction_id,
             special: values.special,
-            option_in_option_sets: values.option_in_option_sets
+            option_in_option_sets: values.option_in_option_sets,
           };
           if (values.id) {
             updateOptionSet(values.id, optionSetObj)
-              .then(response => {
+              .then((response) => {
                 if (response.status === 200) {
                   props.fetchOptionSet(values.id);
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });
@@ -130,12 +128,12 @@ const OptionSetForm = props => {
               });
           } else {
             createOptionSet(optionSetObj)
-              .then(response => {
+              .then((response) => {
                 if (response.status === 200) {
                   props.fetchOptionSet(response.data.id);
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });
@@ -172,11 +170,11 @@ const OptionSetForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       showSearch
                       allowClear
                       optionFilterProp="children"
-                      onChange={value => {
+                      onChange={(value) => {
                         if (value === undefined) {
                           value = null;
                         }
@@ -189,8 +187,8 @@ const OptionSetForm = props => {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      <Option value=""></Option>
-                      {instructions.map(instruction => {
+                      <Option value="" />
+                      {instructions.map((instruction) => {
                         return (
                           <Option
                             key={instruction.id}

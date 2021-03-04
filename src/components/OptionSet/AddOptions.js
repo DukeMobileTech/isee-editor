@@ -1,7 +1,7 @@
-import React, { useState, Fragment } from "react";
-import { Form, Select, Divider, Button, Input } from "antd";
-import { createOption } from "../../utils/api/option";
 import { PlusOutlined } from "@ant-design/icons";
+import { Button, Divider, Form, Input, Select } from "antd";
+import React, { Fragment, useState } from "react";
+import { createOption } from "../../utils/api/option";
 
 const layout = {
   labelCol: { span: 8 },
@@ -11,18 +11,18 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const AddOptions = props => {
+const AddOptions = (props) => {
   const options = props.options;
   const optionSet = props.optionSet;
   const values = props.values;
   const [newOption, setNewOption] = useState(false);
-  
+
   const onFinish = (values) => {
     let option = {
       identifier: values.identifier,
-      text: values.text
+      text: values.text,
     };
-    createOption(option).then(response => {
+    createOption(option).then((response) => {
       if (response.status === 201) {
         option = response.data;
         props.setOptions([option, ...options]);
@@ -37,22 +37,25 @@ const AddOptions = props => {
     setNewOption(!newOption);
   };
 
-  const addOption = option => {
-    const copy = [...values.option_in_option_sets, {
-      option_id: option.id,
-      option_set_id: optionSet.id,
-      number_in_question: optionSet.option_in_option_sets.length + 1,
-      special: false,
-      option: option
-    }];
+  const addOption = (option) => {
+    const copy = [
+      ...values.option_in_option_sets,
+      {
+        option_id: option.id,
+        option_set_id: optionSet.id,
+        number_in_question: optionSet.option_in_option_sets.length + 1,
+        special: false,
+        option: option,
+      },
+    ];
 
     props.resetForm({
-        id: values.id,
-        title: values.title,
-        instruction_id: values.instruction_id,
-        special: values.special,
-        option_in_option_sets: copy
-      });
+      id: values.id,
+      title: values.title,
+      instruction_id: values.instruction_id,
+      special: values.special,
+      option_in_option_sets: copy,
+    });
   };
 
   const NewOption = () => {
@@ -67,7 +70,9 @@ const AddOptions = props => {
           <Form.Item
             label="Identifier"
             name="identifier"
-            rules={[{ required: true, message: 'Please input the identifier!' }]}
+            rules={[
+              { required: true, message: "Please input the identifier!" },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -75,7 +80,7 @@ const AddOptions = props => {
           <Form.Item
             label="Text"
             name="text"
-            rules={[{ required: true, message: 'Please input the text!' }]}
+            rules={[{ required: true, message: "Please input the text!" }]}
           >
             <Input />
           </Form.Item>
@@ -106,14 +111,14 @@ const AddOptions = props => {
         option.props.children &&
         option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
-      onChange={selectedValues => {
-        selectedValues.forEach(selectedValue => {
+      onChange={(selectedValues) => {
+        selectedValues.forEach((selectedValue) => {
           const option = options.find(
-            option => option.identifier === selectedValue
+            (option) => option.identifier === selectedValue
           );
           if (option) {
             const exists = optionSet.option_in_option_sets.find(
-              os => os.option_id === option.id
+              (os) => os.option_id === option.id
             );
             if (exists === undefined) {
               addOption(option);
@@ -121,14 +126,14 @@ const AddOptions = props => {
           }
         });
       }}
-      dropdownRender={menu => (
+      dropdownRender={(menu) => (
         <div>
           {menu}
           <Divider style={{ margin: "4px 0" }} />
           <Button
             type="primary"
             style={{ margin: "5px" }}
-            onMouseDown={e => e.preventDefault()}
+            onMouseDown={(e) => e.preventDefault()}
             onClick={addNewOption}
           >
             <PlusOutlined />
@@ -139,7 +144,7 @@ const AddOptions = props => {
       )}
     >
       {options &&
-        options.map(option => {
+        options.map((option) => {
           return (
             <Select.Option key={`${option.identifier}`}>
               {`${option.identifier} - ${option.text.replace(/<[^>]+>/g, "")}`}

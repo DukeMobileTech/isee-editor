@@ -1,26 +1,25 @@
-import { Row, Table, Typography, Input, Button } from "antd";
-import React, { useState, Fragment, useContext } from "react";
+/* eslint-disable no-use-before-define */
 import { SearchOutlined } from "@ant-design/icons";
-
-import {
-  getOptionSet,
-  deleteOptionSet,
-  copyOptionSet
-} from "../../utils/api/option_set";
-
-import {
-  EditButton,
-  DeleteButton,
-  TranslationAddButtons,
-  TranslationButton,
-  CopyButton
-} from "../../utils/Buttons";
+import { Button, Input, Row, Table, Typography } from "antd";
+import React, { Fragment, useContext, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { OptionSetContext } from "../../context/OptionSetContext";
 import { InstructionContext } from "../../context/InstructionContext";
-import OptionSetForm from "./OptionSetForm";
-import Translations from "../OptionTranslation/Translations";
 import { OptionContext } from "../../context/OptionContext";
+import { OptionSetContext } from "../../context/OptionSetContext";
+import {
+  copyOptionSet,
+  deleteOptionSet,
+  getOptionSet
+} from "../../utils/api/option_set";
+import {
+  CopyButton,
+  DeleteButton,
+  EditButton,
+  TranslationAddButtons,
+  TranslationButton
+} from "../../utils/Buttons";
+import Translations from "../OptionTranslation/Translations";
+import OptionSetForm from "./OptionSetForm";
 
 const OptionSets = () => {
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
@@ -34,7 +33,7 @@ const OptionSets = () => {
   const [options, setOptions] = useContext(OptionContext);
   const [optionsToTranslate, setOptionsToTranslate] = useState([]);
 
-  const fetchOptionSet = async id => {
+  const fetchOptionSet = async (id) => {
     if (id) {
       const result = await getOptionSet(id);
       let index = optionSets.indexOf(optionSet);
@@ -48,22 +47,22 @@ const OptionSets = () => {
     setVisible(false);
   };
 
-  const handleOptionSetForm = os => {
+  const handleOptionSetForm = (os) => {
     setOptionSet(os);
     setVisible(true);
   };
 
-  const handleDeleteOptionSet = os => {
-    deleteOptionSet(os.id).then(res => {
+  const handleDeleteOptionSet = (os) => {
+    deleteOptionSet(os.id).then(() => {
       let index = optionSets.indexOf(os);
       optionSets.splice(index, 1);
       setOptionSets([...optionSets]);
     });
   };
 
-  const handleShowOptionSetTranslations = os => {
+  const handleShowOptionSetTranslations = (os) => {
     setOptionSet(os);
-    setOptionsToTranslate(os.option_in_option_sets.map(oios => oios.option));
+    setOptionsToTranslate(os.option_in_option_sets.map((oios) => oios.option));
     setShowTranslations(true);
   };
 
@@ -72,32 +71,32 @@ const OptionSets = () => {
     setShowTranslations(true);
   };
 
-  const handleCopyOptionSet = os => {
-    copyOptionSet(os.id).then(response => {
+  const handleCopyOptionSet = (os) => {
+    copyOptionSet(os.id).then((response) => {
       optionSets.unshift(response.data);
       setOptionSets([...optionSets]);
     });
   };
 
-  const optionsToString = array => {
+  const optionsToString = (array) => {
     const searchAttributes = array.map(
-      oios => `${oios.option.identifier} ${oios.option.text}`
+      (oios) => `${oios.option.identifier} ${oios.option.text}`
     );
     return searchAttributes.join(" ");
   };
 
-  const getColumnSearchProps = dataIndex => ({
+  const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
-      clearFilters
+      clearFilters,
     }) => (
       <div style={{ padding: 8 }}>
         <Input
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e =>
+          onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() => handleSearch(selectedKeys, confirm)}
@@ -121,7 +120,7 @@ const OptionSets = () => {
         </Button>
       </div>
     ),
-    filterIcon: filtered => (
+    filterIcon: (filtered) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
     onFilter: (value, record) => {
@@ -146,14 +145,14 @@ const OptionSets = () => {
           .includes(value.toLowerCase());
       }
     },
-    render: text => (
+    render: (text) => (
       <Highlighter
         highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
         searchWords={[searchText]}
         autoEscape
         textToHighlight={text ? text.toString() : ""}
       />
-    )
+    ),
   });
 
   const handleSearch = (selectedKeys, confirm) => {
@@ -161,13 +160,13 @@ const OptionSets = () => {
     setSearchText(selectedKeys[0]);
   };
 
-  const handleReset = clearFilters => {
+  const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
 
-  const instruction = id => {
-    const inst = instructions.find(ins => ins.id === Number(id));
+  const instruction = (id) => {
+    const inst = instructions.find((ins) => ins.id === Number(id));
     return inst ? inst.text : "";
   };
 
@@ -176,7 +175,7 @@ const OptionSets = () => {
       title: "Title",
       dataIndex: "title",
       width: "15%",
-      ...getColumnSearchProps("title")
+      ...getColumnSearchProps("title"),
     },
     searchText === ""
       ? {
@@ -188,11 +187,11 @@ const OptionSets = () => {
             return (
               <span
                 dangerouslySetInnerHTML={{
-                  __html: instruction(os.instruction_id)
+                  __html: instruction(os.instruction_id),
                 }}
               />
             );
-          }
+          },
         }
       : {
           title: "Instructions",
@@ -201,7 +200,7 @@ const OptionSets = () => {
           ...getColumnSearchProps("instruction_id"),
           render: (text, os) => {
             return <span>{instruction(os.instruction_id)}</span>;
-          }
+          },
         },
     {
       title: "Options",
@@ -210,7 +209,7 @@ const OptionSets = () => {
       ...getColumnSearchProps("option_in_option_sets"),
       render: (text, os) => (
         <Fragment>
-          {os.option_in_option_sets.map(oios => {
+          {os.option_in_option_sets.map((oios) => {
             return (
               <span key={oios.id}>
                 <Typography.Text strong>
@@ -223,7 +222,7 @@ const OptionSets = () => {
             );
           })}
         </Fragment>
-      )
+      ),
     },
     {
       title: "Actions",
@@ -239,6 +238,7 @@ const OptionSets = () => {
           <DeleteButton
             handleClick={() => {
               if (
+                // eslint-disable-next-line no-alert
                 window.confirm(
                   `Are you sure you want to delete ${record.title}?`
                 )
@@ -247,8 +247,8 @@ const OptionSets = () => {
             }}
           />
         </Row>
-      )
-    }
+      ),
+    },
   ];
 
   if (showTranslations) {
@@ -274,13 +274,13 @@ const OptionSets = () => {
         <TranslationAddButtons
           handleTranslationClick={handleShowAllTranslations}
           handleAddClick={() =>
-            handleOptionSetForm({option_in_option_sets: []})
+            handleOptionSetForm({ option_in_option_sets: [] })
           }
         />
         <Table
           columns={columns}
           dataSource={optionSets}
-          rowKey={os => os.id}
+          rowKey={(os) => os.id}
           pagination={{ defaultPageSize: 25 }}
         />
       </Fragment>
