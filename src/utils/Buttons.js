@@ -1,18 +1,17 @@
-import React from "react";
-import { Button, Col, Row } from "antd";
 import {
-  SaveOutlined,
-  LeftOutlined,
-  GlobalOutlined,
-  FolderOpenOutlined,
-  FolderAddOutlined,
-  PlusOutlined,
   CopyOutlined,
-  OrderedListOutlined,
+  DeleteOutlined,
   EditOutlined,
-  DeleteOutlined
+  FolderAddOutlined,
+  FolderOpenOutlined,
+  GlobalOutlined,
+  LeftOutlined,
+  OrderedListOutlined,
+  PlusOutlined,
+  SaveOutlined,
 } from "@ant-design/icons";
-
+import { Button, Col, Row } from "antd";
+import React from "react";
 import { GREEN, WHITE } from "./Colors";
 
 export const RightSubmitButton = () => {
@@ -39,7 +38,7 @@ export const GreenSubmitButton = () => {
   );
 };
 
-export const RightSaveButton = props => {
+export const RightSaveButton = (props) => {
   return (
     <Col offset={22}>
       <Button type="primary" title="Save" onClick={props.handleClick}>
@@ -49,7 +48,7 @@ export const RightSaveButton = props => {
   );
 };
 
-export const LeftCancelButton = props => {
+export const LeftCancelButton = (props) => {
   return (
     <Col span={2}>
       <Button title="Back" onClick={props.handleClick}>
@@ -59,7 +58,7 @@ export const LeftCancelButton = props => {
   );
 };
 
-export const FolderAddButton = props => {
+export const FolderAddButton = (props) => {
   return (
     <Col offset={22}>
       <Button type="primary" title="New" onClick={props.handleClick}>
@@ -69,7 +68,7 @@ export const FolderAddButton = props => {
   );
 };
 
-export const LeftCancelRightAddButtons = props => {
+export const LeftCancelRightAddButtons = (props) => {
   return (
     <Row style={{ margin: "3px" }}>
       <Button title="Back" onClick={props.handleCancelClick}>
@@ -87,7 +86,7 @@ export const LeftCancelRightAddButtons = props => {
   );
 };
 
-export const AddButton = props => {
+export const AddButton = (props) => {
   return (
     <Row style={{ margin: "3px" }}>
       <Button
@@ -102,9 +101,14 @@ export const AddButton = props => {
   );
 };
 
-export const TranslationAddButtons = props => {
+export const TranslationAddButtons = (props) => {
   return (
-    <Row gutter={8} type="flex" justify="space-between" style={{ margin: "3px" }}>
+    <Row
+      gutter={8}
+      type="flex"
+      justify="space-between"
+      style={{ margin: "3px" }}
+    >
       <Button
         title="Show Translations"
         type="primary"
@@ -124,7 +128,7 @@ export const TranslationAddButtons = props => {
   );
 };
 
-export const TranslationOrderAddButtons = props => {
+export const TranslationOrderAddButtons = (props) => {
   return (
     <Row
       type="flex"
@@ -159,7 +163,7 @@ export const TranslationOrderAddButtons = props => {
   );
 };
 
-export const SaveButton = props => {
+export const SaveButton = (props) => {
   return (
     <Button
       style={{ margin: "1px", backgroundColor: GREEN }}
@@ -172,7 +176,7 @@ export const SaveButton = props => {
   );
 };
 
-export const EditButton = props => {
+export const EditButton = (props) => {
   return (
     <Button
       style={{ margin: "1px" }}
@@ -185,7 +189,7 @@ export const EditButton = props => {
   );
 };
 
-export const DeleteButton = props => {
+export const DeleteButton = (props) => {
   return (
     <Button
       style={{ margin: "1px" }}
@@ -198,7 +202,7 @@ export const DeleteButton = props => {
   );
 };
 
-export const ViewButton = props => {
+export const ViewButton = (props) => {
   return (
     <Button
       style={{ margin: "1px" }}
@@ -211,7 +215,7 @@ export const ViewButton = props => {
   );
 };
 
-export const TranslationButton = props => {
+export const TranslationButton = (props) => {
   return (
     <Button type="primary" title="Translations" onClick={props.handleClick}>
       <GlobalOutlined />
@@ -219,7 +223,7 @@ export const TranslationButton = props => {
   );
 };
 
-export const CopyButton = props => {
+export const CopyButton = (props) => {
   return (
     <Button type="primary" title="Copy" onClick={props.handleClick}>
       <CopyOutlined />

@@ -1,5 +1,5 @@
-import React from "react";
 import { Typography } from "antd";
+import React from "react";
 
 export const QuestionText = ({ iq }) => {
   return (
@@ -9,7 +9,7 @@ export const QuestionText = ({ iq }) => {
           <i>
             <span
               dangerouslySetInnerHTML={{
-                __html: iq.before_text_instruction
+                __html: iq.before_text_instruction,
               }}
             />
           </i>
@@ -18,7 +18,7 @@ export const QuestionText = ({ iq }) => {
       <Typography.Paragraph>
         <span
           dangerouslySetInnerHTML={{
-            __html: iq.text
+            __html: iq.text,
           }}
         />
       </Typography.Paragraph>
@@ -27,7 +27,7 @@ export const QuestionText = ({ iq }) => {
           <i>
             <span
               dangerouslySetInnerHTML={{
-                __html: iq.after_text_instruction
+                __html: iq.after_text_instruction,
               }}
             />
           </i>
@@ -38,7 +38,7 @@ export const QuestionText = ({ iq }) => {
           <i>
             <span
               dangerouslySetInnerHTML={{
-                __html: iq.pop_up_instruction_text
+                __html: iq.pop_up_instruction_text,
               }}
             />
           </i>

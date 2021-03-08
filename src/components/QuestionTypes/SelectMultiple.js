@@ -1,6 +1,6 @@
+import { Checkbox } from "antd";
 import React from "react";
 import { hasOtherOption, isSelectMultiple } from "../../utils/Utils";
-import { Checkbox } from "antd";
 
 export const SelectMultiple = ({ iq }) => {
   if (!isSelectMultiple(iq)) return null;
@@ -11,7 +11,7 @@ export const SelectMultiple = ({ iq }) => {
         <Checkbox key={option.id}>
           <span
             dangerouslySetInnerHTML={{
-              __html: option.text.replace("<p>", "").replace("</p>", "")
+              __html: option.text.replace("<p>", "").replace("</p>", ""),
             }}
           />
         </Checkbox>

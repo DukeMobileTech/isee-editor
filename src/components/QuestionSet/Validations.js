@@ -1,6 +1,6 @@
 import React from "react";
 
-const Validations = props => {
+const Validations = (props) => {
   return <h1>Validations</h1>;
 };
 

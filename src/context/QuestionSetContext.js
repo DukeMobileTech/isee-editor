@@ -1,8 +1,8 @@
-import React, { useState, createContext } from "react";
+import React, { createContext, useState } from "react";
 
 export const QuestionSetContext = createContext();
 
-export const QuestionSetProvider = props => {
+export const QuestionSetProvider = (props) => {
   const [questionSets, setQuestionSets] = useState([]);
 
   return (

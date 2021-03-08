@@ -1,27 +1,25 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Divider, Table, Row, Button, Layout, Menu, Drawer } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
+import { Button, Divider, Drawer, Layout, Menu, Row, Table } from "antd";
+import React, { Fragment, useEffect, useState } from "react";
 import {
-  DeleteButton,
-  EditButton,
-  CopyButton,
-  LeftCancelButton
-} from "../../utils/Buttons";
-import {
+  copyScoreUnit,
   deleteScoreUnit,
   getScoreUnits,
-  copyScoreUnit
 } from "../../utils/api/score_unit";
-
-import NewScoreUnit from "./NewScoreUnit";
-import EditScoreUnit from "./EditScoreUnit";
+import {
+  CopyButton,
+  DeleteButton,
+  EditButton,
+  LeftCancelButton,
+} from "../../utils/Buttons";
+import { CenteredH3, CenteredH4, CenteredH5 } from "../../utils/Styles";
 import { customExpandIcon } from "../../utils/Utils";
-import { CenteredH4, CenteredH3, CenteredH5 } from "../../utils/Styles";
+import EditScoreUnit from "./EditScoreUnit";
+import NewScoreUnit from "./NewScoreUnit";
 
 const { Column } = Table;
 
-const ScoreUnits = props => {
+const ScoreUnits = (props) => {
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
@@ -33,11 +31,6 @@ const ScoreUnits = props => {
   const [scoreUnit, setScoreUnit] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
 
-  useEffect(() => {
-    fetchScoreUnits();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const fetchScoreUnits = async () => {
     const result = await getScoreUnits(
       projectId,
@@ -48,15 +41,20 @@ const ScoreUnits = props => {
     setScoreUnits(result.data);
   };
 
-  const handleSubdomainClick = item => {
-    const clicked = subdomains.find(sd => sd.id === Number(item.key));
+  useEffect(() => {
+    fetchScoreUnits();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSubdomainClick = (item) => {
+    const clicked = subdomains.find((sd) => sd.id === Number(item.key));
     setSubdomain(clicked);
     getScoreUnits(
       projectId,
       instrumentId,
       scoreScheme.id,
       clicked.id
-    ).then(res => setScoreUnits(res.data));
+    ).then((res) => setScoreUnits(res.data));
   };
 
   const onNew = () => {
@@ -73,28 +71,28 @@ const ScoreUnits = props => {
     fetchScoreUnits();
   };
 
-  const handleEditScoreUnit = scoreUnit => {
+  const handleEditScoreUnit = (scoreUnit) => {
     setScoreUnit(scoreUnit);
     setShowEdit(true);
   };
 
-  const handleCopyUnit = scoreUnit => {
+  const handleCopyUnit = (scoreUnit) => {
     copyScoreUnit(projectId, instrumentId, scoreScheme.id, scoreUnit).then(
-      response => {
+      (response) => {
         scoreUnits.unshift(response.data);
         setScoreUnits([...scoreUnits]);
       }
     );
   };
 
-  const handleDeleteScoreUnit = scoreUnit => {
+  const handleDeleteScoreUnit = (scoreUnit) => {
     deleteScoreUnit(projectId, instrumentId, scoreScheme.id, scoreUnit)
-      .then(res => {
+      .then((res) => {
         let index = scoreUnits.indexOf(scoreUnit);
         scoreUnits.splice(index, 1);
         setScoreUnits([...scoreUnits]);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -109,7 +107,7 @@ const ScoreUnits = props => {
           defaultOpenKeys={[`${subdomain.id}`]}
           onClick={handleSubdomainClick}
         >
-          {subdomains.map(item => {
+          {subdomains.map((item) => {
             return (
               <Menu.Item key={`${item.id}`}>
                 {`${item.title} ${item.name}`}
@@ -135,20 +133,20 @@ const ScoreUnits = props => {
         </Row>
         <Table
           dataSource={scoreUnits}
-          rowKey={su => su.id}
+          rowKey={(su) => su.id}
           pagination={{
-            defaultPageSize: 50
+            defaultPageSize: 50,
           }}
-          expandedRowRender={scoreUnit => (
+          expandedRowRender={(scoreUnit) => (
             <Fragment>
               {scoreUnit.notes && (
                 <Row style={{ marginBottom: "25px" }}>{scoreUnit.notes}</Row>
               )}
               <Table
                 dataSource={scoreUnit.option_scores}
-                rowKey={optionScore => optionScore.id}
+                rowKey={(optionScore) => optionScore.id}
                 pagination={{
-                  defaultPageSize: 50
+                  defaultPageSize: 50,
                 }}
               >
                 <Table.Column
@@ -161,7 +159,7 @@ const ScoreUnits = props => {
               </Table>
             </Fragment>
           )}
-          expandIcon={props => customExpandIcon(props)}
+          expandIcon={(props) => customExpandIcon(props)}
         >
           <Column title="Title" dataIndex="title" />
           <Column title="Type" dataIndex="score_type" />
@@ -182,6 +180,7 @@ const ScoreUnits = props => {
                 <CopyButton
                   handleClick={() => {
                     if (
+                      // eslint-disable-next-line no-alert
                       window.confirm(
                         `Are you sure you want to make a copy of ${scoreUnit.title}?`
                       )
@@ -193,6 +192,7 @@ const ScoreUnits = props => {
                 <DeleteButton
                   handleClick={() => {
                     if (
+                      // eslint-disable-next-line no-alert
                       window.confirm(
                         `Are you sure you want to delete ${scoreUnit.title}?`
                       )
@@ -212,7 +212,7 @@ const ScoreUnits = props => {
           onClose={onCancelNew}
           visible={showNew}
           key="new"
-          destroyOnClose={true}
+          destroyOnClose
         >
           <NewScoreUnit
             subdomain={subdomain}
@@ -233,7 +233,7 @@ const ScoreUnits = props => {
           onClose={onCancelEdit}
           visible={showEdit}
           key="edit"
-          destroyOnClose={true}
+          destroyOnClose
         >
           <EditScoreUnit
             scoreUnit={scoreUnit}

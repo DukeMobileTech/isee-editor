@@ -1,24 +1,22 @@
-import * as Yup from "yup";
-
-import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
-import { AlertErrorMessage } from "../../utils/Utils";
+import { Form as AntForm, Modal } from "antd";
 import { Field, Form, Formik } from "formik";
+import React from "react";
+import * as Yup from "yup";
 import {
   createQuestionSet,
-  updateQuestionSet
+  updateQuestionSet,
 } from "../../utils/api/question_set";
-
-import { Form as AntForm, Modal } from "antd";
-import React from "react";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
 import { modalWidth } from "../../utils/Constants";
+import { AlertErrorMessage } from "../../utils/Utils";
 
 const FormItem = AntForm.Item;
 
 const QuestionSetSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required")
+  title: Yup.string().required("Title is required"),
 });
 
-const QuestionSetForm = props => {
+const QuestionSetForm = (props) => {
   const questionSet = props.questionSet;
   const title = questionSet
     ? `Editing ${questionSet.title}`
@@ -27,30 +25,30 @@ const QuestionSetForm = props => {
   return (
     <Modal
       title={title}
-      visible={true}
+      visible
       footer={null}
-      destroyOnClose={true}
+      destroyOnClose
       onCancel={props.handleCancel}
       width={modalWidth}
     >
       <Formik
         initialValues={{
           id: (questionSet && questionSet.id) || null,
-          title: (questionSet && questionSet.title) || ""
+          title: (questionSet && questionSet.title) || "",
         }}
         validationSchema={QuestionSetSchema}
         onSubmit={(values, { setErrors }) => {
           const questionSet = {
-            title: values.title
+            title: values.title,
           };
           if (values.id) {
             updateQuestionSet(values.id, questionSet)
-              .then(response => {
+              .then((response) => {
                 if (response.status === 204) {
                   props.fetchQuestionSets();
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });
@@ -59,12 +57,12 @@ const QuestionSetForm = props => {
               });
           } else {
             createQuestionSet(questionSet)
-              .then(response => {
+              .then((response) => {
                 if (response.status === 201) {
                   props.fetchQuestionSets();
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });

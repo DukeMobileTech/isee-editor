@@ -1,20 +1,20 @@
-import React, { Fragment } from "react";
 import { Divider } from "antd";
+import React, { Fragment } from "react";
+import { DeleteButton, EditButton } from "../../utils/Buttons";
 
-import { EditButton, DeleteButton } from "../../utils/Buttons";
-
-export const EditDeleteBtnGroup = props => (
+export const EditDeleteBtnGroup = (props) => (
   <Fragment>
     <EditButton
-      handleClick={event => {
+      handleClick={(event) => {
         event.stopPropagation();
         props.handleEdit(props.object);
       }}
     />
     <Divider type="vertical" />
     <DeleteButton
-      handleClick={event => {
+      handleClick={(event) => {
         event.stopPropagation();
+        // eslint-disable-next-line no-alert
         if (window.confirm(`Are you sure you want to delete ${props.message}?`))
           props.handleDelete(props.object);
       }}

@@ -1,14 +1,13 @@
+import { ConnectedRouter } from "connected-react-router";
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { ConnectedRouter } from "connected-react-router";
-
-import Error from "./Error";
-import Instrument from "./Instrument/Instrument";
-import Bank from "./Bank";
-import ScoreScheme from "./ScoreScheme/ScoreScheme";
 import Projects from "../containers/Project";
 import Instruments from "../containers/Project/show";
 import { history } from "../redux/store";
+import Bank from "./Bank";
+import Error from "./Error";
+import Instrument from "./Instrument/Instrument";
+import ScoreScheme from "./ScoreScheme/ScoreScheme";
 
 const Router = () => {
   return (

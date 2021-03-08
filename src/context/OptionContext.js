@@ -1,8 +1,8 @@
-import React, { useState, createContext } from "react";
+import React, { createContext, useState } from "react";
 
 export const OptionContext = createContext();
 
-export const OptionProvider = props => {
+export const OptionProvider = (props) => {
   const [options, setOptions] = useState([]);
 
   return (

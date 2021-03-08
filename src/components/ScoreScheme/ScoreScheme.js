@@ -1,21 +1,20 @@
-import { Tabs, Row, Button, Spin } from "antd";
-import React, { Fragment, useState, useEffect } from "react";
 import {
-  WarningOutlined,
+  DownloadOutlined,
   OrderedListOutlined,
   ProjectOutlined,
-  DownloadOutlined
+  WarningOutlined,
 } from "@ant-design/icons";
-
-import ScoreUnits from "./ScoreUnits";
-import { CenteredH3 } from "../../utils/Styles";
-import Domains from "../Domain/Domains";
+import { Button, Row, Spin, Tabs } from "antd";
+import fileDownload from "js-file-download";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   getScoreScheme,
-  getScoreSchemeExcel
+  getScoreSchemeExcel,
 } from "../../utils/api/score_scheme";
-import fileDownload from "js-file-download";
+import { CenteredH3 } from "../../utils/Styles";
+import Domains from "../Domain/Domains";
 import RedFlags from "../RedFlag/RedFlags";
+import ScoreUnits from "./ScoreUnits";
 
 const ScoreScheme = ({ match }) => {
   const projectId = match.params.project_id;
@@ -29,7 +28,7 @@ const ScoreScheme = ({ match }) => {
     const fetchExcel = () => {
       if (download) {
         setLoading(true);
-        getScoreSchemeExcel(projectId, instrumentId, id).then(results => {
+        getScoreSchemeExcel(projectId, instrumentId, id).then((results) => {
           setLoading(false);
           fileDownload(results.data, `${scoreScheme.title}.xlsx`);
         });
@@ -42,7 +41,7 @@ const ScoreScheme = ({ match }) => {
   useEffect(() => {
     const fetchScoreScheme = () => {
       setLoading(true);
-      getScoreScheme(projectId, instrumentId, id).then(results => {
+      getScoreScheme(projectId, instrumentId, id).then((results) => {
         setScoreScheme(results.data);
         setLoading(false);
       });

@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
 import { Divider, Spin, Table } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { ProjectContext } from "../../context/ProjectContext";
 import {
   deleteInstrument,
-  loadInstruments
+  loadInstruments,
 } from "../../redux/actions/instruments";
-import { CenteredH4 } from "../../utils/Styles";
-import { Link } from "react-router-dom";
 import { DeleteButton, EditButton, FolderAddButton } from "../../utils/Buttons";
+import { CenteredH4 } from "../../utils/Styles";
 import InstrumentForm from "../Instrument/InstrumentForm";
-import { ProjectContext } from "../../context/ProjectContext";
 
 const { Column } = Table;
 
@@ -18,7 +18,7 @@ const Instruments = ({
   instruments,
   projectId,
   loadInstruments,
-  deleteInstrument
+  deleteInstrument,
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [instrument, setInstrument] = useState(null);
@@ -32,7 +32,7 @@ const Instruments = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
-  const handleEditInstrument = instrument => {
+  const handleEditInstrument = (instrument) => {
     setInstrument(instrument);
     setShowForm(true);
   };
@@ -59,7 +59,7 @@ const Instruments = ({
     return (
       <Spin spinning={isLoading}>
         <CenteredH4>Instruments</CenteredH4>
-        <Table dataSource={instruments} rowKey={instrument => instrument.id}>
+        <Table dataSource={instruments} rowKey={(instrument) => instrument.id}>
           <Column
             title="Title"
             dataIndex="title"
@@ -100,6 +100,7 @@ const Instruments = ({
                 <DeleteButton
                   handleClick={() => {
                     if (
+                      // eslint-disable-next-line no-alert
                       window.confirm(
                         `Are you sure you want to delete ${instrument.title}?`
                       )
@@ -125,15 +126,15 @@ function mapStateToProps(state, ownProps) {
     instruments,
     projectId,
     loadInstruments,
-    deleteInstrument
+    deleteInstrument,
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    loadInstruments: projectId => dispatch(loadInstruments(projectId)),
+    loadInstruments: (projectId) => dispatch(loadInstruments(projectId)),
     deleteInstrument: (projectId, id) =>
-      dispatch(deleteInstrument(projectId, id))
+      dispatch(deleteInstrument(projectId, id)),
   };
 };
 

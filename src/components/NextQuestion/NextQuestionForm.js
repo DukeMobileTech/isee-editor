@@ -1,17 +1,15 @@
-import * as Yup from "yup";
-
-import { RightSubmitButton, LeftCancelButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow, hasNumberResponses } from "../../utils/Utils";
 import { Col, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
+import React, { Fragment, useContext } from "react";
+import * as Yup from "yup";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import {
   createNextQuestion,
-  updateNextQuestion
+  updateNextQuestion,
 } from "../../utils/api/next_question";
-
-import React, { useContext, Fragment } from "react";
-import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
 import { valueOperators } from "../../utils/Constants";
+import { AlertErrorMessage, DRow, hasNumberResponses } from "../../utils/Utils";
 
 const { Text } = Typography;
 
@@ -19,13 +17,13 @@ const NextQuestionSchema = Yup.object().shape({
   instrument_question_id: Yup.number().required("Question Id is required"),
   question_identifier: Yup.string().required("Question is required"),
   option_identifier: Yup.string().when("value", {
-    is: val => val === null || val === "",
-    then: Yup.string().required("Option is required")
+    is: (val) => val === null || val === "",
+    then: Yup.string().required("Option is required"),
   }),
-  next_question_identifier: Yup.string().required("Next Question is required")
+  next_question_identifier: Yup.string().required("Next Question is required"),
 });
 
-const NextQuestionForm = props => {
+const NextQuestionForm = (props) => {
   const nextQuestion = props.nextQuestion;
   const instrumentQuestion = props.instrumentQuestion;
   // eslint-disable-next-line no-unused-vars
@@ -42,7 +40,7 @@ const NextQuestionForm = props => {
         value: nextQuestion.value || "",
         next_question_identifier: nextQuestion.next_question_identifier || "",
         complete_survey: nextQuestion.complete_survey || false,
-        value_operator: nextQuestion.value_operator || ""
+        value_operator: nextQuestion.value_operator || "",
       }}
       validationSchema={NextQuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -54,7 +52,7 @@ const NextQuestionForm = props => {
           value: values.value,
           next_question_identifier: values.next_question_identifier,
           complete_survey: values.complete_survey,
-          value_operator: values.value_operator
+          value_operator: values.value_operator,
         };
         if (editNextQuestion.id) {
           updateNextQuestion(
@@ -62,12 +60,12 @@ const NextQuestionForm = props => {
             instrumentQuestion.instrument_id,
             editNextQuestion
           )
-            .then(response => {
+            .then((response) => {
               if (response.status === 204) {
                 props.fetchNextQuestions();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         } else {
@@ -77,12 +75,12 @@ const NextQuestionForm = props => {
             instrumentQuestion.id,
             editNextQuestion
           )
-            .then(response => {
+            .then((response) => {
               if (response.status === 201) {
                 props.fetchNextQuestions();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         }
@@ -99,8 +97,8 @@ const NextQuestionForm = props => {
                 name="option_identifier"
                 component="select"
               >
-                <option></option>
-                {instrumentQuestion.options.map(option => {
+                <option />
+                {instrumentQuestion.options.map((option) => {
                   return (
                     <option
                       key={option.id}
@@ -129,8 +127,8 @@ const NextQuestionForm = props => {
                     name="value_operator"
                     component="select"
                   >
-                    <option key="EMPTY"></option>
-                    {valueOperators.map(operator => {
+                    <option key="EMPTY" />
+                    {valueOperators.map((operator) => {
                       return (
                         <option
                           key={operator}
@@ -170,14 +168,14 @@ const NextQuestionForm = props => {
                 name="next_question_identifier"
                 component="select"
               >
-                <option></option>
+                <option />
                 {instrumentQuestions
                   .filter(
-                    iq =>
+                    (iq) =>
                       iq.number_in_instrument >
                       instrumentQuestion.number_in_instrument
                   )
-                  .map(iq => {
+                  .map((iq) => {
                     return (
                       <option
                         key={iq.id}

@@ -1,16 +1,16 @@
-import { takeEvery, call, put } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import {
-  getInstruments,
   createInstrument,
+  deleteInstrument,
+  getInstruments,
   updateInstrument,
-  deleteInstrument
 } from "../../utils/api/instrument";
 import {
   addInstrument,
   removeInstrument,
-  setInstruments,
   setInstrument,
-  setInstrumentsError
+  setInstruments,
+  setInstrumentsError,
 } from "../actions/instruments";
 import { INSTRUMENTS } from "../constants/instruments";
 

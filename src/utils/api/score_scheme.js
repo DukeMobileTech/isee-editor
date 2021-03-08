@@ -47,8 +47,8 @@ export const getScoreSchemeExcel = (projectId, instrumentId, id) => {
     {
       responseType: "arraybuffer",
       headers: {
-        Accept: "application/xlsx"
-      }
+        Accept: "application/xlsx",
+      },
     }
   );
 };

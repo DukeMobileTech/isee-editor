@@ -1,17 +1,17 @@
-import { DeleteButton, EditButton, AddButton } from "../../utils/Buttons";
 import { Divider, Table } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   deleteScoreScheme,
-  getScoreSchemes
+  getScoreSchemes,
 } from "../../utils/api/score_scheme";
-import ScoreSchemeForm from "./ScoreSchemeForm";
+import { AddButton, DeleteButton, EditButton } from "../../utils/Buttons";
 import ScoreScheme from "./ScoreScheme";
-import { Link } from "react-router-dom";
+import ScoreSchemeForm from "./ScoreSchemeForm";
 
 const { Column } = Table;
 
-const ScoreSchemes = props => {
+const ScoreSchemes = (props) => {
   const projectId = props.projectId;
   const instrument = props.instrument;
   const [scoreSchemes, setScoreSchemes] = useState([]);
@@ -19,10 +19,10 @@ const ScoreSchemes = props => {
   const [showForm, setShowForm] = useState(false);
   const [showScheme, setShowScheme] = useState(false);
 
-  useEffect(() => {
-    fetchScoreSchemes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleCancel = () => {
+    setShowForm(false);
+    setShowScheme(false);
+  };
 
   const fetchScoreSchemes = async () => {
     handleCancel();
@@ -30,29 +30,29 @@ const ScoreSchemes = props => {
     setScoreSchemes(result.data);
   };
 
+  useEffect(() => {
+    fetchScoreSchemes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleNewScheme = () => {
     setShowForm(true);
     setScoreScheme(null);
   };
 
-  const handleEditScheme = scheme => {
+  const handleEditScheme = (scheme) => {
     setScoreScheme(scheme);
     setShowForm(true);
   };
 
-  const handleCancel = () => {
-    setShowForm(false);
-    setShowScheme(false);
-  };
-
-  const handleDeleteScheme = scheme => {
+  const handleDeleteScheme = (scheme) => {
     deleteScoreScheme(instrument.project_id, instrument.id, scheme.id)
-      .then(results => {
+      .then((results) => {
         let index = scoreSchemes.indexOf(scheme);
         scoreSchemes.splice(index, 1);
         setScoreSchemes([...scoreSchemes]);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -78,7 +78,7 @@ const ScoreSchemes = props => {
     return (
       <Fragment>
         <AddButton handleClick={handleNewScheme} />
-        <Table dataSource={scoreSchemes} rowKey={scheme => scheme.id}>
+        <Table dataSource={scoreSchemes} rowKey={(scheme) => scheme.id}>
           <Column
             title="Title"
             dataIndex="title"
@@ -106,6 +106,7 @@ const ScoreSchemes = props => {
                 <DeleteButton
                   handleClick={() => {
                     if (
+                      // eslint-disable-next-line no-alert
                       window.confirm(
                         `Are you sure you want to delete ${scheme.title}?`
                       )

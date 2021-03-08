@@ -1,17 +1,17 @@
 import { PROJECTS } from "../constants/projects";
 
 const loadProjects = () => ({
-  type: PROJECTS.LOAD
+  type: PROJECTS.LOAD,
 });
 
-const setProjects = projects => ({
+const setProjects = (projects) => ({
   type: PROJECTS.LOAD_SUCCESS,
-  projects
+  projects,
 });
 
-const setProjectsError = error => ({
+const setProjectsError = (error) => ({
   type: PROJECTS.LOAD_FAIL,
-  error
+  error,
 });
 
 export { loadProjects, setProjects, setProjectsError };

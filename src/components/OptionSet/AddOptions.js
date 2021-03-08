@@ -17,26 +17,6 @@ const AddOptions = (props) => {
   const values = props.values;
   const [newOption, setNewOption] = useState(false);
 
-  const onFinish = (values) => {
-    let option = {
-      identifier: values.identifier,
-      text: values.text,
-    };
-    createOption(option).then((response) => {
-      if (response.status === 201) {
-        option = response.data;
-        props.setOptions([option, ...options]);
-        addOption(option);
-        setNewOption(!newOption);
-        props.setAddOptions(!props.addOptions);
-      }
-    });
-  };
-
-  const addNewOption = () => {
-    setNewOption(!newOption);
-  };
-
   const addOption = (option) => {
     const copy = [
       ...values.option_in_option_sets,
@@ -56,6 +36,26 @@ const AddOptions = (props) => {
       special: values.special,
       option_in_option_sets: copy,
     });
+  };
+
+  const onFinish = (values) => {
+    let option = {
+      identifier: values.identifier,
+      text: values.text,
+    };
+    createOption(option).then((response) => {
+      if (response.status === 201) {
+        option = response.data;
+        props.setOptions([option, ...options]);
+        addOption(option);
+        setNewOption(!newOption);
+        props.setAddOptions(!props.addOptions);
+      }
+    });
+  };
+
+  const addNewOption = () => {
+    setNewOption(!newOption);
   };
 
   const NewOption = () => {

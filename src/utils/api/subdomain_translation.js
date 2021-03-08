@@ -12,7 +12,7 @@ export const getSubdomainTranslations = (
   return instance.get(
     `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}/subdomain_translations`,
     {
-      params: { language: language }
+      params: { language: language },
     }
   );
 };
@@ -26,7 +26,7 @@ export const createSubdomainTranslation = (
   return instance.post(
     `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}/subdomain_translations`,
     {
-      subdomain_translation: translation
+      subdomain_translation: translation,
     }
   );
 };
@@ -40,7 +40,7 @@ export const updateSubdomainTranslation = (
   return instance.put(
     `/projects/${projectId}/instruments/${instrumentId}/score_schemes/${domain.score_scheme_id}/domains/${domain.id}/subdomain_translations/${translation.id}`,
     {
-      subdomain_translation: translation
+      subdomain_translation: translation,
     }
   );
 };

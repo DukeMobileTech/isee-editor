@@ -1,19 +1,17 @@
 import { Col, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
 import React from "react";
-import { createSubdomain, updateSubdomain } from "../../utils/api/subdomain";
-
 import * as Yup from "yup";
-
+import { createSubdomain, updateSubdomain } from "../../utils/api/subdomain";
 import { RightSubmitButton } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
-import { Field, Form, Formik } from "formik";
 
 const { Text } = Typography;
 const SubdomainSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required")
+  title: Yup.string().required("Title is required"),
 });
 
-const SubdomainForm = props => {
+const SubdomainForm = (props) => {
   const subdomain = props.subdomain;
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
@@ -29,15 +27,15 @@ const SubdomainForm = props => {
         id: (subdomain && subdomain.id) || null,
         title: (subdomain && subdomain.title) || "",
         name: (subdomain && subdomain.name) || "",
-        domain_id: props.domain.id
+        domain_id: props.domain.id,
       }}
       validationSchema={SubdomainSchema}
-      onSubmit={values => {
+      onSubmit={(values) => {
         const obj = {
           id: values.id,
           title: values.title,
           name: values.name,
-          domain_id: props.domain.id
+          domain_id: props.domain.id,
         };
         if (values.id) {
           updateSubdomain(
@@ -45,14 +43,14 @@ const SubdomainForm = props => {
             instrumentId,
             props.scoreScheme.id,
             obj
-          ).then(res => onCancel());
+          ).then((res) => onCancel());
         } else {
           createSubdomain(
             projectId,
             instrumentId,
             props.scoreScheme.id,
             obj
-          ).then(res => onCancel());
+          ).then((res) => onCancel());
         }
       }}
       render={() => (

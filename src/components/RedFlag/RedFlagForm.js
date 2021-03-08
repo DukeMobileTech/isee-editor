@@ -1,15 +1,13 @@
-import * as Yup from "yup";
-
-import { RightSubmitButton, LeftCancelButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Col, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-
 import React, { useContext } from "react";
-import { createRedFlag, updateRedFlag } from "../../utils/api/red_flag";
+import * as Yup from "yup";
 import { InstructionContext } from "../../context/InstructionContext";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
+import { createRedFlag, updateRedFlag } from "../../utils/api/red_flag";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import { AlertErrorMessage, DRow } from "../../utils/Utils";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -17,13 +15,13 @@ const { Option } = Select;
 const RedFlagSchema = Yup.object().shape({
   instrument_question_id: Yup.number().required("Question is required"),
   option_identifier: Yup.string().when("value", {
-    is: val => val === null || val === "",
-    then: Yup.string().required("Option is required")
+    is: (val) => val === null || val === "",
+    then: Yup.string().required("Option is required"),
   }),
-  instruction_id: Yup.number().required("Instruction is required")
+  instruction_id: Yup.number().required("Instruction is required"),
 });
 
-const RedFlagForm = props => {
+const RedFlagForm = (props) => {
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
   const redFlag = props.redFlag;
@@ -46,7 +44,7 @@ const RedFlagForm = props => {
         score_scheme_id: (redFlag && redFlag.score_scheme_id) || scoreScheme.id,
         option_identifier: (redFlag && redFlag.option_identifier) || "",
         instruction_id: (redFlag && redFlag.instruction_id) || "",
-        selected: redFlag ? redFlag.selected : true
+        selected: redFlag ? redFlag.selected : true,
       }}
       validationSchema={RedFlagSchema}
       onSubmit={(values, { setErrors }) => {
@@ -56,26 +54,26 @@ const RedFlagForm = props => {
           score_scheme_id: values.score_scheme_id,
           option_identifier: values.option_identifier,
           instruction_id: values.instruction_id,
-          selected: values.selected
+          selected: values.selected,
         };
         if (editRedFlag.id) {
           updateRedFlag(projectId, instrumentId, scoreScheme.id, editRedFlag)
-            .then(response => {
+            .then((response) => {
               if (response.status === 204) {
                 props.fetchRedFlags();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         } else {
           createRedFlag(projectId, instrumentId, scoreScheme.id, editRedFlag)
-            .then(response => {
+            .then((response) => {
               if (response.status === 201) {
                 props.fetchRedFlags();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         }
@@ -92,9 +90,9 @@ const RedFlagForm = props => {
                 name="instrument_question_id"
                 component="select"
               >
-                <option></option>
+                <option />
                 {instrumentQuestions &&
-                  instrumentQuestions.map(iq => {
+                  instrumentQuestions.map((iq) => {
                     return (
                       <option
                         key={iq.id}
@@ -121,18 +119,19 @@ const RedFlagForm = props => {
                 name="option_identifier"
                 component="select"
               >
-                <option></option>
+                <option />
                 {values.instrument_question_id &&
                   optionSets &&
                   optionSets
                     .find(
-                      os =>
+                      (os) =>
                         os.id ===
                         instrumentQuestions.find(
-                          iq => iq.id === Number(values.instrument_question_id)
+                          (iq) =>
+                            iq.id === Number(values.instrument_question_id)
                         ).option_set_id
                     )
-                    .option_in_option_sets.map(oios => {
+                    .option_in_option_sets.map((oios) => {
                       return (
                         <option
                           key={oios.option.id}
@@ -159,11 +158,11 @@ const RedFlagForm = props => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                     showSearch
                     allowClear
                     optionFilterProp="children"
-                    onChange={value => {
+                    onChange={(value) => {
                       if (value === undefined) {
                         value = null;
                       }
@@ -176,8 +175,8 @@ const RedFlagForm = props => {
                         .indexOf(input.toLowerCase()) >= 0
                     }
                   >
-                    <Option value=""></Option>
-                    {instructions.map(instruction => {
+                    <Option value="" />
+                    {instructions.map((instruction) => {
                       return (
                         <Option
                           key={instruction.id}

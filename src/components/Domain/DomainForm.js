@@ -1,18 +1,17 @@
 import { Col, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
 import React from "react";
-import { createDomain, updateDomain } from "../../utils/api/domain";
 import * as Yup from "yup";
-
+import { createDomain, updateDomain } from "../../utils/api/domain";
 import { RightSubmitButton } from "../../utils/Buttons";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
-import { Field, Form, Formik } from "formik";
 
 const { Text } = Typography;
 const DomainSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required")
+  title: Yup.string().required("Title is required"),
 });
 
-const DomainForm = props => {
+const DomainForm = (props) => {
   const domain = props.domain;
 
   return (
@@ -21,28 +20,28 @@ const DomainForm = props => {
         id: (domain && domain.id) || null,
         title: (domain && domain.title) || "",
         score_scheme_id: props.scoreSchemeId,
-        name: (domain && domain.name) || ""
+        name: (domain && domain.name) || "",
       }}
       validationSchema={DomainSchema}
-      onSubmit={values => {
+      onSubmit={(values) => {
         const domainObj = {
           id: values.id,
           title: values.title,
           name: values.name,
-          score_scheme_id: props.scoreSchemeId
+          score_scheme_id: props.scoreSchemeId,
         };
         if (values.id) {
           updateDomain(
             props.projectId,
             props.instrumentId,
             domainObj
-          ).then(res => props.fetchDomains());
+          ).then((res) => props.fetchDomains());
         } else {
           createDomain(
             props.projectId,
             props.instrumentId,
             domainObj
-          ).then(res => props.fetchDomains());
+          ).then((res) => props.fetchDomains());
         }
       }}
       render={() => (

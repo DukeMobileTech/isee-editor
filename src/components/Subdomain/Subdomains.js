@@ -1,29 +1,28 @@
-import React, { Fragment, useState } from "react";
+import { GlobalOutlined, PlusOutlined } from "@ant-design/icons";
 import {
-  Divider,
   Button,
-  Row,
+  Divider,
+  Drawer,
   Layout,
   Menu,
-  Drawer,
+  Row,
   Table,
-  Typography
+  Typography,
 } from "antd";
-import { PlusOutlined, GlobalOutlined } from "@ant-design/icons";
-
-import ScoreUnits from "../ScoreUnit/ScoreUnits";
-import SubdomainForm from "./SubdomainForm";
-import { deleteSubdomain } from "../../utils/api/subdomain";
-import { CenteredH4, CenteredH3 } from "../../utils/Styles";
+import React, { Fragment, useState } from "react";
 import { getDomain } from "../../utils/api/domain";
-import Translations from "../SubdomainTranslation/Translations";
+import { deleteSubdomain } from "../../utils/api/subdomain";
 import {
   DeleteButton,
   EditButton,
-  LeftCancelButton
+  LeftCancelButton,
 } from "../../utils/Buttons";
+import { CenteredH3, CenteredH4 } from "../../utils/Styles";
+import ScoreUnits from "../ScoreUnit/ScoreUnits";
+import Translations from "../SubdomainTranslation/Translations";
+import SubdomainForm from "./SubdomainForm";
 
-const Subdomains = props => {
+const Subdomains = (props) => {
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
@@ -33,6 +32,12 @@ const Subdomains = props => {
   const [subdomain, setSubdomain] = useState(null);
   const [show, setShow] = useState(false);
   const [showTranslations, setShowTranslations] = useState(false);
+
+  const handleCancel = () => {
+    setVisible(false);
+    setShow(false);
+    setSubdomain(null);
+  };
 
   const fetchDomain = async () => {
     handleCancel();
@@ -46,14 +51,8 @@ const Subdomains = props => {
     setSubdomains(result.data.subdomains);
   };
 
-  const handleCancel = () => {
-    setVisible(false);
-    setShow(false);
-    setSubdomain(null);
-  };
-
-  const handleDomainClick = item => {
-    const clicked = props.domains.find(dom => dom.id === Number(item.key));
+  const handleDomainClick = (item) => {
+    const clicked = props.domains.find((dom) => dom.id === Number(item.key));
     setDomain(clicked);
     setSubdomains(clicked.subdomains);
   };
@@ -63,18 +62,18 @@ const Subdomains = props => {
     setVisible(true);
   };
 
-  const handleShowSubdomain = subdomain => {
+  const handleShowSubdomain = (subdomain) => {
     setSubdomain(subdomain);
     setShow(true);
   };
 
-  const handleDeleteSubdomain = subdomain => {
+  const handleDeleteSubdomain = (subdomain) => {
     deleteSubdomain(
       projectId,
       instrumentId,
       scoreScheme.id,
       subdomain
-    ).then(res => fetchDomain());
+    ).then((res) => fetchDomain());
   };
 
   const handleTranslations = () => {
@@ -118,7 +117,7 @@ const Subdomains = props => {
             defaultOpenKeys={[`${domain.id}`]}
             onClick={handleDomainClick}
           >
-            {props.domains.map(domainItem => {
+            {props.domains.map((domainItem) => {
               return (
                 <Menu.Item key={`${domainItem.id}`}>
                   {`${domainItem.title} ${domainItem.name}`}
@@ -157,7 +156,7 @@ const Subdomains = props => {
             size="small"
             bordered
             dataSource={subdomains}
-            rowKey={sd => sd.id}
+            rowKey={(sd) => sd.id}
             pagination={{ defaultPageSize: 25 }}
           >
             <Table.Column
@@ -186,6 +185,7 @@ const Subdomains = props => {
                   <DeleteButton
                     handleClick={() => {
                       if (
+                        // eslint-disable-next-line no-alert
                         window.confirm(
                           `Are you sure you want to delete ${sd.title}?`
                         )
@@ -205,7 +205,7 @@ const Subdomains = props => {
             onClose={handleCancel}
             visible={visible}
             key={"right"}
-            destroyOnClose={true}
+            destroyOnClose
           >
             <SubdomainForm
               domain={domain}

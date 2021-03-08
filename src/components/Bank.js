@@ -1,27 +1,26 @@
-import React, { useContext, useEffect } from "react";
-import { Tabs } from "antd";
 import {
   CheckSquareOutlined,
   OrderedListOutlined,
   QuestionOutlined,
+  StopOutlined,
   UnorderedListOutlined,
-  StopOutlined
 } from "@ant-design/icons";
-
-import QuestionSets from "./QuestionSet/QuestionSets";
-import OptionSets from "./OptionSet/OptionSets";
-import Validations from "./QuestionSet/Validations";
-import Instructions from "./Instruction/Instructions";
-import { QuestionSetContext } from "../context/QuestionSetContext";
-import Options from "./Option/Options";
-import Questions from "./Question/Questions";
-import { getQuestionSets } from "../utils/api/question_set";
-import { getInstructions } from "../utils/api/instruction";
-import { getOptionSets } from "../utils/api/option_set";
-import { OptionSetContext } from "../context/OptionSetContext";
+import { Tabs } from "antd";
+import React, { useContext, useEffect } from "react";
 import { InstructionContext } from "../context/InstructionContext";
-import { getOptions } from "../utils/api/option";
 import { OptionContext } from "../context/OptionContext";
+import { OptionSetContext } from "../context/OptionSetContext";
+import { QuestionSetContext } from "../context/QuestionSetContext";
+import { getInstructions } from "../utils/api/instruction";
+import { getOptions } from "../utils/api/option";
+import { getOptionSets } from "../utils/api/option_set";
+import { getQuestionSets } from "../utils/api/question_set";
+import Instructions from "./Instruction/Instructions";
+import Options from "./Option/Options";
+import OptionSets from "./OptionSet/OptionSets";
+import Questions from "./Question/Questions";
+import QuestionSets from "./QuestionSet/QuestionSets";
+import Validations from "./QuestionSet/Validations";
 
 const { TabPane } = Tabs;
 
@@ -71,14 +70,14 @@ const Bank = ({ match, history }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onTabSelection = key => {
+  const onTabSelection = (key) => {
     history.push(`/banks/${key}`);
   };
 
   const questionSubset = (folder, questionSet) => {
     history.push({
       pathname: "/banks/questions",
-      state: { folder, questionSet }
+      state: { folder, questionSet },
     });
     window.location.reload(false);
   };

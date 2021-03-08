@@ -1,7 +1,7 @@
-import React from "react";
 import { Alert } from "antd";
+import React from "react";
 
-const ErrorAlert = props => {
+const ErrorAlert = (props) => {
   return (
     <Alert
       message="Error"

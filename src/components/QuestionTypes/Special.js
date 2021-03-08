@@ -1,5 +1,5 @@
-import React from "react";
 import { Radio } from "antd";
+import React from "react";
 
 export const Special = ({ iq }) => {
   if (iq.special_options.length === 0) return null;
@@ -10,7 +10,7 @@ export const Special = ({ iq }) => {
         <Radio key={option.id} value={option.text}>
           <span
             dangerouslySetInnerHTML={{
-              __html: option.text.replace("<p>", "").replace("</p>", "")
+              __html: option.text.replace("<p>", "").replace("</p>", ""),
             }}
           />
         </Radio>

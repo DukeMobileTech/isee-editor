@@ -1,13 +1,12 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Button, Spin, Table, Row, Drawer } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
-import { getColumnSearchProps } from "../utils/ColumnSearch";
-import RedFlagForm from "./RedFlagForm";
-import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
+import { Button, Drawer, Row, Spin, Table } from "antd";
+import React, { Fragment, useEffect, useState } from "react";
 import { deleteRedFlag, getRedFlags } from "../../utils/api/red_flag";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
+import RedFlagForm from "./RedFlagForm";
 
-const RedFlags = props => {
+const RedFlags = (props) => {
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
@@ -18,23 +17,64 @@ const RedFlags = props => {
   const [redFlag, setRedFlag] = useState(null);
   const [visible, setVisible] = useState(false);
 
+  const handleRedFlagEdit = (rf) => {
+    setRedFlag(rf);
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+    setRedFlag(null);
+  };
+
+  const fetchRedFlags = async () => {
+    setLoading(true);
+    const result = await getRedFlags(projectId, instrumentId, scoreScheme.id);
+    setRedFlags(result.data);
+    setLoading(false);
+    handleCancel();
+  };
+
+  useEffect(() => {
+    fetchRedFlags();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleRedFlagDelete = (rf) => {
+    deleteRedFlag(projectId, instrumentId, scoreScheme.id, rf)
+      .then((res) => {
+        fetchRedFlags();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onPageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
+
+  const onNewRedFlag = () => {
+    setVisible(true);
+  };
+
   const columns = [
     {
       title: "Section",
       dataIndex: "section_title",
-      ...getColumnSearchProps("section_title", searchText, setSearchText)
+      ...getColumnSearchProps("section_title", searchText, setSearchText),
     },
     {
       title: "Display",
       dataIndex: "display_title",
-      ...getColumnSearchProps("display_title", searchText, setSearchText)
+      ...getColumnSearchProps("display_title", searchText, setSearchText),
     },
     {
       title: "QID",
       dataIndex: "iq_identifier",
       ...getColumnSearchProps("iq_identifier", searchText, setSearchText),
       sortDirections: ["descend", "ascend"],
-      sorter: (a, b) => a.iq_identifier.localeCompare(b.iq_identifier)
+      sorter: (a, b) => a.iq_identifier.localeCompare(b.iq_identifier),
     },
     searchText === ""
       ? {
@@ -44,17 +84,17 @@ const RedFlags = props => {
           render: (text, redFlag) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: redFlag.iq_text
+                __html: redFlag.iq_text,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Question Text",
           dataIndex: "iq_text",
           ...getColumnSearchProps("iq_text", searchText, setSearchText),
           sortDirections: ["descend", "ascend"],
-          sorter: (a, b) => a.iq_text.localeCompare(b.iq_text)
+          sorter: (a, b) => a.iq_text.localeCompare(b.iq_text),
         },
     searchText === ""
       ? {
@@ -64,17 +104,17 @@ const RedFlags = props => {
           render: (text, redFlag) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: redFlag.option_text
+                __html: redFlag.option_text,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Option",
           dataIndex: "option_text",
           ...getColumnSearchProps("option_text", searchText, setSearchText),
           sortDirections: ["descend", "ascend"],
-          sorter: (a, b) => a.option_text.localeCompare(b.option_text)
+          sorter: (a, b) => a.option_text.localeCompare(b.option_text),
         },
     searchText === ""
       ? {
@@ -84,22 +124,22 @@ const RedFlags = props => {
           render: (text, redFlag) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: redFlag.description
+                __html: redFlag.description,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Description",
           dataIndex: "description",
           ...getColumnSearchProps("description", searchText, setSearchText),
           sortDirections: ["descend", "ascend"],
-          sorter: (a, b) => a.description.localeCompare(b.description)
+          sorter: (a, b) => a.description.localeCompare(b.description),
         },
     {
       title: "Selected",
       dataIndex: "selected",
-      render: (text, redFlag) => String(redFlag.selected)
+      render: (text, redFlag) => String(redFlag.selected),
     },
     {
       title: "Actions",
@@ -111,50 +151,9 @@ const RedFlags = props => {
           handleEdit={handleRedFlagEdit}
           handleDelete={handleRedFlagDelete}
         />
-      )
-    }
+      ),
+    },
   ];
-
-  useEffect(() => {
-    fetchRedFlags();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchRedFlags = async () => {
-    setLoading(true);
-    const result = await getRedFlags(projectId, instrumentId, scoreScheme.id);
-    setRedFlags(result.data);
-    setLoading(false);
-    handleCancel();
-  };
-
-  const onPageChange = (page, pageSize) => {
-    setCurrentPage(page);
-  };
-
-  const onNewRedFlag = () => {
-    setVisible(true);
-  };
-
-  const handleRedFlagEdit = rf => {
-    setRedFlag(rf);
-    setVisible(true);
-  };
-
-  const handleRedFlagDelete = rf => {
-    deleteRedFlag(projectId, instrumentId, scoreScheme.id, rf)
-      .then(res => {
-        fetchRedFlags();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-    setRedFlag(null);
-  };
 
   return (
     <Spin spinning={loading}>
@@ -172,11 +171,11 @@ const RedFlags = props => {
         <Table
           columns={columns}
           dataSource={redFlags}
-          rowKey={redFlag => redFlag.id}
+          rowKey={(redFlag) => redFlag.id}
           pagination={{
             defaultPageSize: 100,
             onChange: onPageChange,
-            current: currentPage
+            current: currentPage,
           }}
         />
         <Drawer
@@ -187,7 +186,7 @@ const RedFlags = props => {
           onClose={handleCancel}
           visible={visible}
           key={"right"}
-          destroyOnClose={true}
+          destroyOnClose
         >
           <RedFlagForm
             redFlag={redFlag}

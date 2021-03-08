@@ -7,15 +7,15 @@ export const getOptionSets = () => {
   return instance.get("/option_sets");
 };
 
-export const getOptionSet = id => {
+export const getOptionSet = (id) => {
   return instance.get(`/option_sets/${id}`);
 };
 
-export const copyOptionSet = id => {
+export const copyOptionSet = (id) => {
   return instance.get(`/option_sets/${id}/copy`);
 };
 
-export const createOptionSet = optionSet => {
+export const createOptionSet = (optionSet) => {
   return instance.post("/option_sets", { option_set: optionSet });
 };
 
@@ -23,6 +23,6 @@ export const updateOptionSet = (id, optionSet) => {
   return instance.put(`/option_sets/${id}`, { option_set: optionSet });
 };
 
-export const deleteOptionSet = id => {
+export const deleteOptionSet = (id) => {
   return instance.delete(`/option_sets/${id}`);
 };

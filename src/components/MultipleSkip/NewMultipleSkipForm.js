@@ -1,14 +1,12 @@
-import * as Yup from "yup";
-
-import { RightSubmitButton, LeftCancelButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow, hasNumberResponses } from "../../utils/Utils";
-import { Col, Typography, Select } from "antd";
+import { Col, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-
-import React, { useContext, Fragment } from "react";
+import React, { Fragment, useContext } from "react";
+import * as Yup from "yup";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { createMultipleSkip } from "../../utils/api/multiple_skip";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
 import { valueOperators } from "../../utils/Constants";
+import { AlertErrorMessage, DRow, hasNumberResponses } from "../../utils/Utils";
 
 const { Text } = Typography;
 
@@ -16,13 +14,15 @@ const MultipleSkipSchema = Yup.object().shape({
   instrument_question_id: Yup.number().required("Question Id is required"),
   question_identifier: Yup.string().required("Question is required"),
   option_identifier: Yup.string().when("value", {
-    is: val => val === null || val === "",
-    then: Yup.string().required("Option is required")
+    is: (val) => val === null || val === "",
+    then: Yup.string().required("Option is required"),
   }),
-  skipQuestionIdentifiers: Yup.string().required("Question to skip is required")
+  skipQuestionIdentifiers: Yup.string().required(
+    "Question to skip is required"
+  ),
 });
 
-const NewMultipleSkipForm = props => {
+const NewMultipleSkipForm = (props) => {
   const instrumentQuestion = props.instrumentQuestion;
   // eslint-disable-next-line no-unused-vars
   const [instrumentQuestions, setInstrumentQuestions] = useContext(
@@ -37,26 +37,26 @@ const NewMultipleSkipForm = props => {
         option_identifier: "",
         value: "",
         skipQuestionIdentifiers: [],
-        value_operator: ""
+        value_operator: "",
       }}
       validationSchema={MultipleSkipSchema}
-      onSubmit={values => {
+      onSubmit={(values) => {
         let count = 0;
-        values.skipQuestionIdentifiers.forEach(qid => {
+        values.skipQuestionIdentifiers.forEach((qid) => {
           const multipleSkip = {
             instrument_question_id: values.instrument_question_id,
             question_identifier: values.question_identifier,
             option_identifier: values.option_identifier,
             value: values.value,
             skip_question_identifier: qid,
-            value_operator: values.value_operator
+            value_operator: values.value_operator,
           };
           createMultipleSkip(
             props.projectId,
             instrumentQuestion.instrument_id,
             instrumentQuestion.id,
             multipleSkip
-          ).then(response => {
+          ).then((response) => {
             count += 1;
             if (count === values.skipQuestionIdentifiers.length) {
               props.fetchMultipleSkips();
@@ -76,8 +76,8 @@ const NewMultipleSkipForm = props => {
                 name="option_identifier"
                 component="select"
               >
-                <option></option>
-                {instrumentQuestion.options.map(option => {
+                <option />
+                {instrumentQuestion.options.map((option) => {
                   return (
                     <option
                       key={option.id}
@@ -106,8 +106,8 @@ const NewMultipleSkipForm = props => {
                     name="value_operator"
                     component="select"
                   >
-                    <option key="EMPTY"></option>
-                    {valueOperators.map(operator => {
+                    <option key="EMPTY" />
+                    {valueOperators.map((operator) => {
                       return (
                         <option
                           key={operator}
@@ -147,19 +147,19 @@ const NewMultipleSkipForm = props => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                     mode="multiple"
-                    onChange={values => {
+                    onChange={(values) => {
                       setFieldValue("skipQuestionIdentifiers", values);
                     }}
                   >
                     {instrumentQuestions
                       .filter(
-                        iq =>
+                        (iq) =>
                           iq.number_in_instrument >
                           instrumentQuestion.number_in_instrument
                       )
-                      .map(iq => {
+                      .map((iq) => {
                         return (
                           <Select.Option
                             key={iq.id}

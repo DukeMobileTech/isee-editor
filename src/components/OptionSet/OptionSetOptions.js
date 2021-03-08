@@ -8,7 +8,7 @@ import {
   AlertErrorMessage,
   DRow,
   getItemStyle,
-  getListStyle
+  getListStyle,
 } from "../../utils/Utils";
 
 const OptionSetOptions = ({
@@ -192,6 +192,7 @@ const OptionSetOptions = ({
                             <DeleteButton
                               handleClick={() => {
                                 if (
+                                  // eslint-disable-next-line no-alert
                                   window.confirm(
                                     `Are you sure you want to remove ${
                                       oios.option && oios.option.text

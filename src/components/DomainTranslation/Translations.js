@@ -1,25 +1,23 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
-import DomainTranslations from "./DomainTranslations";
-import { TranslationsHeader } from "../utils/TranslationsHeader";
-import { getColumnSearchProps } from "../utils/ColumnSearch";
 import { getDomainTranslations } from "../../utils/api/domain_translation";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
+import DomainTranslations from "./DomainTranslations";
 
-const DomainTable = props => {
+const DomainTable = (props) => {
   const domains = props.domains;
   const scoreScheme = props.scoreScheme;
   const projectId = props.projectId;
   const translations = props.translations;
   const [searchText, setSearchText] = useState("");
-
   const columns = [
     {
       title: "Title",
       dataIndex: "title",
       width: "10%",
       editable: true,
-      ...getColumnSearchProps("title", searchText, setSearchText)
+      ...getColumnSearchProps("title", searchText, setSearchText),
     },
     searchText === ""
       ? {
@@ -31,17 +29,17 @@ const DomainTable = props => {
           render: (text, domain) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: domain.name
+                __html: domain.name,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Name",
           dataIndex: "name",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("name", searchText, setSearchText)
+          ...getColumnSearchProps("name", searchText, setSearchText),
         },
     {
       title: "Translations",
@@ -49,7 +47,7 @@ const DomainTable = props => {
       width: "60%",
       render: (text, domain) => {
         const domainTranslations = translations.filter(
-          trans => trans.domain_id === domain.id
+          (trans) => trans.domain_id === domain.id
         );
         return (
           <DomainTranslations
@@ -60,15 +58,15 @@ const DomainTable = props => {
             language={props.language}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Table
       bordered
       dataSource={domains}
-      rowKey={domain => domain.id}
+      rowKey={(domain) => domain.id}
       columns={columns}
       size="small"
       pagination={{ defaultPageSize: 25 }}
@@ -76,7 +74,7 @@ const DomainTable = props => {
   );
 };
 
-const Translations = props => {
+const Translations = (props) => {
   const projectId = props.projectId;
   const domains = props.domains;
   const scoreScheme = props.scoreScheme;

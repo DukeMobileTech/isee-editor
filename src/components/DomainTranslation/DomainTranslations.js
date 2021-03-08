@@ -1,16 +1,16 @@
+import { Form } from "antd";
 import React, { useState } from "react";
 import {
-  CellActions,
-  EditableTranslationsProvider
-} from "../utils/EditableCell";
-import {
   createDomainTranslation,
+  deleteDomainTranslation,
   updateDomainTranslation,
-  deleteDomainTranslation
 } from "../../utils/api/domain_translation";
-import { Form } from "antd";
+import {
+  CellActions,
+  EditableTranslationsProvider,
+} from "../utils/EditableCell";
 
-const EditableTable = props => {
+const EditableTable = (props) => {
   const [form] = Form.useForm();
   const language = props.language;
   const domain = props.domain;
@@ -19,6 +19,77 @@ const EditableTable = props => {
   const [translations, setTranslations] = useState(props.translations);
   const [editingKey, setEditingKey] = useState("");
   const newId = "new";
+
+  const isEditing = (record) => record.id === editingKey;
+
+  const cancel = () => {
+    setEditingKey("");
+  };
+
+  const save = async (form, record) => {
+    try {
+      const row = await form.validateFields();
+      const newData = [...translations];
+      const index = newData.findIndex((item) => record.id === item.id);
+      if (index > -1) {
+        const item = newData[index];
+        if (record.id === newId) {
+          row.domain_id = domain.id;
+          row.language = language;
+          createDomainTranslation(projectId, scoreScheme, row).then(
+            (result) => {
+              newData.splice(index, 1, {
+                ...item,
+                ...result.data,
+              });
+              setEditingKey("");
+              setTranslations(newData);
+            }
+          );
+        } else {
+          row.id = record.id;
+          newData.splice(index, 1, {
+            ...item,
+            ...row,
+          });
+          updateDomainTranslation(projectId, scoreScheme, row).then(
+            (result) => {
+              setEditingKey("");
+              setTranslations(newData);
+            }
+          );
+        }
+      } else {
+        newData.push(row);
+        setEditingKey("");
+        setTranslations(newData);
+      }
+    } catch (errInfo) {
+      console.log("Validate Failed:", errInfo);
+    }
+  };
+
+  const edit = (key) => {
+    setEditingKey(key);
+  };
+
+  const handleAdd = () => {
+    setEditingKey(newId);
+    setTranslations([{ id: newId, text: "" }, ...translations]);
+  };
+
+  const handleDelete = (record) => {
+    if (record.id === newId) {
+      translations.splice(translations.indexOf(record), 1);
+      setTranslations([...translations]);
+    } else {
+      deleteDomainTranslation(projectId, scoreScheme, record).then((res) => {
+        const dataSource = [...translations];
+        setTranslations(dataSource.filter((item) => item.id !== record.id));
+      });
+    }
+  };
+
   const columns = [
     {
       title: "Text",
@@ -28,10 +99,10 @@ const EditableTable = props => {
       render: (text, translation) => (
         <span
           dangerouslySetInnerHTML={{
-            __html: translation.text
+            __html: translation.text,
           }}
         />
-      )
+      ),
     },
     {
       title: "Actions",
@@ -46,75 +117,9 @@ const EditableTable = props => {
           edit={edit}
           handleDelete={handleDelete}
         />
-      )
-    }
+      ),
+    },
   ];
-
-  const isEditing = record => record.id === editingKey;
-
-  const cancel = () => {
-    setEditingKey("");
-  };
-
-  const save = async (form, record) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...translations];
-      const index = newData.findIndex(item => record.id === item.id);
-      if (index > -1) {
-        const item = newData[index];
-        if (record.id === newId) {
-          row.domain_id = domain.id;
-          row.language = language;
-          createDomainTranslation(projectId, scoreScheme, row).then(result => {
-            newData.splice(index, 1, {
-              ...item,
-              ...result.data
-            });
-            setEditingKey("");
-            setTranslations(newData);
-          });
-        } else {
-          row.id = record.id;
-          newData.splice(index, 1, {
-            ...item,
-            ...row
-          });
-          updateDomainTranslation(projectId, scoreScheme, row).then(result => {
-            setEditingKey("");
-            setTranslations(newData);
-          });
-        }
-      } else {
-        newData.push(row);
-        setEditingKey("");
-        setTranslations(newData);
-      }
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
-    }
-  };
-
-  const edit = key => {
-    setEditingKey(key);
-  };
-
-  const handleAdd = () => {
-    setEditingKey(newId);
-    setTranslations([{ id: newId, text: "" }, ...translations]);
-  };
-
-  const handleDelete = record => {
-    if (record.id === newId) {
-      translations.splice(translations.indexOf(record), 1);
-      setTranslations([...translations]);
-    } else {
-      deleteDomainTranslation(projectId, scoreScheme, record).then(res => {
-        const dataSource = [...translations];
-        setTranslations(dataSource.filter(item => item.id !== record.id));
-      });
-    }
-  };
 
   return (
     <EditableTranslationsProvider
@@ -128,7 +133,7 @@ const EditableTable = props => {
   );
 };
 
-const DomainTranslations = props => {
+const DomainTranslations = (props) => {
   return (
     <EditableTable
       domain={props.domain}

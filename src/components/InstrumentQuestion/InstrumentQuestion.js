@@ -1,27 +1,26 @@
-import { Modal, Collapse, Tabs, Typography } from "antd";
-import React, { Fragment, useState } from "react";
 import {
-  FormOutlined,
   FastForwardOutlined,
   FilterOutlined,
-  RedoOutlined
+  FormOutlined,
+  RedoOutlined,
 } from "@ant-design/icons";
-
+import { Collapse, Modal, Tabs, Typography } from "antd";
+import React, { Fragment, useState } from "react";
 import { modalWidth } from "../../utils/Constants";
-import InstrumentQuestionForm from "./InstrumentQuestionForm";
-import ExpandedQuestion from "../utils/ExpandedQuestion";
-import NextQuestion from "../NextQuestion/NextQuestion";
-import MultipleSkip from "../MultipleSkip/MultipleSkip";
-import LoopQuestion from "../LoopQuestion/LoopQuestion";
 import ConditionSkip from "../ConditionSkip/ConditionSkip";
+import LoopQuestion from "../LoopQuestion/LoopQuestion";
+import MultipleSkip from "../MultipleSkip/MultipleSkip";
+import NextQuestion from "../NextQuestion/NextQuestion";
+import ExpandedQuestion from "../utils/ExpandedQuestion";
+import InstrumentQuestionForm from "./InstrumentQuestionForm";
 
 const { TabPane } = Tabs;
 
-const InstrumentQuestion = props => {
+const InstrumentQuestion = (props) => {
   const instrumentQuestion = props.instrumentQuestion;
   const [selectedKey, setSelectedKey] = useState("1");
 
-  const onTabSelection = key => {
+  const onTabSelection = (key) => {
     setSelectedKey(key);
   };
 
@@ -34,7 +33,7 @@ const InstrumentQuestion = props => {
       title={instrumentQuestion.identifier}
       visible={props.visible}
       footer={null}
-      destroyOnClose={true}
+      destroyOnClose
       onCancel={onCancel}
       width={modalWidth}
     >
@@ -45,7 +44,7 @@ const InstrumentQuestion = props => {
               <Typography.Text strong>Text:</Typography.Text>
               <span
                 dangerouslySetInnerHTML={{
-                  __html: instrumentQuestion.question.text
+                  __html: instrumentQuestion.question.text,
                 }}
               />
             </Typography.Paragraph>

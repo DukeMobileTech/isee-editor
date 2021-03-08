@@ -1,24 +1,24 @@
-import * as Yup from "yup";
-import React, { useState, useEffect, useContext } from "react";
-import { Col, Typography, Divider } from "antd";
+import { Col, Divider, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-import {
-  RightSubmitButton,
-  SaveButton,
-  DeleteButton,
-  AddButton
-} from "../../utils/Buttons";
-import { AlertErrorMessage, DRow, hasOtherOption } from "../../utils/Utils";
-import { updateScoreUnit } from "../../utils/api/score_unit";
-import { scoreTypes, institutionTypes } from "../../utils/Constants";
+import React, { useContext, useEffect, useState } from "react";
+import * as Yup from "yup";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { OptionSetContext } from "../../context/OptionSetContext";
 import { getDomains } from "../../utils/api/domain";
 import {
+  createOptionScore,
   deleteOptionScore,
   updateOptionScore,
-  createOptionScore
 } from "../../utils/api/option_score";
-import { OptionSetContext } from "../../context/OptionSetContext";
-import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { updateScoreUnit } from "../../utils/api/score_unit";
+import {
+  AddButton,
+  DeleteButton,
+  RightSubmitButton,
+  SaveButton,
+} from "../../utils/Buttons";
+import { institutionTypes, scoreTypes } from "../../utils/Constants";
+import { AlertErrorMessage, DRow, hasOtherOption } from "../../utils/Utils";
 
 const { Text } = Typography;
 const ScoreUnitSchema = Yup.object().shape({
@@ -26,10 +26,10 @@ const ScoreUnitSchema = Yup.object().shape({
   weight: Yup.number()
     .min(1, "Weight must be 1.0 or larger")
     .required("Weight is required"),
-  score_type: Yup.string().required("Score type is required")
+  score_type: Yup.string().required("Score type is required"),
 });
 
-const EditScoreUnit = props => {
+const EditScoreUnit = (props) => {
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
   const scoreSchemeId = props.scoreSchemeId;
@@ -42,15 +42,15 @@ const EditScoreUnit = props => {
   // eslint-disable-next-line no-unused-vars
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
 
-  useEffect(() => {
-    fetchDomains();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const fetchDomains = async () => {
     const result = await getDomains(projectId, instrumentId, scoreSchemeId);
     setDomains(result.data);
   };
+
+  useEffect(() => {
+    fetchDomains();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDeleteOptionScore = (optionScore, values, setFieldValue) => {
     if (optionScore.id != null) {
@@ -61,14 +61,14 @@ const EditScoreUnit = props => {
         scoreUnit,
         optionScore.id
       )
-        .then(res => {
+        .then((res) => {
           let index = values.option_scores.indexOf(optionScore);
           const copy = values.option_scores.slice();
           copy.splice(index, 1);
           setFieldValue("option_scores", copy);
           props.fetchScoreUnits();
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     } else {
@@ -79,7 +79,7 @@ const EditScoreUnit = props => {
     }
   };
 
-  const handleUpdateOptionScore = optionScore => {
+  const handleUpdateOptionScore = (optionScore) => {
     if (optionScore.id != null) {
       updateOptionScore(
         projectId,
@@ -104,7 +104,7 @@ const EditScoreUnit = props => {
       option_identifier: "",
       value: "",
       score_unit_question_id: scoreUnit.option_scores[0].score_unit_question_id,
-      question_identifier: scoreUnit.option_scores[0].question_identifier
+      question_identifier: scoreUnit.option_scores[0].question_identifier,
     };
     const copy = values.option_scores.slice();
     copy.push(optionScore);
@@ -122,7 +122,7 @@ const EditScoreUnit = props => {
         base_point_score: scoreUnit && scoreUnit.base_point_score,
         institution_type: (scoreUnit && scoreUnit.institution_type) || "",
         notes: (scoreUnit && scoreUnit.notes) || "",
-        option_scores: scoreUnit && scoreUnit.option_scores
+        option_scores: scoreUnit && scoreUnit.option_scores,
       }}
       validationSchema={ScoreUnitSchema}
       onSubmit={(values, { setErrors }) => {
@@ -135,10 +135,10 @@ const EditScoreUnit = props => {
           score_type: values.score_type,
           institution_type: values.institution_type,
           base_point_score: values.base_point_score,
-          notes: values.notes
+          notes: values.notes,
         })
-          .then(res => props.fetchScoreUnits())
-          .catch(error => setErrors(error));
+          .then((res) => props.fetchScoreUnits())
+          .catch((error) => setErrors(error));
       }}
       render={({ values, setFieldValue }) => (
         <Form>
@@ -148,8 +148,8 @@ const EditScoreUnit = props => {
             </Col>
             <Col span={14}>
               <Field className="ant-input" name="domain_id" component="select">
-                <option></option>
-                {domains.map(domain => {
+                <option />
+                {domains.map((domain) => {
                   return (
                     <option key={domain.id} name="domain_id" value={domain.id}>
                       {domain.title}
@@ -172,12 +172,12 @@ const EditScoreUnit = props => {
                 name="subdomain_id"
                 component="select"
               >
-                <option></option>
+                <option />
                 {values.domain_id &&
                   domains.length > 0 &&
                   domains
-                    .find(d => d.id === Number(values.domain_id))
-                    .subdomains.map(sd => {
+                    .find((d) => d.id === Number(values.domain_id))
+                    .subdomains.map((sd) => {
                       return (
                         <option key={sd.id} name="subdomain_id" value={sd.id}>
                           {sd.title}
@@ -228,8 +228,8 @@ const EditScoreUnit = props => {
             </Col>
             <Col span={14}>
               <Field className="ant-input" name="score_type" component="select">
-                <option></option>
-                {scoreTypes.map(type => {
+                <option />
+                {scoreTypes.map((type) => {
                   return (
                     <option key={type} name="score_type" value={type}>
                       {type}
@@ -270,8 +270,8 @@ const EditScoreUnit = props => {
                 name="institution_type"
                 component="select"
               >
-                <option></option>
-                {institutionTypes.map(iType => {
+                <option />
+                {institutionTypes.map((iType) => {
                   return (
                     <option key={iType} name="institution_type" value={iType}>
                       {iType}
@@ -319,11 +319,11 @@ const EditScoreUnit = props => {
           )}
           {values.option_scores.map((optionScore, index) => {
             const question = instrumentQuestions.find(
-              iq => iq.identifier === optionScore.question_identifier
+              (iq) => iq.identifier === optionScore.question_identifier
             );
             const os =
               question &&
-              optionSets.find(set => set.id === question.option_set_id);
+              optionSets.find((set) => set.id === question.option_set_id);
             return (
               <DRow key={`${optionScore.option_identifier}_${index}`}>
                 {question && <Col span={5}>{question.identifier}</Col>}
@@ -334,7 +334,7 @@ const EditScoreUnit = props => {
                     component="select"
                   >
                     {os &&
-                      os.option_in_option_sets.map(oios => {
+                      os.option_in_option_sets.map((oios) => {
                         return (
                           <option
                             key={oios.option.id}
@@ -385,6 +385,7 @@ const EditScoreUnit = props => {
                   <DeleteButton
                     handleClick={() => {
                       if (
+                        // eslint-disable-next-line no-alert
                         window.confirm(
                           `Are you sure you want to delete ${optionScore.option_identifier}?`
                         )

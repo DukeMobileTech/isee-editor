@@ -21,7 +21,7 @@ export const questionTypes = [
   "RANGE",
   "PHONE_NUMBER",
   "ADDRESS",
-  "EMAIL_ADDRESS"
+  "EMAIL_ADDRESS",
 ];
 
 export const questionTypesWithOptions = [
@@ -32,7 +32,7 @@ export const questionTypesWithOptions = [
   "LIST_OF_TEXT_BOXES",
   "LIST_OF_INTEGER_BOXES",
   "LABELED_SLIDER",
-  "DROP_DOWN"
+  "DROP_DOWN",
 ];
 
 export const languages = [
@@ -43,7 +43,7 @@ export const languages = [
   { name: "Spanish", code: "es" },
   { name: "Swahili", code: "sw" },
   { name: "Telugu", code: "te" },
-  { name: "Chinese", code: "zh" }
+  { name: "Chinese", code: "zh" },
 ];
 
 export const modalWidth = window.innerWidth * 0.8;
@@ -53,7 +53,7 @@ export const pdfResponseHeights = [50, 100, 150, 200];
 export const questionTypesWithDefaultResponses = [
   "FREE_RESPONSE",
   "INTEGER",
-  "DECIMAL_NUMBER"
+  "DECIMAL_NUMBER",
 ];
 
 export const ALL = "ALL";
@@ -65,7 +65,7 @@ export const skipOperationTypes = [
   ANY,
   ALL,
   ANY_AND_NO_OTHER,
-  ANY_NOT_SELECTED
+  ANY_NOT_SELECTED,
 ];
 
 export const valueOperators = [
@@ -74,7 +74,7 @@ export const valueOperators = [
   "EQUALS_TO_OR_LESS_THAN",
   "NOT_EQUALS_TO",
   "MORE_THAN",
-  "EQUALS_TO_OR_MORE_THAN"
+  "EQUALS_TO_OR_MORE_THAN",
 ];
 
 export const scoreTypes = [
@@ -83,7 +83,7 @@ export const scoreTypes = [
   "CALCULATION",
   "AVERAGE",
   "LOWEST",
-  "HIGHEST"
+  "HIGHEST",
 ];
 
 export const institutionTypes = ["RESIDENTIAL", "NON_RESIDENTIAL"];

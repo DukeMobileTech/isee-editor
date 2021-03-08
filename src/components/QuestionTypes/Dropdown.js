@@ -1,7 +1,7 @@
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown, Menu } from "antd";
 import React from "react";
 import { isDropDown } from "../../utils/Utils";
-import { Menu, Dropdown } from "antd";
-import { DownOutlined } from "@ant-design/icons";
 
 export const DropDown = ({ iq }) => {
   if (!isDropDown(iq)) return null;
@@ -11,10 +11,10 @@ export const DropDown = ({ iq }) => {
       <Menu>
         {iq.options.map((option, index) => {
           return (
-            <Menu.Item>
+            <Menu.Item key={option.identifier}>
               <span
                 dangerouslySetInnerHTML={{
-                  __html: option.text.replace("<p>", "").replace("</p>", "")
+                  __html: option.text.replace("<p>", "").replace("</p>", ""),
                 }}
               />
             </Menu.Item>
@@ -26,7 +26,7 @@ export const DropDown = ({ iq }) => {
 
   return (
     <Dropdown overlay={menu}>
-      <p className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+      <p className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
         Dropdown <DownOutlined />
       </p>
     </Dropdown>

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
 import { Spin, Table } from "antd";
-import { getQuestionTranslations } from "../../utils/api/question_translation";
+import React, { useEffect, useState } from "react";
 import {
   getAllQuestions,
+  getFolderQuestions,
   getQuestionSetQuestions,
-  getFolderQuestions
 } from "../../utils/api/question";
-import QuestionTranslations from "./QuestionTranslations";
+import { getQuestionTranslations } from "../../utils/api/question_translation";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
 import { TranslationsHeader } from "../utils/TranslationsHeader";
+import QuestionTranslations from "./QuestionTranslations";
 
-const QuestionTranslationsTable = props => {
+const QuestionTranslationsTable = (props) => {
   const questions = props.questions;
   const translations = props.translations;
   const [searchText, setSearchText] = useState("");
@@ -21,7 +21,7 @@ const QuestionTranslationsTable = props => {
       dataIndex: "question_identifier",
       width: "20%",
       editable: true,
-      ...getColumnSearchProps("question_identifier", searchText, setSearchText)
+      ...getColumnSearchProps("question_identifier", searchText, setSearchText),
     },
     searchText === ""
       ? {
@@ -33,17 +33,17 @@ const QuestionTranslationsTable = props => {
           render: (text, question) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: question.text
+                __html: question.text,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Text",
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text", searchText, setSearchText)
+          ...getColumnSearchProps("text", searchText, setSearchText),
         },
     {
       title: "Translations",
@@ -51,13 +51,13 @@ const QuestionTranslationsTable = props => {
       width: "50%",
       sortDirections: ["descend", "ascend"],
       sorter: (a, b) => {
-        const qta = translations.filter(t => t.question_id === a.id);
-        const qtb = translations.filter(t => t.question_id === b.id);
+        const qta = translations.filter((t) => t.question_id === a.id);
+        const qtb = translations.filter((t) => t.question_id === b.id);
         return qta.length - qtb.length;
       },
       render: (text, question) => {
         const questionTranslations = translations.filter(
-          translation => translation.question_id === question.id
+          (translation) => translation.question_id === question.id
         );
         return (
           <QuestionTranslations
@@ -66,15 +66,15 @@ const QuestionTranslationsTable = props => {
             language={props.language}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Table
       bordered
       dataSource={questions}
-      rowKey={question => question.id}
+      rowKey={(question) => question.id}
       columns={columns}
       size="small"
       pagination={{ defaultPageSize: 25 }}
@@ -82,7 +82,7 @@ const QuestionTranslationsTable = props => {
   );
 };
 
-const Translations = props => {
+const Translations = (props) => {
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState(null);
   const [translations, setTranslations] = useState([]);
@@ -123,7 +123,7 @@ const Translations = props => {
     fetchQuestionTranslations();
   }, [language, props.questionSet]);
 
-  const handleChange = value => {
+  const handleChange = (value) => {
     setLanguage(value);
   };
 

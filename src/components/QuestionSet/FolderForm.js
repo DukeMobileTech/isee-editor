@@ -1,21 +1,19 @@
-import * as Yup from "yup";
-
-import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
-import { AlertErrorMessage } from "../../utils/Utils";
-import { Field, Form, Formik } from "formik";
-import { createFolder, updateFolder } from "../../utils/api/folder";
-
 import { Form as AntForm, Modal } from "antd";
+import { Field, Form, Formik } from "formik";
 import React from "react";
+import * as Yup from "yup";
+import { createFolder, updateFolder } from "../../utils/api/folder";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
 import { modalWidth } from "../../utils/Constants";
+import { AlertErrorMessage } from "../../utils/Utils";
 
 const FormItem = AntForm.Item;
 
 const FolderSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required")
+  title: Yup.string().required("Title is required"),
 });
 
-const FolderForm = props => {
+const FolderForm = (props) => {
   const questionSet = props.questionSet;
   const folder = props.folder;
   const title = folder ? `Editing ${folder.title}` : "New Folder";
@@ -23,9 +21,9 @@ const FolderForm = props => {
   return (
     <Modal
       title={title}
-      visible={true}
+      visible
       footer={null}
-      destroyOnClose={true}
+      destroyOnClose
       onCancel={props.handleCancel}
       width={modalWidth}
     >
@@ -33,22 +31,22 @@ const FolderForm = props => {
         initialValues={{
           id: (folder && folder.id) || null,
           title: (folder && folder.title) || "",
-          question_set_id: questionSet.id
+          question_set_id: questionSet.id,
         }}
         validationSchema={FolderSchema}
         onSubmit={(values, { setErrors }) => {
           const folder = {
             title: values.title,
-            question_set_id: values.question_set_id
+            question_set_id: values.question_set_id,
           };
           if (values.id) {
             updateFolder(questionSet.id, values.id, folder)
-              .then(response => {
+              .then((response) => {
                 if (response.status === 204) {
                   props.fetchFolders();
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });
@@ -57,12 +55,12 @@ const FolderForm = props => {
               });
           } else {
             createFolder(questionSet.id, folder)
-              .then(response => {
+              .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                   props.fetchFolders();
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Title")) {
                     setErrors({ title: err });

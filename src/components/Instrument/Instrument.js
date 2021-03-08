@@ -1,26 +1,25 @@
-import { Layout, Spin, Tabs } from "antd";
-import React, { Fragment, useContext, useEffect, useState } from "react";
 import {
   CheckSquareOutlined,
+  LayoutOutlined,
   OrderedListOutlined,
   TabletOutlined,
-  LayoutOutlined
 } from "@ant-design/icons";
-
+import { Layout, Spin, Tabs } from "antd";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { InstructionContext } from "../../context/InstructionContext";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
-import Sections from "../Section/Sections";
 import { getInstructions } from "../../utils/api/instruction";
 import { getInstrument } from "../../utils/api/instrument";
+import { getInstrumentQuestions } from "../../utils/api/instrument_question";
 import { getOptionSets } from "../../utils/api/option_set";
 import { getQuestionSets } from "../../utils/api/question_set";
-import PdfDownload from "./PdfDownload";
-import { getInstrumentQuestions } from "../../utils/api/instrument_question";
-import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { InstrumentHeader } from "../Headers";
 import InstrumentQuestions from "../InstrumentQuestion/InstrumentQuestions";
 import ScoreSchemes from "../ScoreScheme/ScoreSchemes";
+import Sections from "../Section/Sections";
+import PdfDownload from "./PdfDownload";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -91,7 +90,7 @@ const Instrument = ({ match }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onTabSelection = key => {
+  const onTabSelection = (key) => {
     setSelectedKey(key);
   };
 

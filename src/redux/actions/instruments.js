@@ -1,53 +1,53 @@
 import { INSTRUMENTS } from "../constants/instruments";
 
-const loadInstruments = projectId => ({
+const loadInstruments = (projectId) => ({
   type: INSTRUMENTS.LOAD,
-  projectId
+  projectId,
 });
 
-const setInstruments = instruments => ({
+const setInstruments = (instruments) => ({
   type: INSTRUMENTS.LOAD_SUCCESS,
-  instruments
+  instruments,
 });
 
-const setInstrumentsError = error => ({
+const setInstrumentsError = (error) => ({
   type: INSTRUMENTS.LOAD_FAIL,
-  error
+  error,
 });
 
 const createInstrument = (projectId, instrument) => ({
   type: INSTRUMENTS.CREATE,
   projectId,
-  instrument
+  instrument,
 });
 
-const addInstrument = instrument => ({
+const addInstrument = (instrument) => ({
   type: INSTRUMENTS.CREATE_SUCCESS,
-  instrument
+  instrument,
 });
 
 const updateInstrument = (projectId, id, instrument) => ({
   type: INSTRUMENTS.UPDATE,
   projectId,
   id,
-  instrument
+  instrument,
 });
 
 const setInstrument = (instrument, currentProjectId) => ({
   type: INSTRUMENTS.UPDATE_SUCCESS,
   instrument,
-  currentProjectId
+  currentProjectId,
 });
 
 const deleteInstrument = (projectId, id) => ({
   type: INSTRUMENTS.DELETE,
   projectId,
-  id
+  id,
 });
 
-const removeInstrument = id => ({
+const removeInstrument = (id) => ({
   type: INSTRUMENTS.DELETE_SUCCESS,
-  id
+  id,
 });
 
 export {
@@ -59,5 +59,5 @@ export {
   updateInstrument,
   setInstrument,
   deleteInstrument,
-  removeInstrument
+  removeInstrument,
 };

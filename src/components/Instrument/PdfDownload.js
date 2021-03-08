@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Spin, Typography, Select, Row, Col } from "antd";
-import { getInstrumentPdf } from "../../utils/api/instrument";
+import { Col, Row, Select, Spin, Typography } from "antd";
 import fileDownload from "js-file-download";
+import React, { useEffect, useState } from "react";
+import { getInstrumentPdf } from "../../utils/api/instrument";
 import { languages } from "../../utils/Constants";
 
-const PdfDownload = props => {
+const PdfDownload = (props) => {
   const instrument = props.instrument;
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState(null);
@@ -14,7 +14,7 @@ const PdfDownload = props => {
     const fetchPdf = () => {
       if (language !== null && columnCount !== null) {
         setLoading(true);
-        getInstrumentPdf(instrument, language, columnCount).then(results => {
+        getInstrumentPdf(instrument, language, columnCount).then((results) => {
           setLoading(false);
           fileDownload(
             results.data,
@@ -27,18 +27,18 @@ const PdfDownload = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, columnCount]);
 
-  const handleChange = value => {
+  const handleChange = (value) => {
     setLanguage(value);
   };
 
-  const handleColumnChange = count => {
+  const handleColumnChange = (count) => {
     setColumnCount(count);
   };
 
   return (
     <Spin spinning={loading}>
       <Row type="flex" align="middle" style={{ margin: "2px" }}>
-        <Col span={6}></Col>
+        <Col span={6} />
         <Col span={6}>
           <Typography.Text strong style={{ margin: "5px" }}>
             PDF Language
@@ -46,7 +46,7 @@ const PdfDownload = props => {
         </Col>
         <Col span={6}>
           <Select style={{ width: 250 }} onChange={handleChange}>
-            {languages.map(language => {
+            {languages.map((language) => {
               return (
                 <Select.Option
                   key={language.code}
@@ -59,10 +59,10 @@ const PdfDownload = props => {
             })}
           </Select>
         </Col>
-        <Col span={6}></Col>
+        <Col span={6} />
       </Row>
       <Row type="flex" align="middle" style={{ margin: "2px" }}>
-        <Col span={6}></Col>
+        <Col span={6} />
         <Col span={6}>
           <Typography.Text strong style={{ margin: "5px" }}>
             Number of columns
@@ -81,7 +81,7 @@ const PdfDownload = props => {
             </Select.Option>
           </Select>
         </Col>
-        <Col span={6}></Col>
+        <Col span={6} />
       </Row>
     </Spin>
   );

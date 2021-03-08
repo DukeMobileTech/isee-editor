@@ -1,22 +1,20 @@
+import { Col, Select, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
+import React, { Fragment, useContext } from "react";
 import * as Yup from "yup";
-
-import { RightSubmitButton, LeftCancelButton } from "../../utils/Buttons";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import {
+  createConditionSkip,
+  updateConditionSkip,
+} from "../../utils/api/condition_skip";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import { valueOperators } from "../../utils/Constants";
 import {
   AlertErrorMessage,
   DRow,
   hasNumberResponses,
-  hasSingleResponse
+  hasSingleResponse,
 } from "../../utils/Utils";
-import { Col, Typography, Select } from "antd";
-import { Field, Form, Formik } from "formik";
-
-import React, { useContext, Fragment } from "react";
-import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
-import { valueOperators } from "../../utils/Constants";
-import {
-  updateConditionSkip,
-  createConditionSkip
-} from "../../utils/api/condition_skip";
 
 const { Text } = Typography;
 
@@ -24,13 +22,13 @@ const ConditionSkipSchema = Yup.object().shape({
   instrument_question_id: Yup.number().required("Question Id is required"),
   question_identifier: Yup.string().required("Question is required"),
   option_identifier: Yup.string().when("value", {
-    is: val => val === null || val === "",
-    then: Yup.string().required("Option is required")
+    is: (val) => val === null || val === "",
+    then: Yup.string().required("Option is required"),
   }),
-  next_question_identifier: Yup.string().required("Next Question is required")
+  next_question_identifier: Yup.string().required("Next Question is required"),
 });
 
-const ConditionSkipForm = props => {
+const ConditionSkipForm = (props) => {
   const conditionSkip = props.conditionSkip;
   const instrumentQuestion = props.instrumentQuestion;
   const display = props.display;
@@ -54,7 +52,7 @@ const ConditionSkipForm = props => {
         values: conditionSkip.values ? conditionSkip.values.split(",") : [],
         value_operators: conditionSkip.value_operators
           ? conditionSkip.value_operators.split(",")
-          : []
+          : [],
       }}
       validationSchema={ConditionSkipSchema}
       onSubmit={(values, { setErrors }) => {
@@ -66,7 +64,7 @@ const ConditionSkipForm = props => {
           question_identifiers: values.question_identifiers.join(","),
           values: values.values.join(","),
           value_operators: values.value_operators.join(","),
-          next_question_identifier: values.next_question_identifier
+          next_question_identifier: values.next_question_identifier,
         };
         if (editConditionSkip.id) {
           updateConditionSkip(
@@ -74,12 +72,12 @@ const ConditionSkipForm = props => {
             instrumentQuestion.instrument_id,
             editConditionSkip
           )
-            .then(response => {
+            .then((response) => {
               if (response.status === 204) {
                 props.fetchConditionSkips();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         } else {
@@ -89,12 +87,12 @@ const ConditionSkipForm = props => {
             instrumentQuestion.id,
             editConditionSkip
           )
-            .then(response => {
+            .then((response) => {
               if (response.status === 201) {
                 props.fetchConditionSkips();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         }
@@ -111,20 +109,20 @@ const ConditionSkipForm = props => {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                     mode="multiple"
                     value={values.question_identifiers}
-                    onChange={values => {
+                    onChange={(values) => {
                       setFieldValue("question_identifiers", values);
                     }}
                   >
                     {instrumentQuestions
                       .filter(
-                        iq =>
+                        (iq) =>
                           iq.number_in_instrument <=
                           instrumentQuestion.number_in_instrument
                       )
-                      .map(iq => {
+                      .map((iq) => {
                         return (
                           <Select.Option
                             key={iq.id}
@@ -146,7 +144,7 @@ const ConditionSkipForm = props => {
           {hasNumberResponses(instrumentQuestion.question) &&
             values.question_identifiers.map((qid, index) => {
               return (
-                <Fragment>
+                <Fragment key={qid}>
                   <DRow key={qid}>
                     <Col span={8}>
                       <Text strong>{`Value Operator for ${qid}`}</Text>
@@ -157,13 +155,13 @@ const ConditionSkipForm = props => {
                         render={({ field }) => (
                           <Select
                             {...field}
-                            style={{ width: '100%' }}
+                            style={{ width: "100%" }}
                             value={values.value_operators[index]}
-                            onChange={val => {
+                            onChange={(val) => {
                               setFieldValue(`value_operators.${index}`, val);
                             }}
                           >
-                            {valueOperators.map(operator => {
+                            {valueOperators.map((operator) => {
                               return (
                                 <Select.Option
                                   key={operator}
@@ -204,7 +202,7 @@ const ConditionSkipForm = props => {
             <Fragment>
               {values.question_identifiers.map((qid, index) => {
                 const iq = display.instrument_questions.find(
-                  q => q.identifier === qid
+                  (q) => q.identifier === qid
                 );
                 return (
                   <DRow key={qid}>
@@ -217,13 +215,13 @@ const ConditionSkipForm = props => {
                         render={({ field }) => (
                           <Select
                             {...field}
-                            style={{ width: '100%' }}
+                            style={{ width: "100%" }}
                             value={values.option_ids[index]}
-                            onChange={val => {
+                            onChange={(val) => {
                               setFieldValue(`option_ids.${index}`, val);
                             }}
                           >
-                            {iq.options.map(option => {
+                            {iq.options.map((option) => {
                               return (
                                 <Select.Option
                                   key={option.id}
@@ -256,14 +254,14 @@ const ConditionSkipForm = props => {
                 name="next_question_identifier"
                 component="select"
               >
-                <option></option>
+                <option />
                 {instrumentQuestions
                   .filter(
-                    iq =>
+                    (iq) =>
                       iq.number_in_instrument >
                       instrumentQuestion.number_in_instrument
                   )
-                  .map(iq => {
+                  .map((iq) => {
                     return (
                       <option
                         key={iq.id}

@@ -1,22 +1,21 @@
-import { GreenSubmitButton } from "../../utils/Buttons";
-import { DRow, hasMultipleResponses } from "../../utils/Utils";
-import { Col, Typography, Select } from "antd";
+import { Col, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useState } from "react";
-
 import { updateInstrumentQuestion } from "../../utils/api/instrument_question";
-import { skipOperationTypes, ANY_AND_NO_OTHER } from "../../utils/Constants";
+import { GreenSubmitButton } from "../../utils/Buttons";
+import { ANY_AND_NO_OTHER, skipOperationTypes } from "../../utils/Constants";
+import { DRow, hasMultipleResponses } from "../../utils/Utils";
 
 const { Text } = Typography;
 
-const IQForm = props => {
+const IQForm = (props) => {
   const iq = props.instrumentQuestion;
-  const skip_options = [];
-  props.multipleSkips.forEach(nq => {
+  const skipOptions = [];
+  props.multipleSkips.forEach((nq) => {
     const option = iq.options.find(
-      op => op.identifier === nq.option_identifier
+      (op) => op.identifier === nq.option_identifier
     );
-    if (option) skip_options.push(option.id);
+    if (option) skipOptions.push(option.id);
   });
   const [neutralIds, setNeutralIds] = useState(
     iq.multiple_skip_neutral_ids === null || iq.multiple_skip_neutral_ids === ""
@@ -29,7 +28,7 @@ const IQForm = props => {
     <Formik
       initialValues={{
         multiple_skip_operator: iq.multiple_skip_operator || "",
-        multiple_skip_neutral_ids: neutralIds
+        multiple_skip_neutral_ids: neutralIds,
       }}
       nextInitialState={nextInitialState}
       onSubmit={(values, { resetForm }) => {
@@ -37,13 +36,13 @@ const IQForm = props => {
           id: iq.id,
           instrument_id: iq.instrument_id,
           multiple_skip_operator: values.multiple_skip_operator,
-          multiple_skip_neutral_ids: values.multiple_skip_neutral_ids
+          multiple_skip_neutral_ids: values.multiple_skip_neutral_ids,
         };
         updateInstrumentQuestion(props.projectId, editQuestion).then(
-          response => {
+          (response) => {
             setNextInitialState({
               multiple_skip_operator: response.multiple_skip_operator,
-              multiple_skip_neutral_ids: response.multiple_skip_neutral_ids
+              multiple_skip_neutral_ids: response.multiple_skip_neutral_ids,
             });
             resetForm();
           }
@@ -62,8 +61,8 @@ const IQForm = props => {
                   name="multiple_skip_operator"
                   component="select"
                 >
-                  <option></option>
-                  {skipOperationTypes.map(operation => {
+                  <option />
+                  {skipOperationTypes.map((operation) => {
                     return (
                       <option
                         key={operation}
@@ -89,18 +88,18 @@ const IQForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       mode="multiple"
                       value={neutralIds}
-                      onChange={values => {
+                      onChange={(values) => {
                         const selectedIds = [
                           ...new Set(
                             values
                               .join(",")
                               .replace(/(^[,\s]+)|([,\s]+$)/g, "")
                               .split(",")
-                              .filter(val => !skip_options.includes(val))
-                          )
+                              .filter((val) => !skipOptions.includes(val))
+                          ),
                         ];
                         setNeutralIds(selectedIds);
                         setFieldValue(
@@ -109,7 +108,7 @@ const IQForm = props => {
                         );
                       }}
                     >
-                      <Select.Option value=""></Select.Option>
+                      <Select.Option value="" />
                       {iq.options.map((option, idx) => {
                         return (
                           <Select.Option key={option.id} value={`${option.id}`}>

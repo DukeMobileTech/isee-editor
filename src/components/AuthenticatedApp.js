@@ -1,17 +1,16 @@
-import React, { useContext } from "react";
 import { Layout } from "antd";
+import React, { useContext } from "react";
 import { connect } from "react-redux";
-
+import { ProjectContext } from "../context/ProjectContext";
+import { CenteredH1, MainContent } from "../utils/Styles";
+import AppFooter from "./AppFooter";
 import { AppHeader } from "./Headers";
 import Router from "./Router";
-import AppFooter from "./AppFooter";
-import { CenteredH1, MainContent } from "../utils/Styles";
-import { ProjectContext } from "../context/ProjectContext";
 
 const AuthenticatedApp = ({ projects }) => {
   // eslint-disable-next-line no-unused-vars
   const [currentProjectId, setCurrentProjectId] = useContext(ProjectContext);
-  const project = projects.find(p => p.id === Number(currentProjectId));
+  const project = projects.find((p) => p.id === Number(currentProjectId));
 
   return (
     <Layout className="layout">
@@ -28,7 +27,7 @@ const AuthenticatedApp = ({ projects }) => {
 };
 
 const mapStateToProps = ({ projects }) => ({
-  projects
+  projects,
 });
 
 export default connect(mapStateToProps, null)(AuthenticatedApp);

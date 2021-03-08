@@ -1,19 +1,17 @@
-import * as Yup from "yup";
-
-import {
-  LeftCancelButton,
-  RightSubmitButton,
-  DeleteButton
-} from "../../utils/Buttons";
-import { AlertErrorMessage, DRow, hasOtherOption } from "../../utils/Utils";
-import { Form as AntForm, Col, Select, Typography } from "antd";
+import { Col, Form as AntForm, Select, Typography } from "antd";
 import { Field, FieldArray, Form, Formik } from "formik";
 import React, { useContext } from "react";
-
-import { createScoreUnit } from "../../utils/api/score_unit";
+import * as Yup from "yup";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
-import { scoreTypes, institutionTypes } from "../../utils/Constants";
+import { createScoreUnit } from "../../utils/api/score_unit";
+import {
+  DeleteButton,
+  LeftCancelButton,
+  RightSubmitButton,
+} from "../../utils/Buttons";
+import { institutionTypes, scoreTypes } from "../../utils/Constants";
+import { AlertErrorMessage, DRow, hasOtherOption } from "../../utils/Utils";
 
 const { Text } = Typography;
 const FormItem = AntForm.Item;
@@ -23,10 +21,10 @@ const ScoreUnitSchema = Yup.object().shape({
   weight: Yup.number()
     .min(1.0, "Weight must be 1.0 or larger")
     .required("Weight is required"),
-  score_type: Yup.string().required("Score type is required")
+  score_type: Yup.string().required("Score type is required"),
 });
 
-const NewScoreUnit = props => {
+const NewScoreUnit = (props) => {
   const subdomain = props.subdomain;
   const scoreUnit = props.scoreUnit;
   // eslint-disable-next-line no-unused-vars
@@ -46,7 +44,7 @@ const NewScoreUnit = props => {
         base_point_score: (scoreUnit && scoreUnit.base_point_score) || 0,
         institution_type: (scoreUnit && scoreUnit.institution_type) || "",
         notes: (scoreUnit && scoreUnit.notes) || "",
-        options: []
+        options: [],
       }}
       validationSchema={ScoreUnitSchema}
       onSubmit={(values, { setErrors }) => {
@@ -58,7 +56,7 @@ const NewScoreUnit = props => {
           base_point_score: values.base_point_score,
           institution_type: values.institution_type,
           notes: values.notes,
-          options: values.options
+          options: values.options,
         };
         createScoreUnit(
           props.projectId,
@@ -66,12 +64,12 @@ const NewScoreUnit = props => {
           props.scoreSchemeId,
           scoreUnit
         )
-          .then(response => {
+          .then((response) => {
             if (response.status === 201) {
               props.fetchScoreUnits();
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             setErrors(error);
           });
@@ -116,8 +114,8 @@ const NewScoreUnit = props => {
             </Col>
             <Col span={14}>
               <Field className="ant-input" name="score_type" component="select">
-                <option></option>
-                {scoreTypes.map(type => {
+                <option />
+                {scoreTypes.map((type) => {
                   return (
                     <option key={type} name="score_type" value={type}>
                       {type}
@@ -158,8 +156,8 @@ const NewScoreUnit = props => {
                 name="institution_type"
                 component="select"
               >
-                <option></option>
-                {institutionTypes.map(type => {
+                <option />
+                {institutionTypes.map((type) => {
                   return (
                     <option key={type} name="institution_type" value={type}>
                       {type}
@@ -190,33 +188,34 @@ const NewScoreUnit = props => {
             <Col span={20}>
               <FieldArray
                 name="options"
-                render={arrayHelpers => (
+                render={(arrayHelpers) => (
                   <div>
                     <FormItem>
                       <Select
                         showSearch
                         style={{ width: "100%" }}
                         placeholder="Search and/or select one question at a time add to the score unit"
-                        onChange={selectedValue => {
+                        onChange={(selectedValue) => {
                           const question = instrumentQuestions.find(
-                            iq => iq.identifier === selectedValue
+                            (iq) => iq.identifier === selectedValue
                           );
                           const os = optionSets.find(
-                            oSet => oSet.id === question.option_set_id
+                            (oSet) => oSet.id === question.option_set_id
                           );
+                          // eslint-disable-next-line no-unused-expressions
                           question &&
                             os &&
-                            os.option_in_option_sets.forEach((oios, index) => {
+                            os.option_in_option_sets.forEach((oios, _index) => {
                               let optionObj = {
                                 value: "",
                                 option_identifier: oios.option.identifier,
                                 text: oios.option.text,
                                 instrument_question_id: question.id,
-                                notes: ""
+                                notes: "",
                               };
                               if (
                                 !values.options.find(
-                                  option =>
+                                  (option) =>
                                     option.identifier ===
                                     optionObj.option_identifier
                                 )
@@ -224,6 +223,7 @@ const NewScoreUnit = props => {
                                 arrayHelpers.push(optionObj);
                               }
                             });
+                          // eslint-disable-next-line no-unused-expressions
                           question &&
                             hasOtherOption(question) &&
                             os &&
@@ -232,12 +232,12 @@ const NewScoreUnit = props => {
                               option_identifier: os.other_option.identifier,
                               text: os.other_option.text,
                               instrument_question_id: question.id,
-                              notes: ""
+                              notes: "",
                             });
                         }}
                       >
                         {instrumentQuestions &&
-                          instrumentQuestions.map(iq => {
+                          instrumentQuestions.map((iq) => {
                             return (
                               <Option key={`${iq.identifier}`}>
                                 {iq.identifier}
@@ -268,7 +268,7 @@ const NewScoreUnit = props => {
                           <Col span={10}>
                             <span
                               dangerouslySetInnerHTML={{
-                                __html: option.text
+                                __html: option.text,
                               }}
                             />
                           </Col>

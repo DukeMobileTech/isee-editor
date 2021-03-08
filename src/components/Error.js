@@ -1,5 +1,5 @@
-import React from "react";
 import { Typography } from "antd";
+import React from "react";
 import { CenteredH4 } from "../utils/Styles";
 
 const { Text } = Typography;

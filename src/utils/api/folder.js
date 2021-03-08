@@ -3,19 +3,19 @@ import { instance } from "./api";
 /**
  * Folder
  */
-export const getFolders = questionSetId => {
+export const getFolders = (questionSetId) => {
   return instance.get(`/question_sets/${questionSetId}/folders`);
 };
 
 export const createFolder = (questionSetId, folder) => {
   return instance.post(`/question_sets/${questionSetId}/folders`, {
-    folder: folder
+    folder: folder,
   });
 };
 
 export const updateFolder = (questionSetId, id, folder) => {
   return instance.put(`/question_sets/${questionSetId}/folders/${id}`, {
-    folder: folder
+    folder: folder,
   });
 };
 

@@ -3,7 +3,7 @@ import { instance } from "./api";
 /*
 Instrument
 */
-export const getInstruments = projectId => {
+export const getInstruments = (projectId) => {
   return instance.get(`/projects/${projectId}/instruments`);
 };
 
@@ -18,21 +18,21 @@ export const getInstrumentPdf = (instrument, language, columnCount) => {
       params: { language: language, column_count: columnCount },
       responseType: "arraybuffer",
       headers: {
-        Accept: "application/pdf"
-      }
+        Accept: "application/pdf",
+      },
     }
   );
 };
 
 export const createInstrument = (projectId, instrument) => {
   return instance.post(`/projects/${projectId}/instruments`, {
-    instrument: instrument
+    instrument: instrument,
   });
 };
 
 export const updateInstrument = (projectId, id, instrument) => {
   return instance.put(`/projects/${projectId}/instruments/${id}`, {
-    instrument: instrument
+    instrument: instrument,
   });
 };
 

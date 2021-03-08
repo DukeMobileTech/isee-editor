@@ -1,23 +1,21 @@
+import { Button, Form as AntForm, Layout, Row } from "antd";
+import axios from "axios";
+import { Field, Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
-import { Formik, Form, Field } from "formik";
+import { CenteredH2, MainContent } from "../utils/Styles";
+import { AlertErrorMessage } from "../utils/Utils";
 import AppFooter from "./AppFooter";
 import { AppHeader } from "./Headers";
-import { Layout, Form as AntForm, Button, Row } from "antd";
-import { MainContent, CenteredH2 } from "../utils/Styles";
-import { AlertErrorMessage } from "../utils/Utils";
-import axios from "axios";
 
 const { Content } = Layout;
 const FormItem = AntForm.Item;
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
-    .required("Email is required"),
+  email: Yup.string().email().required("Email is required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
-    .required("Password is required")
+    .required("Password is required"),
 });
 
 const Login = () => {
@@ -25,24 +23,25 @@ const Login = () => {
     <Formik
       initialValues={{
         email: "",
-        password: ""
+        password: "",
       }}
       validationSchema={LoginSchema}
       onSubmit={(values, { resetForm }) => {
         axios
           .create({
+            // eslint-disable-next-line no-undef
             baseURL: `${process.env.REACT_APP_BASE_URL}/api/v4/`,
-            responseType: "json"
+            responseType: "json",
           })
           .post("/user_token", {
-            auth: { email: values.email, password: values.password }
+            auth: { email: values.email, password: values.password },
           })
-          .then(response => {
+          .then((response) => {
             sessionStorage.setItem("email", values.email);
             sessionStorage.setItem("jwt", response.data.jwt);
             window.location = "/";
           })
-          .catch(error => {
+          .catch((error) => {
             resetForm();
           });
       }}

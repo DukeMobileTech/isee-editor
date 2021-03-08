@@ -1,35 +1,34 @@
-import { Button, Col, Row, Spin, Table, Layout, Menu } from "antd";
-import React, { useEffect, useState } from "react";
 import {
   ImportOutlined,
+  OrderedListOutlined,
   PlusOutlined,
   TableOutlined,
-  OrderedListOutlined
 } from "@ant-design/icons";
-
-import { CenteredH2, CenteredH4, CenteredH3 } from "../../utils/Styles";
-import ExpandedQuestion from "../utils/ExpandedQuestion";
+import { Button, Col, Layout, Menu, Row, Spin, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { getDisplay } from "../../utils/api/display";
+import { deleteInstrumentQuestion } from "../../utils/api/instrument_question";
+import {
+  DeleteButton,
+  EditButton,
+  LeftCancelButton,
+  TranslationButton,
+  ViewButton,
+} from "../../utils/Buttons";
+import { CenteredH2, CenteredH3, CenteredH4 } from "../../utils/Styles";
+import { customExpandIcon } from "../../utils/Utils";
 import ImportInstrumentQuestion from "../InstrumentQuestion/ImportInstrumentQuestion";
 import InstrumentQuestion from "../InstrumentQuestion/InstrumentQuestion";
 import NewInstrumentQuestion from "../InstrumentQuestion/NewInstrumentQuestion";
-import QuestionForm from "../Question/QuestionForm";
-import { deleteInstrumentQuestion } from "../../utils/api/instrument_question";
-import { getDisplay } from "../../utils/api/display";
-import TableQuestions from "./TableQuestions";
-import { customExpandIcon } from "../../utils/Utils";
-import DisplayQuestions from "./DisplayQuestions";
-import {
-  ViewButton,
-  EditButton,
-  DeleteButton,
-  TranslationButton,
-  LeftCancelButton
-} from "../../utils/Buttons";
 import Translations from "../InstrumentTranslation/Translations";
+import QuestionForm from "../Question/QuestionForm";
+import ExpandedQuestion from "../utils/ExpandedQuestion";
+import DisplayQuestions from "./DisplayQuestions";
+import TableQuestions from "./TableQuestions";
 
 const { Column } = Table;
 
-const Display = props => {
+const Display = (props) => {
   const projectId = props.projectId;
   const displays = props.displays;
   const [loading, setLoading] = useState(false);
@@ -46,6 +45,24 @@ const Display = props => {
   const [showTranslations, setShowTranslations] = useState(false);
   const [questionIds, setQuestionIds] = useState([]);
 
+  const handleCancel = () => {
+    setShowNew(false);
+    setShowEdit(false);
+    setShowImport(false);
+    setShowTables(false);
+    setShowQuestionModal(false);
+    setInstrumentQuestion(null);
+  };
+
+  const fetchDisplay = () => {
+    handleCancel();
+    setLoading(true);
+    getDisplay(projectId, display.instrument_id, display.id).then((results) => {
+      setDisplay(results.data);
+      setLoading(false);
+    });
+  };
+
   useEffect(() => {
     fetchDisplay();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,40 +76,22 @@ const Display = props => {
     setShowNew(true);
   };
 
-  const handleCancel = () => {
-    setShowNew(false);
-    setShowEdit(false);
-    setShowImport(false);
-    setShowTables(false);
-    setShowQuestionModal(false);
-    setInstrumentQuestion(null);
-  };
-
   const handleImportCompleted = () => {
     setShowImport(false);
     fetchDisplay();
   };
 
-  const fetchDisplay = () => {
-    handleCancel();
-    setLoading(true);
-    getDisplay(projectId, display.instrument_id, display.id).then(results => {
-      setDisplay(results.data);
-      setLoading(false);
-    });
-  };
-
-  const handleInstrumentQuestionEdit = question => {
+  const handleInstrumentQuestionEdit = (question) => {
     setEditQuestion(question);
     setShowEdit(true);
   };
 
-  const handleQuestionDelete = question => {
+  const handleQuestionDelete = (question) => {
     deleteInstrumentQuestion(projectId, question)
-      .then(res => {
+      .then((res) => {
         fetchDisplay();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -101,18 +100,18 @@ const Display = props => {
     setShowOrder(!showOrder);
   };
 
-  const handleQuestionClick = question => {
+  const handleQuestionClick = (question) => {
     setInstrumentQuestion(question);
     setShowQuestionModal(true);
   };
 
-  const handleTranslation = question => {
+  const handleTranslation = (question) => {
     setQuestionIds([question.question.id]);
     setShowTranslations(true);
   };
 
   const handleTranslations = () => {
-    setQuestionIds(display.instrument_questions.map(iq => iq.question.id));
+    setQuestionIds(display.instrument_questions.map((iq) => iq.question.id));
     setShowTranslations(true);
   };
 
@@ -124,10 +123,10 @@ const Display = props => {
     setCurrentPage(page);
   };
 
-  const handleDisplayClick = item => {
-    const dis = displays.find(dis => dis.id === Number(item.key));
+  const handleDisplayClick = (item) => {
+    const dis = displays.find((dis) => dis.id === Number(item.key));
     setLoading(true);
-    getDisplay(projectId, dis.instrument_id, dis.id).then(results => {
+    getDisplay(projectId, dis.instrument_id, dis.id).then((results) => {
       setDisplay(results.data);
       setLoading(false);
     });
@@ -214,7 +213,7 @@ const Display = props => {
             defaultOpenKeys={[`${display.id}`]}
             onClick={handleDisplayClick}
           >
-            {displays.map(displayItem => {
+            {displays.map((displayItem) => {
               return (
                 <Menu.Item key={`${displayItem.id}`}>
                   {displayItem.title}
@@ -254,8 +253,8 @@ const Display = props => {
             <Table
               size="middle"
               dataSource={display.instrument_questions}
-              rowKey={iq => iq.id}
-              expandedRowRender={iq => (
+              rowKey={(iq) => iq.id}
+              expandedRowRender={(iq) => (
                 <ExpandedQuestion
                   question={iq.question}
                   options={iq.options}
@@ -263,11 +262,11 @@ const Display = props => {
                   fetchDisplay={fetchDisplay}
                 />
               )}
-              expandIcon={props => customExpandIcon(props)}
+              expandIcon={(props) => customExpandIcon(props)}
               pagination={{
                 defaultPageSize: 25,
                 onChange: onPageChange,
-                current: currentPage
+                current: currentPage,
               }}
             >
               <Column title="Position" dataIndex="position" />
@@ -278,7 +277,7 @@ const Display = props => {
                 render={(text, iq) => (
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: iq.question.text
+                      __html: iq.question.text,
                     }}
                   />
                 )}
@@ -298,6 +297,7 @@ const Display = props => {
                     <DeleteButton
                       handleClick={() => {
                         if (
+                          // eslint-disable-next-line no-alert
                           window.confirm(
                             `Are you sure you want to delete ${iq.identifier}?`
                           )

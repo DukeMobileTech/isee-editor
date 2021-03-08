@@ -1,35 +1,30 @@
-import * as Yup from "yup";
-
-import { RightSubmitButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Col, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useContext } from "react";
-
+import * as Yup from "yup";
+import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
 import { updateInstrumentQuestion } from "../../utils/api/instrument_question";
-import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
+import { RightSubmitButton } from "../../utils/Buttons";
+import { AlertErrorMessage, DRow } from "../../utils/Utils";
 
 const { Text } = Typography;
 const InstrumentQuestionSchema = Yup.object().shape({
   identifier: Yup.string().required("Identifier is required"),
-  display_id: Yup.number().required("Subsection is required")
+  display_id: Yup.number().required("Subsection is required"),
 });
 
-const InstrumentQuestionForm = props => {
+const InstrumentQuestionForm = (props) => {
   const iq = props.instrumentQuestion;
   // eslint-disable-next-line no-unused-vars
   const [sections, setSections] = useContext(InstrumentSectionContext);
-  const displays = [].concat.apply(
-    [],
-    sections.map(sec => sec.displays)
-  );
+  const displays = [].concat(...sections.map((sec) => sec.displays));
   // eslint-disable-next-line no-unused-vars
   const [instrumentQuestions, setInstrumentQuestions] = useContext(
     InstrumentQuestionContext
   );
 
-  const hasMultipleResponses = question => {
+  const hasMultipleResponses = (question) => {
     return (
       question.question_type === "SELECT_MULTIPLE" ||
       question.question_type === "SELECT_MULTIPLE_WRITE_OTHER" ||
@@ -43,7 +38,7 @@ const InstrumentQuestionForm = props => {
       initialValues={{
         identifier: iq.identifier || "",
         display_id: iq.display_id || "",
-        carry_forward_identifier: iq.carry_forward_identifier || ""
+        carry_forward_identifier: iq.carry_forward_identifier || "",
       }}
       validationSchema={InstrumentQuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -52,13 +47,13 @@ const InstrumentQuestionForm = props => {
           instrument_id: iq.instrument_id,
           identifier: values.identifier,
           display_id: values.display_id,
-          carry_forward_identifier: values.carry_forward_identifier
+          carry_forward_identifier: values.carry_forward_identifier,
         };
         updateInstrumentQuestion(props.projectId, editQuestion)
-          .then(response => {
+          .then((response) => {
             props.fetchDisplay();
           })
-          .catch(error => {
+          .catch((error) => {
             for (const err of error.data.errors) {
               if (err.includes("Identifier")) {
                 setErrors({ identifier: err });
@@ -90,8 +85,8 @@ const InstrumentQuestionForm = props => {
             </Col>
             <Col span={14}>
               <Field className="ant-input" name="display_id" component="select">
-                <option></option>
-                {displays.map(display => {
+                <option />
+                {displays.map((display) => {
                   return (
                     <option
                       key={display.id}
@@ -118,14 +113,14 @@ const InstrumentQuestionForm = props => {
                 name="carry_forward_identifier"
                 component="select"
               >
-                <option></option>
+                <option />
                 {instrumentQuestions
                   .filter(
-                    question =>
+                    (question) =>
                       question.number_in_instrument < iq.number_in_instrument &&
                       hasMultipleResponses(question)
                   )
-                  .map(instrumentQuestion => {
+                  .map((instrumentQuestion) => {
                     return (
                       <option
                         key={instrumentQuestion.id}

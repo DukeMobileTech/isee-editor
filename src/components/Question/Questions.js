@@ -1,26 +1,26 @@
 import { Row, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
-  getAllQuestions,
   copyQuestion,
   deleteFolderQuestion,
+  getAllQuestions,
   getFolderQuestions,
-  getQuestionSetQuestions
+  getQuestionSetQuestions,
 } from "../../utils/api/question";
 import {
-  TranslationAddButtons,
-  EditButton,
-  DeleteButton,
-  TranslationButton,
   CopyButton,
-  TranslationOrderAddButtons
+  DeleteButton,
+  EditButton,
+  TranslationAddButtons,
+  TranslationButton,
+  TranslationOrderAddButtons,
 } from "../../utils/Buttons";
 import { customExpandIcon } from "../../utils/Utils";
 import Translations from "../QuestionTranslation/Translations";
-import Attributes from "./Attributes";
-import { useLocation } from "react-router-dom";
-import QuestionForm from "./QuestionForm";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
+import Attributes from "./Attributes";
+import QuestionForm from "./QuestionForm";
 import QuestionReorder from "./QuestionReorder";
 
 const Questions = () => {
@@ -38,11 +38,6 @@ const Questions = () => {
   const [questionSet, setQuestionSet] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [reorder, setReorder] = useState(false);
-
-  useEffect(() => {
-    fetchQuestions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const fetchQuestions = async () => {
     setVisible(false);
@@ -66,98 +61,34 @@ const Questions = () => {
     }
   };
 
-  const columns = [
-    {
-      title: "Question Set",
-      dataIndex: "question_set_title",
-      width: "15%",
-      ...getColumnSearchProps("question_set_title", searchText, setSearchText),
-      sortDirections: ["descend", "ascend"],
-      sorter: (a, b) => a.question_set_title.localeCompare(b.question_set_title)
-    },
-    {
-      title: "Folder",
-      dataIndex: "folder_title",
-      width: "15%",
-      ...getColumnSearchProps("folder_title", searchText, setSearchText),
-      sortDirections: ["descend", "ascend"],
-      sorter: (a, b) => a.folder_title.localeCompare(b.folder_title)
-    },
-    {
-      title: "Identifier",
-      dataIndex: "question_identifier",
-      width: "10%",
-      ...getColumnSearchProps("question_identifier", searchText, setSearchText)
-    },
-    searchText === ""
-      ? {
-          title: "Text",
-          dataIndex: "text",
-          width: "40%",
-          ...getColumnSearchProps("text", searchText, setSearchText),
-          render: (text, question) => (
-            <span
-              dangerouslySetInnerHTML={{
-                __html: question.text
-              }}
-            />
-          )
-        }
-      : {
-          title: "Text",
-          dataIndex: "text",
-          width: "40%",
-          ...getColumnSearchProps("text", searchText, setSearchText)
-        },
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      width: "20%",
-      render: (text, question) => (
-        <Row gutter={8} type="flex" justify="space-around" align="middle">
-          <EditButton handleClick={() => handleEditQuestion(question)} />
-          <TranslationButton
-            handleClick={() => handleShowTranslations(question)}
-          />
-          <CopyButton handleClick={() => handleCopyQuestion(question)} />
-          <DeleteButton
-            handleClick={() => {
-              if (
-                window.confirm(
-                  `Are you sure you want to delete ${question.question_identifier}?`
-                )
-              )
-                handleDeleteQuestion(question);
-            }}
-          />
-        </Row>
-      )
-    }
-  ];
+  useEffect(() => {
+    fetchQuestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleEditQuestion = question => {
+  const handleEditQuestion = (question) => {
     setQuestion(question);
     setVisible(true);
   };
 
-  const handleDeleteQuestion = question => {
+  const handleDeleteQuestion = (question) => {
     deleteFolderQuestion(question)
-      .then(res => {
+      .then((res) => {
         fetchQuestions();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleCopyQuestion = question => {
-    copyQuestion(question.id).then(response => {
+  const handleCopyQuestion = (question) => {
+    copyQuestion(question.id).then((response) => {
       questions.unshift(response.data);
       setQuestions([...questions]);
     });
   };
 
-  const handleShowTranslations = question => {
+  const handleShowTranslations = (question) => {
     setQuestion(question);
     setShowQuestionTranslations(!showQuestionTranslations);
   };
@@ -178,6 +109,77 @@ const Questions = () => {
   const handleReorder = () => {
     setReorder(!reorder);
   };
+
+  const columns = [
+    {
+      title: "Question Set",
+      dataIndex: "question_set_title",
+      width: "15%",
+      ...getColumnSearchProps("question_set_title", searchText, setSearchText),
+      sortDirections: ["descend", "ascend"],
+      sorter: (a, b) =>
+        a.question_set_title.localeCompare(b.question_set_title),
+    },
+    {
+      title: "Folder",
+      dataIndex: "folder_title",
+      width: "15%",
+      ...getColumnSearchProps("folder_title", searchText, setSearchText),
+      sortDirections: ["descend", "ascend"],
+      sorter: (a, b) => a.folder_title.localeCompare(b.folder_title),
+    },
+    {
+      title: "Identifier",
+      dataIndex: "question_identifier",
+      width: "10%",
+      ...getColumnSearchProps("question_identifier", searchText, setSearchText),
+    },
+    searchText === ""
+      ? {
+          title: "Text",
+          dataIndex: "text",
+          width: "40%",
+          ...getColumnSearchProps("text", searchText, setSearchText),
+          render: (text, question) => (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: question.text,
+              }}
+            />
+          ),
+        }
+      : {
+          title: "Text",
+          dataIndex: "text",
+          width: "40%",
+          ...getColumnSearchProps("text", searchText, setSearchText),
+        },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      width: "20%",
+      render: (text, question) => (
+        <Row gutter={8} type="flex" justify="space-around" align="middle">
+          <EditButton handleClick={() => handleEditQuestion(question)} />
+          <TranslationButton
+            handleClick={() => handleShowTranslations(question)}
+          />
+          <CopyButton handleClick={() => handleCopyQuestion(question)} />
+          <DeleteButton
+            handleClick={() => {
+              if (
+                // eslint-disable-next-line no-alert
+                window.confirm(
+                  `Are you sure you want to delete ${question.question_identifier}?`
+                )
+              )
+                handleDeleteQuestion(question);
+            }}
+          />
+        </Row>
+      ),
+    },
+  ];
 
   if (reorder) {
     return (
@@ -235,14 +237,14 @@ const Questions = () => {
         <Table
           columns={columns}
           dataSource={questions}
-          rowKey={question => question.id}
+          rowKey={(question) => question.id}
           pagination={{
             defaultPageSize: 25,
             onChange: onPageChange,
-            current: currentPage
+            current: currentPage,
           }}
-          expandedRowRender={question => <Attributes question={question} />}
-          expandIcon={props => customExpandIcon(props)}
+          expandedRowRender={(question) => <Attributes question={question} />}
+          expandIcon={(props) => customExpandIcon(props)}
         />
       </Spin>
     );

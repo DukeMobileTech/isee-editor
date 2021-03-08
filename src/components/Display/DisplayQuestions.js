@@ -1,18 +1,17 @@
-import React, { Fragment } from "react";
-import { Col, List, Row } from "antd";
 import { DragOutlined } from "@ant-design/icons";
-
-import { CenteredH3 } from "../../utils/Styles";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getListStyle, getItemStyle } from "../../utils/Utils";
-import { LeftCancelButton } from "../../utils/Buttons";
+import { Col, List, Row } from "antd";
+import React, { Fragment } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { orderInstrumentQuestions } from "../../utils/api/display";
+import { LeftCancelButton } from "../../utils/Buttons";
+import { CenteredH3 } from "../../utils/Styles";
+import { getItemStyle, getListStyle } from "../../utils/Utils";
 
-const DisplayQuestions = props => {
+const DisplayQuestions = (props) => {
   const instrumentQuestions = props.instrumentQuestions;
   const display = props.display;
 
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     let order = [];
     const copy = [...instrumentQuestions];
     copy.splice(
@@ -28,9 +27,9 @@ const DisplayQuestions = props => {
       display.instrument_id,
       display.id,
       {
-        order
+        order,
       }
-    ).then(res => {
+    ).then((res) => {
       props.fetchDisplay();
     });
   };
@@ -86,7 +85,7 @@ const DisplayQuestions = props => {
                           <Col span={17}>
                             <span
                               dangerouslySetInnerHTML={{
-                                __html: instrumentQuestion.question.text
+                                __html: instrumentQuestion.question.text,
                               }}
                             />
                           </Col>

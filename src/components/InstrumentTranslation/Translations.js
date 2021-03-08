@@ -1,12 +1,12 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { TranslationsHeader } from "../utils/TranslationsHeader";
 import { Spin, Table } from "antd";
-import { getColumnSearchProps } from "../utils/ColumnSearch";
-import QuestionTranslations from "./QuestionTranslations";
+import React, { Fragment, useEffect, useState } from "react";
 import { getQuestions } from "../../utils/api/question";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
 import OptionTranslations from "./OptionTranslations";
+import QuestionTranslations from "./QuestionTranslations";
 
-const OptionsTable = props => {
+const OptionsTable = (props) => {
   const options = props.options;
   const [searchText, setSearchText] = useState("");
 
@@ -16,7 +16,7 @@ const OptionsTable = props => {
       dataIndex: "identifier",
       width: "20%",
       editable: true,
-      ...getColumnSearchProps("identifier", searchText, setSearchText)
+      ...getColumnSearchProps("identifier", searchText, setSearchText),
     },
     searchText === ""
       ? {
@@ -28,17 +28,17 @@ const OptionsTable = props => {
           render: (text, option) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: option.text
+                __html: option.text,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Text",
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text", searchText, setSearchText)
+          ...getColumnSearchProps("text", searchText, setSearchText),
         },
     {
       title: "Translations",
@@ -46,16 +46,16 @@ const OptionsTable = props => {
       width: "50%",
       sorter: (a, b) => {
         const qta = a.option_translations.filter(
-          t => t.language === props.language
+          (t) => t.language === props.language
         );
         const qtb = b.option_translations.filter(
-          t => t.language === props.language
+          (t) => t.language === props.language
         );
         return qta.length - qtb.length;
       },
       render: (text, option) => {
         const translations = option.option_translations.filter(
-          translation => translation.language === props.language
+          (translation) => translation.language === props.language
         );
         return (
           <OptionTranslations
@@ -64,15 +64,15 @@ const OptionsTable = props => {
             language={props.language}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Table
       bordered
       dataSource={options}
-      rowKey={option => option.id}
+      rowKey={(option) => option.id}
       columns={columns}
       size="small"
       pagination={false}
@@ -80,7 +80,7 @@ const OptionsTable = props => {
   );
 };
 
-const TranslationsTable = props => {
+const TranslationsTable = (props) => {
   const questions = props.questions;
   const language = props.language;
   const [searchText, setSearchText] = useState("");
@@ -91,7 +91,7 @@ const TranslationsTable = props => {
       dataIndex: "question_identifier",
       width: "20%",
       editable: true,
-      ...getColumnSearchProps("question_identifier", searchText, setSearchText)
+      ...getColumnSearchProps("question_identifier", searchText, setSearchText),
     },
     searchText === ""
       ? {
@@ -103,17 +103,17 @@ const TranslationsTable = props => {
           render: (text, question) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: question.text
+                __html: question.text,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Text",
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text", searchText, setSearchText)
+          ...getColumnSearchProps("text", searchText, setSearchText),
         },
     {
       title: "Translations",
@@ -121,16 +121,16 @@ const TranslationsTable = props => {
       width: "50%",
       sorter: (a, b) => {
         const qta = a.question_translations.filter(
-          t => t.language === props.language
+          (t) => t.language === props.language
         );
         const qtb = b.question_translations.filter(
-          t => t.language === props.language
+          (t) => t.language === props.language
         );
         return qta.length - qtb.length;
       },
       render: (text, question) => {
         const translations = question.question_translations.filter(
-          translation => translation.language === props.language
+          (translation) => translation.language === props.language
         );
         return (
           <QuestionTranslations
@@ -140,11 +140,11 @@ const TranslationsTable = props => {
             fetchQuestions={props.fetchQuestions}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
-  const expandedRowRender = props => {
+  const expandedRowRender = (props) => {
     if (props.options.length > 0) {
       return <OptionsTable options={props.options} language={language} />;
     } else {
@@ -156,7 +156,7 @@ const TranslationsTable = props => {
     <Table
       bordered
       dataSource={questions}
-      rowKey={question => question.id}
+      rowKey={(question) => question.id}
       columns={columns}
       size="small"
       pagination={{ defaultPageSize: 25 }}
@@ -165,18 +165,11 @@ const TranslationsTable = props => {
   );
 };
 
-const Translations = props => {
+const Translations = (props) => {
   const questionIds = props.questionIds;
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState(null);
   const [questions, setQuestions] = useState([]);
-
-  useEffect(() => {
-    if (questionIds && language) {
-      fetchQuestions();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questionIds, language]);
 
   const fetchQuestions = async () => {
     setLoading(true);
@@ -187,12 +180,19 @@ const Translations = props => {
       language
     );
     const ordered = [];
-    questionIds.forEach(id => {
-      ordered.push(result.data.find(qst => qst.id === id));
+    questionIds.forEach((id) => {
+      ordered.push(result.data.find((qst) => qst.id === id));
     });
     setQuestions(ordered);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (questionIds && language) {
+      fetchQuestions();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionIds, language]);
 
   function handleChange(value) {
     setLanguage(value);

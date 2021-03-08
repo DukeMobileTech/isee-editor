@@ -1,24 +1,22 @@
-import * as Yup from "yup";
-
-import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import { Form as AntForm } from "antd";
 import { Field, Form, Formik } from "formik";
+import React from "react";
+import * as Yup from "yup";
 import {
   createScoreScheme,
-  updateScoreScheme
+  updateScoreScheme,
 } from "../../utils/api/score_scheme";
-import { AlertErrorMessage } from "../../utils/Utils";
-
-import { Form as AntForm } from "antd";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
 import { CenteredH4 } from "../../utils/Styles";
-import React from "react";
+import { AlertErrorMessage } from "../../utils/Utils";
 
 const FormItem = AntForm.Item;
 
 const ScoreSchemeSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required")
+  title: Yup.string().required("Title is required"),
 });
 
-const ScoreSchemeForm = props => {
+const ScoreSchemeForm = (props) => {
   const instrument = props.instrument;
   const scoreScheme = props.scoreScheme;
 
@@ -27,13 +25,13 @@ const ScoreSchemeForm = props => {
       initialValues={{
         id: (scoreScheme && scoreScheme.id) || null,
         title: (scoreScheme && scoreScheme.title) || "",
-        active: (scoreScheme && scoreScheme.active) || false
+        active: (scoreScheme && scoreScheme.active) || false,
       }}
       validationSchema={ScoreSchemeSchema}
       onSubmit={(values, { setErrors }) => {
         const scoreScheme = {
           title: values.title,
-          active: values.active
+          active: values.active,
         };
         if (values.id) {
           updateScoreScheme(
@@ -42,22 +40,22 @@ const ScoreSchemeForm = props => {
             values.id,
             scoreScheme
           )
-            .then(response => {
+            .then((response) => {
               if (response.status === 204) {
                 props.fetchScoreSchemes();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         } else {
           createScoreScheme(instrument.project_id, instrument.id, scoreScheme)
-            .then(response => {
+            .then((response) => {
               if (response.status === 201) {
                 props.fetchScoreSchemes();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         }

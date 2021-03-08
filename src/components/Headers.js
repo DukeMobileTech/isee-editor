@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
-import { Button, Divider, Layout, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { Button, Divider, Layout, Menu } from "antd";
+import React, { useContext } from "react";
 import styled from "styled-components";
-
-import { CenteredH2 } from "../utils/Styles";
 import { ProjectContext } from "../context/ProjectContext";
+import { CenteredH2 } from "../utils/Styles";
 
 const Logo = styled.div`
   width: 120px;
@@ -19,27 +18,25 @@ const Logo = styled.div`
 const header = {
   lineHeight: "64px",
   textAlign: "center",
-  fontWeight: "bold"
+  fontWeight: "bold",
 };
 
-export const AppHeader = props => {
+export const AppHeader = (props) => {
   // eslint-disable-next-line no-unused-vars
-  const [projects, currentProjectId, setCurrentProjectId] = useContext(
-    ProjectContext
-  );
+  const [currentProjectId, setCurrentProjectId] = useContext(ProjectContext);
 
-  const handleSignout = e => {
+  const handleSignout = (e) => {
     e.preventDefault();
     sessionStorage.clear();
     window.location = "/";
   };
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     e.preventDefault();
     window.location = "/";
   };
 
-  const UserMenuItem = props => {
+  const UserMenuItem = (props) => {
     return (
       <Menu.Item
         key="4"
@@ -73,6 +70,7 @@ export const AppHeader = props => {
           </Menu.Item>
           <Menu.Item key="3">
             <a
+              // eslint-disable-next-line no-undef
               href={`${process.env.REACT_APP_BASE_URL}/admin`}
               target="_blank"
               rel="noopener noreferrer"

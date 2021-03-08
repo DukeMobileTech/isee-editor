@@ -1,5 +1,5 @@
-import { PROJECTS } from "../constants/projects";
 import { INSTRUMENTS } from "../constants/instruments";
+import { PROJECTS } from "../constants/projects";
 
 const loadingReducer = (state = false, action) => {
   switch (action.type) {

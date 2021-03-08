@@ -1,19 +1,18 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
-import SubdomainTranslations from "./SubdomainTranslations";
-import { TranslationsHeader } from "../utils/TranslationsHeader";
-import { getColumnSearchProps } from "../utils/ColumnSearch";
 import { getSubdomainTranslations } from "../../utils/api/subdomain_translation";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
+import SubdomainTranslations from "./SubdomainTranslations";
 
-const SubdomainTable = props => {
+const SubdomainTable = (props) => {
   const [searchText, setSearchText] = useState("");
 
   const columns = [
     {
       title: "Title",
       dataIndex: "title",
-      width: "10%"
+      width: "10%",
     },
     searchText === ""
       ? {
@@ -25,17 +24,17 @@ const SubdomainTable = props => {
           render: (text, subdomain) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: subdomain.name
+                __html: subdomain.name,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Name",
           dataIndex: "name",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("name", searchText, setSearchText)
+          ...getColumnSearchProps("name", searchText, setSearchText),
         },
     {
       title: "Translations",
@@ -43,7 +42,7 @@ const SubdomainTable = props => {
       width: "60%",
       render: (text, subdomain) => {
         const subdomainTranslations = props.translations.filter(
-          trans => trans.subdomain_id === subdomain.id
+          (trans) => trans.subdomain_id === subdomain.id
         );
         return (
           <SubdomainTranslations
@@ -55,15 +54,15 @@ const SubdomainTable = props => {
             domain={props.domain}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Table
       bordered
       dataSource={props.subdomains}
-      rowKey={subdomain => subdomain.id}
+      rowKey={(subdomain) => subdomain.id}
       columns={columns}
       size="small"
       pagination={{ defaultPageSize: 25 }}
@@ -71,7 +70,7 @@ const SubdomainTable = props => {
   );
 };
 
-const Translations = props => {
+const Translations = (props) => {
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState(null);
   const [translations, setTranslations] = useState([]);

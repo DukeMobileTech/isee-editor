@@ -7,7 +7,9 @@
         "react",
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -21,7 +23,7 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react", "react-hooks"
+        "react", "react-hooks", "import"
     ],
     "rules": {
         "react/prop-types": 0,

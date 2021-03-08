@@ -1,7 +1,7 @@
-import { Tag, Typography, Row, Col } from "antd";
-
-import React, { useState, useContext, Fragment } from "react";
+import { Col, Row, Tag, Typography } from "antd";
+import React, { Fragment, useContext, useState } from "react";
 import { InstructionContext } from "../../context/InstructionContext";
+
 const { Text } = Typography;
 
 const Attributes = ({ question }) => {
@@ -29,8 +29,8 @@ const Attributes = ({ question }) => {
             <span
               dangerouslySetInnerHTML={{
                 __html: instructions.find(
-                  ins => ins.id === Number(question.instruction_id)
-                ).text
+                  (ins) => ins.id === Number(question.instruction_id)
+                ).text,
               }}
             />
           </Col>

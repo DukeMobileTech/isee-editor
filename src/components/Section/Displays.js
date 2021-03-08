@@ -1,24 +1,22 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Button, Col, Divider, List, Row, Drawer, Layout, Menu } from "antd";
-import { DragOutlined, PlusOutlined, GlobalOutlined } from "@ant-design/icons";
-
+import { DragOutlined, GlobalOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Divider, Drawer, Layout, List, Menu, Row } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
+import { deleteDisplay } from "../../utils/api/display";
+import { getSections, orderDisplays } from "../../utils/api/section";
 import {
   DeleteButton,
   EditButton,
-  LeftCancelButton
+  LeftCancelButton,
 } from "../../utils/Buttons";
-import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
-import DisplayForm from "./DisplayForm";
-import { deleteDisplay } from "../../utils/api/display";
-import { getSections, orderDisplays } from "../../utils/api/section";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getListStyle, getItemStyle } from "../../utils/Utils";
+import { CenteredH2, CenteredH4 } from "../../utils/Styles";
+import { getItemStyle, getListStyle } from "../../utils/Utils";
 import Display from "../Display/Display";
 import { Translations } from "../DisplayTranslation/Translations";
-import { CenteredH2, CenteredH4 } from "../../utils/Styles";
+import DisplayForm from "./DisplayForm";
 
-const Displays = props => {
-  // eslint-disable-next-line no-unused-vars
+const Displays = (props) => {
   const [sections, setSections] = useContext(InstrumentSectionContext);
   const [section, setSection] = useState(props.section);
   const [displays, setDisplays] = useState(section.displays);
@@ -28,7 +26,7 @@ const Displays = props => {
   const [showTranslations, setShowTranslations] = useState(false);
 
   useEffect(() => {
-    sections.forEach(sec => {
+    sections.forEach((sec) => {
       if (sec.id === section.id) {
         setDisplays(sec.displays);
       }
@@ -49,21 +47,21 @@ const Displays = props => {
     setShowForm(true);
   };
 
-  const handleEditDisplay = display => {
+  const handleEditDisplay = (display) => {
     setDisplay(display);
     setShowForm(true);
   };
 
-  const handleDeleteDisplay = display => {
+  const handleDeleteDisplay = (display) => {
     deleteDisplay(
       props.instrument.project_id,
       display.instrument_id,
       display.id
     )
-      .then(res => {
+      .then((res) => {
         fetchSections();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -73,7 +71,7 @@ const Displays = props => {
     setShowQuestions(false);
   };
 
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     let order = [];
     const copy = [...displays];
     copy.splice(
@@ -89,14 +87,14 @@ const Displays = props => {
       props.instrument.id,
       section.id,
       {
-        order
+        order,
       }
-    ).then(res => {
+    ).then((res) => {
       fetchSections();
     });
   };
 
-  const handleShowQuestions = display => {
+  const handleShowQuestions = (display) => {
     setDisplay(display);
     setShowQuestions(true);
   };
@@ -105,8 +103,8 @@ const Displays = props => {
     setShowTranslations(!showTranslations);
   };
 
-  const handleSectionClick = item => {
-    const clickedSection = sections.find(sec => sec.id === Number(item.key));
+  const handleSectionClick = (item) => {
+    const clickedSection = sections.find((sec) => sec.id === Number(item.key));
     setSection(clickedSection);
   };
 
@@ -140,7 +138,7 @@ const Displays = props => {
             defaultOpenKeys={[`${section.id}`]}
             onClick={handleSectionClick}
           >
-            {sections.map(sectionItem => {
+            {sections.map((sectionItem) => {
               return (
                 <Menu.Item key={`${sectionItem.id}`}>
                   {sectionItem.title}
@@ -217,6 +215,7 @@ const Displays = props => {
                                 <DeleteButton
                                   handleClick={() => {
                                     if (
+                                      // eslint-disable-next-line no-alert
                                       window.confirm(
                                         `Are you sure you want to delete ${display.title}?`
                                       )
@@ -244,7 +243,7 @@ const Displays = props => {
             onClose={handleCancel}
             visible={showForm}
             key={"right"}
-            destroyOnClose={true}
+            destroyOnClose
           >
             <DisplayForm
               instrument={props.instrument}

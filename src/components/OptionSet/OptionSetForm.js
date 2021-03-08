@@ -40,6 +40,17 @@ const OptionSetForm = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const resetOptionSetForm = (array, values, resetForm) => {
+    array.forEach((item, index) => (item.number_in_question = index + 1));
+    resetForm({
+      id: values.id,
+      title: values.title,
+      instruction_id: values.instruction_id,
+      special: values.special,
+      option_in_option_sets: array,
+    });
+  };
+
   const handleDeleteOption = (oios, values, resetForm) => {
     const index = optionSet.option_in_option_sets.findIndex(
       (item) => oios.id === item.id
@@ -60,17 +71,6 @@ const OptionSetForm = (props) => {
         resetOptionSetForm(optionSetOptions, values, resetForm);
       }
     }
-  };
-
-  const resetOptionSetForm = (array, values, resetForm) => {
-    array.forEach((item, index) => (item.number_in_question = index + 1));
-    resetForm({
-      id: values.id,
-      title: values.title,
-      instruction_id: values.instruction_id,
-      special: values.special,
-      option_in_option_sets: array,
-    });
   };
 
   const AddOptionIcon = () => {

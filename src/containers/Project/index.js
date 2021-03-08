@@ -1,11 +1,9 @@
 import { Spin, Table } from "antd";
 import React, { useEffect } from "react";
-
-import { Link } from "react-router-dom";
-import { CenteredH4 } from "../../utils/Styles";
-
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { loadProjects } from "../../redux/actions/projects";
+import { CenteredH4 } from "../../utils/Styles";
 
 const Projects = ({ isLoading, projects, loadProjects, error }) => {
   useEffect(() => {
@@ -16,7 +14,7 @@ const Projects = ({ isLoading, projects, loadProjects, error }) => {
   return (
     <Spin spinning={isLoading}>
       <CenteredH4>Projects</CenteredH4>
-      <Table dataSource={projects} rowKey={project => project.id}>
+      <Table dataSource={projects} rowKey={(project) => project.id}>
         <Table.Column
           title="Name"
           dataIndex="name"
@@ -33,11 +31,11 @@ const Projects = ({ isLoading, projects, loadProjects, error }) => {
 const mapStateToProps = ({ isLoading, projects, error }) => ({
   isLoading,
   projects,
-  error
+  error,
 });
 
-const mapDispatchToProps = dispatch => ({
-  loadProjects: () => dispatch(loadProjects())
+const mapDispatchToProps = (dispatch) => ({
+  loadProjects: () => dispatch(loadProjects()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projects);

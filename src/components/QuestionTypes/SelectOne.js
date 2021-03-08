@@ -1,6 +1,6 @@
-import React from "react";
-import { isSelectOne, hasOtherOption } from "../../utils/Utils";
 import { Radio } from "antd";
+import React from "react";
+import { hasOtherOption, isSelectOne } from "../../utils/Utils";
 
 export const SelectOne = ({ iq }) => {
   if (!isSelectOne(iq)) return null;
@@ -11,7 +11,7 @@ export const SelectOne = ({ iq }) => {
         <Radio key={option.id} value={index}>
           <span
             dangerouslySetInnerHTML={{
-              __html: option.text.replace("<p>", "").replace("</p>", "")
+              __html: option.text.replace("<p>", "").replace("</p>", ""),
             }}
           />
         </Radio>

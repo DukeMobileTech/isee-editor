@@ -1,11 +1,11 @@
+import React from "react";
 import { InstructionProvider } from "./InstructionContext";
+import { InstrumentQuestionProvider } from "./InstrumentQuestionContext";
 import { InstrumentSectionProvider } from "./InstrumentSectionContext";
+import { OptionProvider } from "./OptionContext";
 import { OptionSetProvider } from "./OptionSetContext";
 import { ProjectProvider } from "./ProjectContext";
 import { QuestionSetProvider } from "./QuestionSetContext";
-import React from "react";
-import { InstrumentQuestionProvider } from "./InstrumentQuestionContext";
-import { OptionProvider } from "./OptionContext";
 
 function AppProviders({ children }) {
   return (

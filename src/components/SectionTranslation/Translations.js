@@ -1,12 +1,11 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
-import SectionTranslations from "./SectionTranslations";
-import { TranslationsHeader } from "../utils/TranslationsHeader";
-import { getColumnSearchProps } from "../utils/ColumnSearch";
 import { getSectionTranslations } from "../../utils/api/section_translation";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
+import SectionTranslations from "./SectionTranslations";
 
-const SectionTable = props => {
+const SectionTable = (props) => {
   const sections = props.sections;
   const instrument = props.instrument;
   const translations = props.translations;
@@ -18,7 +17,7 @@ const SectionTable = props => {
       dataIndex: "position",
       width: "20%",
       editable: true,
-      ...getColumnSearchProps("position", searchText, setSearchText)
+      ...getColumnSearchProps("position", searchText, setSearchText),
     },
     searchText === ""
       ? {
@@ -30,30 +29,30 @@ const SectionTable = props => {
           render: (text, section) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: section.title
+                __html: section.title,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Title",
           dataIndex: "title",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("title", searchText, setSearchText)
+          ...getColumnSearchProps("title", searchText, setSearchText),
         },
     {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
       sorter: (a, b) => {
-        const qta = translations.filter(t => t.section_id === a.id);
-        const qtb = translations.filter(t => t.section_id === b.id);
+        const qta = translations.filter((t) => t.section_id === a.id);
+        const qtb = translations.filter((t) => t.section_id === b.id);
         return qta.length - qtb.length;
       },
       render: (text, section) => {
         const sectionTranslations = translations.filter(
-          trans => trans.section_id === section.id
+          (trans) => trans.section_id === section.id
         );
         return (
           <SectionTranslations
@@ -63,15 +62,15 @@ const SectionTable = props => {
             language={props.language}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Table
       bordered
       dataSource={sections}
-      rowKey={section => section.id}
+      rowKey={(section) => section.id}
       columns={columns}
       size="small"
       pagination={{ defaultPageSize: 25 }}
@@ -79,7 +78,7 @@ const SectionTable = props => {
   );
 };
 
-const Translations = props => {
+const Translations = (props) => {
   const sections = props.sections;
   const instrument = props.instrument;
   const [loading, setLoading] = useState(true);

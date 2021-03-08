@@ -1,76 +1,66 @@
-import React, { Fragment } from "react";
-import ReactQuill from "react-quill";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  SaveOutlined,
+  UndoOutlined,
+} from "@ant-design/icons";
 import {
   Button,
+  Col,
+  ConfigProvider,
   Divider,
   Form,
   Input,
   Popconfirm,
-  Col,
-  ConfigProvider,
   Row,
-  Table
+  Table,
 } from "antd";
-import {
-  SaveOutlined,
-  UndoOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined
-} from "@ant-design/icons";
-
-import { TranslationButton, TranslationAddButtons } from "../../utils/Buttons";
+import React, { Fragment } from "react";
+import ReactQuill from "react-quill";
+import { TranslationAddButtons, TranslationButton } from "../../utils/Buttons";
 
 export const EditableContext = React.createContext(null);
 
-export const EditableCell = props => {
+export const EditableCell = (props) => {
   const renderCell = () => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      index,
-      children,
-      ...restProps
-    } = props;
+    const { editing, dataIndex, title, record, children, ...restProps } = props;
+
+    const editingView = ({ dataIndex, title, record }) =>
+      dataIndex === "text" ? (
+        <Form.Item
+          style={{ margin: 0 }}
+          name={dataIndex}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+          initialValue={record[dataIndex]}
+        >
+          <ReactQuill value={record[dataIndex]} />
+        </Form.Item>
+      ) : (
+        <Form.Item style={{ margin: 0 }}>
+          <Form.Item
+            name={dataIndex}
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`,
+              },
+            ]}
+            initialValue={record[dataIndex]}
+          >
+            <Input />
+          </Form.Item>
+        </Form.Item>
+      );
 
     return (
       <td {...restProps}>
-        {editing ? (
-          dataIndex === "text" ? (
-            <Form.Item
-              style={{ margin: 0 }}
-              name={dataIndex}
-              rules={[
-                {
-                  required: true,
-                  message: `Please Input ${title}!`
-                }
-              ]}
-              initialValue={record[dataIndex]}
-            >
-              <ReactQuill value={record[dataIndex]} />
-            </Form.Item>
-          ) : (
-            <Form.Item style={{ margin: 0 }}>
-              <Form.Item
-                name={dataIndex}
-                rules={[
-                  {
-                    required: true,
-                    message: `Please Input ${title}!`
-                  }
-                ]}
-                initialValue={record[dataIndex]}
-              >
-                <Input />
-              </Form.Item>
-            </Form.Item>
-          )
-        ) : (
-          children
-        )}
+        {editing ? editingView(dataIndex, title, record) : children}
       </td>
     );
   };
@@ -86,14 +76,14 @@ export const CellActions = ({
   cancel,
   edit,
   handleDelete,
-  handleTranslations
+  handleTranslations,
 }) => {
   const editable = isEditing(record);
 
   return editable ? (
     <span>
       <EditableContext.Consumer>
-        {form => (
+        {(form) => (
           <Button
             type="primary"
             title="Save"
@@ -149,30 +139,30 @@ export const EditableTranslationsProvider = ({
   columns,
   translations,
   isEditing,
-  handleAdd
+  handleAdd,
 }) => {
   const components = {
     body: {
-      cell: EditableCell
-    }
+      cell: EditableCell,
+    },
   };
 
-  const tableColumns = columns.map(col => {
+  const tableColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
     }
     return {
       ...col,
-      onCell: record => ({
+      onCell: (record) => ({
         record,
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record)
-      })
+        editing: isEditing(record),
+      }),
     };
   });
 
-  const customizeRenderEmpty = language => {
+  const customizeRenderEmpty = (language) => {
     if (language) {
       return (
         <p style={{ textAlign: "center" }}>No translations for language</p>
@@ -192,7 +182,7 @@ export const EditableTranslationsProvider = ({
                 components={components}
                 bordered
                 dataSource={translations}
-                rowKey={translation => translation.id}
+                rowKey={(translation) => translation.id}
                 columns={tableColumns}
                 pagination={false}
                 size="small"
@@ -223,26 +213,26 @@ export const EditableProvider = ({
   isEditing,
   handleShowAllTranslations,
   handleAdd,
-  cancel
+  cancel,
 }) => {
   const components = {
     body: {
-      cell: EditableCell
-    }
+      cell: EditableCell,
+    },
   };
 
-  const tableColumns = columns.map(col => {
+  const tableColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
     }
     return {
       ...col,
-      onCell: record => ({
+      onCell: (record) => ({
         record,
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record)
-      })
+        editing: isEditing(record),
+      }),
     };
   });
 
@@ -257,11 +247,11 @@ export const EditableProvider = ({
           components={components}
           bordered
           dataSource={data}
-          rowKey={datum => datum.id}
+          rowKey={(datum) => datum.id}
           columns={tableColumns}
           pagination={{
             onChange: cancel,
-            defaultPageSize: 25
+            defaultPageSize: 25,
           }}
         />
       </EditableContext.Provider>

@@ -1,12 +1,11 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
 import { getOptionTranslations } from "../../utils/api/option_translation";
-import OptionTranslations from "./OptionTranslations";
-import { TranslationsHeader } from "../utils/TranslationsHeader";
 import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
+import OptionTranslations from "./OptionTranslations";
 
-const OptionsTable = props => {
+const OptionsTable = (props) => {
   const options = props.options;
   const translations = props.translations;
   const [searchText, setSearchText] = useState("");
@@ -17,7 +16,7 @@ const OptionsTable = props => {
       dataIndex: "identifier",
       width: "20%",
       editable: true,
-      ...getColumnSearchProps("identifier", searchText, setSearchText)
+      ...getColumnSearchProps("identifier", searchText, setSearchText),
     },
     searchText === ""
       ? {
@@ -29,30 +28,30 @@ const OptionsTable = props => {
           render: (text, option) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: option.text
+                __html: option.text,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Text",
           dataIndex: "text",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("text", searchText, setSearchText)
+          ...getColumnSearchProps("text", searchText, setSearchText),
         },
     {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
       sorter: (a, b) => {
-        const ota = translations.filter(t => t.option_id === a.id);
-        const otb = translations.filter(t => t.option_id === b.id);
+        const ota = translations.filter((t) => t.option_id === a.id);
+        const otb = translations.filter((t) => t.option_id === b.id);
         return ota.length - otb.length;
       },
       render: (text, option) => {
         const optionTranslations = translations.filter(
-          trans => trans.option_id === option.id
+          (trans) => trans.option_id === option.id
         );
         return (
           <OptionTranslations
@@ -61,15 +60,15 @@ const OptionsTable = props => {
             language={props.language}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Table
       bordered
       dataSource={options}
-      rowKey={option => option.id}
+      rowKey={(option) => option.id}
       columns={columns}
       size="small"
       pagination={{ defaultPageSize: 25 }}
@@ -77,7 +76,7 @@ const OptionsTable = props => {
   );
 };
 
-const Translations = props => {
+const Translations = (props) => {
   const options = props.options;
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState(null);

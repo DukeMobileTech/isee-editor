@@ -1,5 +1,5 @@
-import { PROJECTS } from "../constants/projects";
 import { INSTRUMENTS } from "../constants/instruments";
+import { PROJECTS } from "../constants/projects";
 
 const errorReducer = (state = null, action) => {
   switch (action.type) {

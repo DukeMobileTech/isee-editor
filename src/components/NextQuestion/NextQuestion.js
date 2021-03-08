@@ -1,27 +1,21 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
-import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
-import NextQuestionForm from "./NextQuestionForm";
 import {
+  deleteNextQuestion,
   getNextQuestions,
-  deleteNextQuestion
 } from "../../utils/api/next_question";
 import { AddButton } from "../../utils/Buttons";
+import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import IQForm from "./IQForm";
+import NextQuestionForm from "./NextQuestionForm";
 
 const { Column } = Table;
 
-const NextQuestion = props => {
+const NextQuestion = (props) => {
   const instrumentQuestion = props.instrumentQuestion;
   const [nextQuestions, setNextQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [nextQuestion, setNextQuestion] = useState(null);
-
-  useEffect(() => {
-    fetchNextQuestions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const fetchNextQuestions = () => {
     setLoading(true);
@@ -30,22 +24,27 @@ const NextQuestion = props => {
       props.projectId,
       instrumentQuestion.instrument_id,
       instrumentQuestion.id
-    ).then(results => {
+    ).then((results) => {
       setNextQuestions(results.data);
       setLoading(false);
     });
   };
 
-  const handleNextQuestionEdit = nq => {
+  useEffect(() => {
+    fetchNextQuestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleNextQuestionEdit = (nq) => {
     setNextQuestion(nq);
   };
 
-  const handleNextQuestionDelete = nq => {
+  const handleNextQuestionDelete = (nq) => {
     deleteNextQuestion(props.projectId, instrumentQuestion.instrument_id, nq)
-      .then(res => {
+      .then((res) => {
         fetchNextQuestions();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -71,7 +70,7 @@ const NextQuestion = props => {
   } else {
     return (
       <Spin spinning={loading}>
-        <Table dataSource={nextQuestions} rowKey={nq => nq.id}>
+        <Table dataSource={nextQuestions} rowKey={(nq) => nq.id}>
           <Column title="Option" dataIndex="option_identifier" />
           <Column title="Value Operator" dataIndex="value_operator" />
           <Column title="Value" dataIndex="value" />

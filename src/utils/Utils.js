@@ -1,13 +1,13 @@
-import React from "react";
+import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import { Alert, Row } from "antd";
-import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
 import { ErrorMessage } from "formik";
+import React from "react";
 
-export const AlertErrorMessage = props => {
+export const AlertErrorMessage = (props) => {
   return (
     <ErrorMessage
       name={props.name}
-      render={msg => <Alert message={msg} type={props.type} />}
+      render={(msg) => <Alert message={msg} type={props.type} />}
     />
   );
 };
@@ -37,23 +37,25 @@ export const getItemStyle = (isDragging, draggableStyle) => ({
   background: isDragging ? "lightgreen" : "white",
 
   // styles we need to apply on draggables
-  ...draggableStyle
+  ...draggableStyle,
 });
 
-export const getListStyle = isDraggingOver => ({
+export const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? "lightblue" : "lightgray",
-  padding: padding
+  padding: padding,
 });
 
-export const customExpandIcon = props => {
+export const customExpandIcon = (props) => {
   if (props.expanded) {
-    return <CaretUpOutlined onClick={e => props.onExpand(props.record, e)} />;
+    return <CaretUpOutlined onClick={(e) => props.onExpand(props.record, e)} />;
   } else {
-    return <CaretDownOutlined onClick={e => props.onExpand(props.record, e)} />;
+    return (
+      <CaretDownOutlined onClick={(e) => props.onExpand(props.record, e)} />
+    );
   }
 };
 
-export const hasNumberResponses = question => {
+export const hasNumberResponses = (question) => {
   return (
     question.question_type === "INTEGER" ||
     question.question_type === "DECIMAL" ||
@@ -61,7 +63,7 @@ export const hasNumberResponses = question => {
   );
 };
 
-export const hasMultipleResponses = question => {
+export const hasMultipleResponses = (question) => {
   return (
     question.question_type === "SELECT_MULTIPLE" ||
     question.question_type === "SELECT_MULTIPLE_WRITE_OTHER" ||
@@ -70,7 +72,7 @@ export const hasMultipleResponses = question => {
   );
 };
 
-export const hasSingleResponse = question => {
+export const hasSingleResponse = (question) => {
   return (
     question.question_type === "SELECT_ONE" ||
     question.question_type === "SELECT_ONE_WRITE_OTHER" ||
@@ -78,43 +80,43 @@ export const hasSingleResponse = question => {
   );
 };
 
-export const hasOtherOption = question => {
+export const hasOtherOption = (question) => {
   return (
     question.question_type === "SELECT_ONE_WRITE_OTHER" ||
     question.question_type === "SELECT_MULTIPLE_WRITE_OTHER"
   );
 };
 
-export const isDropDown = question => {
+export const isDropDown = (question) => {
   return question.question_type === "DROP_DOWN";
 };
 
-export const isSelectOne = question => {
+export const isSelectOne = (question) => {
   return (
     question.question_type === "SELECT_ONE" ||
     question.question_type === "SELECT_ONE_WRITE_OTHER"
   );
 };
 
-export const isSelectMultiple = question => {
+export const isSelectMultiple = (question) => {
   return (
     question.question_type === "SELECT_MULTIPLE" ||
     question.question_type === "SELECT_MULTIPLE_WRITE_OTHER"
   );
 };
 
-export const isInstruction = question => {
+export const isInstruction = (question) => {
   return question.question_type === "INSTRUCTIONS";
 };
 
-export const isList = question => {
+export const isList = (question) => {
   return (
     question.question_type === "LIST_OF_TEXT_BOXES" ||
     question.question_type === "LIST_OF_INTEGER_BOXES"
   );
 };
 
-export const isOther = question => {
+export const isOther = (question) => {
   return (
     question.question_type !== "SELECT_ONE" &&
     question.question_type !== "SELECT_ONE_WRITE_OTHER" &&

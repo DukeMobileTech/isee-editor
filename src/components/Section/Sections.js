@@ -1,38 +1,36 @@
+import { DragOutlined, GlobalOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Divider, Drawer, List, Row } from "antd";
+import { Field, Form, Formik } from "formik";
+import React, { Fragment, useContext, useEffect, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import * as Yup from "yup";
-import React, { useContext, useState, Fragment, useEffect } from "react";
-import { Button, Col, Divider, List, Row, Drawer } from "antd";
-import { DragOutlined, PlusOutlined, GlobalOutlined } from "@ant-design/icons";
-import { Formik, Form, Field } from "formik";
-
+import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
+import {
+  createSection,
+  deleteSection,
+  getSections,
+  updateSection,
+} from "../../utils/api/section";
 import {
   DeleteButton,
   EditButton,
   LeftCancelButton,
-  RightSubmitButton
+  RightSubmitButton,
 } from "../../utils/Buttons";
 import {
+  AlertErrorMessage,
+  DRow,
   getItemStyle,
   getListStyle,
-  DRow,
-  AlertErrorMessage
 } from "../../utils/Utils";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import {
-  deleteSection,
-  getSections,
-  updateSection,
-  createSection
-} from "../../utils/api/section";
-
-import { InstrumentSectionContext } from "../../context/InstrumentSectionContext";
-import Displays from "./Displays";
 import Translations from "../SectionTranslation/Translations";
+import Displays from "./Displays";
 
 const SectionSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required")
+  title: Yup.string().required("Title is required"),
 });
 
-const Sections = props => {
+const Sections = (props) => {
   const instrument = props.instrument;
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
@@ -42,10 +40,11 @@ const Sections = props => {
   const [section, setSection] = useState(null);
   const [showDisplays, setShowDisplays] = useState(false);
 
-  useEffect(() => {
-    fetchSections();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleCancel = () => {
+    setShowForm(false);
+    setShowDisplays(false);
+    setSection(null);
+  };
 
   const fetchSections = async () => {
     handleCancel();
@@ -53,17 +52,22 @@ const Sections = props => {
     setSections(results.data);
   };
 
-  const handleDeleteSection = section => {
+  useEffect(() => {
+    fetchSections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleDeleteSection = (section) => {
     deleteSection(projectId, instrumentId, section.id)
-      .then(res => {
+      .then((res) => {
         fetchSections();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleEditSection = section => {
+  const handleEditSection = (section) => {
     setSection(section);
     setShowForm(true);
   };
@@ -73,18 +77,12 @@ const Sections = props => {
     setShowForm(true);
   };
 
-  const handleCancel = () => {
-    setShowForm(false);
-    setShowDisplays(false);
-    setSection(null);
-  };
-
-  const handleShowDisplays = section => {
+  const handleShowDisplays = (section) => {
     setSection(section);
     setShowDisplays(true);
   };
 
-  const onDragEnd = async result => {
+  const onDragEnd = async (result) => {
     if (
       !result.destination ||
       result.destination.index === result.source.index
@@ -128,7 +126,12 @@ const Sections = props => {
   } else {
     return (
       <Fragment>
-        <Row gutter={8} type="flex" justify="space-between" style={{ margin: "5px" }}>
+        <Row
+          gutter={8}
+          type="flex"
+          justify="space-between"
+          style={{ margin: "5px" }}
+        >
           <Button
             title="Show Translations"
             type="primary"
@@ -193,6 +196,7 @@ const Sections = props => {
                               <DeleteButton
                                 handleClick={() => {
                                   if (
+                                    // eslint-disable-next-line no-alert
                                     window.confirm(
                                       `Are you sure you want to delete ${section.title}?`
                                     )
@@ -220,7 +224,7 @@ const Sections = props => {
           onClose={handleCancel}
           visible={showForm}
           key={"right"}
-          destroyOnClose={true}
+          destroyOnClose
         >
           <Formik
             initialValues={{
@@ -229,7 +233,7 @@ const Sections = props => {
               instrument_id:
                 (section && section.instrument_id) || instrument.id,
               position:
-                (section && section.position) || instrument.section_count + 1
+                (section && section.position) || instrument.section_count + 1,
             }}
             validationSchema={SectionSchema}
             onSubmit={(values, { setErrors }) => {
@@ -237,7 +241,7 @@ const Sections = props => {
                 id: values.id,
                 title: values.title,
                 instrument_id: values.instrument_id,
-                position: values.position
+                position: values.position,
               };
               if (values.id) {
                 updateSection(
@@ -246,10 +250,10 @@ const Sections = props => {
                   values.id,
                   secObj
                 )
-                  .then(res => {
+                  .then((res) => {
                     fetchSections();
                   })
-                  .catch(error => {
+                  .catch((error) => {
                     for (const err of error.data.errors) {
                       if (err.includes("Title")) {
                         setErrors({ title: err });
@@ -262,10 +266,10 @@ const Sections = props => {
                   values.instrument_id,
                   secObj
                 )
-                  .then(res => {
+                  .then((res) => {
                     fetchSections();
                   })
-                  .catch(error => {
+                  .catch((error) => {
                     for (const err of error.data.errors) {
                       if (err.includes("Title")) {
                         setErrors({ title: err });

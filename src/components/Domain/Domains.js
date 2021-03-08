@@ -1,14 +1,13 @@
+import { GlobalOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Divider, Drawer, Row, Table, Typography } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
-import { Button, Divider, Drawer, Table, Typography, Row } from "antd";
-import { PlusOutlined, GlobalOutlined } from "@ant-design/icons";
-
+import { deleteDomain, getDomains } from "../../utils/api/domain";
 import { DeleteButton, EditButton } from "../../utils/Buttons";
-import { getDomains, deleteDomain } from "../../utils/api/domain";
-import DomainForm from "./DomainForm";
-import Subdomains from "../Subdomain/Subdomains";
 import Translations from "../DomainTranslation/Translations";
+import Subdomains from "../Subdomain/Subdomains";
+import DomainForm from "./DomainForm";
 
-const Domains = props => {
+const Domains = (props) => {
   const projectId = props.projectId;
   const instrumentId = props.instrumentId;
   const scoreScheme = props.scoreScheme;
@@ -18,10 +17,11 @@ const Domains = props => {
   const [showDomain, setShowDomain] = useState(false);
   const [showTranslations, setShowTranslations] = useState(false);
 
-  useEffect(() => {
-    fetchDomains();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleCancel = () => {
+    setVisible(false);
+    setShowDomain(false);
+    setDomain(null);
+  };
 
   const fetchDomains = async () => {
     handleCancel();
@@ -29,26 +29,25 @@ const Domains = props => {
     setDomains(result.data);
   };
 
-  const handleCancel = () => {
-    setVisible(false);
-    setShowDomain(false);
-    setDomain(null);
-  };
+  useEffect(() => {
+    fetchDomains();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onNewDomain = () => {
     setVisible(true);
   };
 
-  const handleEditDomain = domain => {
+  const handleEditDomain = (domain) => {
     setVisible(true);
     setDomain(domain);
   };
 
-  const handleDeleteDomain = domain => {
-    deleteDomain(projectId, instrumentId, domain).then(res => fetchDomains());
+  const handleDeleteDomain = (domain) => {
+    deleteDomain(projectId, instrumentId, domain).then((res) => fetchDomains());
   };
 
-  const handleShowDomain = domain => {
+  const handleShowDomain = (domain) => {
     setDomain(domain);
     setShowDomain(true);
   };
@@ -104,7 +103,7 @@ const Domains = props => {
           size="small"
           bordered
           dataSource={domains}
-          rowKey={domain => domain.id}
+          rowKey={(domain) => domain.id}
           pagination={{ defaultPageSize: 25 }}
         >
           <Table.Column
@@ -133,6 +132,7 @@ const Domains = props => {
                 <DeleteButton
                   handleClick={() => {
                     if (
+                      // eslint-disable-next-line no-alert
                       window.confirm(
                         `Are you sure you want to delete ${domain.title}?`
                       )
@@ -152,7 +152,7 @@ const Domains = props => {
           onClose={handleCancel}
           visible={visible}
           key={"right"}
-          destroyOnClose={true}
+          destroyOnClose
         >
           <DomainForm
             visible={visible}

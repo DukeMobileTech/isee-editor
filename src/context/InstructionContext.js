@@ -1,8 +1,8 @@
-import React, { useState, createContext } from "react";
+import React, { createContext, useState } from "react";
 
 export const InstructionContext = createContext();
 
-export const InstructionProvider = props => {
+export const InstructionProvider = (props) => {
   const [instructions, setInstructions] = useState([]);
 
   return (

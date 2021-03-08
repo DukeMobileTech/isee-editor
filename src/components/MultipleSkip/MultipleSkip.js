@@ -1,29 +1,28 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
-import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import {
   deleteMultipleSkip,
-  getMultipleSkips
+  getMultipleSkips,
 } from "../../utils/api/multiple_skip";
-import MultipleSkipForm from "./MultipleSkipForm";
 import { AddButton } from "../../utils/Buttons";
+import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
 import IQForm from "./IQForm";
+import MultipleSkipForm from "./MultipleSkipForm";
 import NewMultipleSkipForm from "./NewMultipleSkipForm";
 
 const { Column } = Table;
 
-const MultipleSkip = props => {
+const MultipleSkip = (props) => {
   const instrumentQuestion = props.instrumentQuestion;
   const [multipleSkips, setMultipleSkips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [multipleSkip, setMultipleSkip] = useState(null);
   const [create, setCreate] = useState(false);
 
-  useEffect(() => {
-    fetchMultipleSkips();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleCancel = () => {
+    setMultipleSkip(null);
+    setCreate(false);
+  };
 
   const fetchMultipleSkips = () => {
     setLoading(true);
@@ -32,33 +31,33 @@ const MultipleSkip = props => {
       props.projectId,
       instrumentQuestion.instrument_id,
       instrumentQuestion.id
-    ).then(results => {
+    ).then((results) => {
       setMultipleSkips(results.data);
       setLoading(false);
     });
   };
 
-  const handleMultipleSkipEdit = ms => {
+  useEffect(() => {
+    fetchMultipleSkips();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleMultipleSkipEdit = (ms) => {
     setMultipleSkip(ms);
   };
 
-  const handleMultipleSkipDelete = ms => {
+  const handleMultipleSkipDelete = (ms) => {
     deleteMultipleSkip(props.projectId, instrumentQuestion.instrument_id, ms)
-      .then(res => {
+      .then((res) => {
         fetchMultipleSkips();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
 
   const handleNewMultipleSkip = () => {
     setCreate(true);
-  };
-
-  const handleCancel = () => {
-    setMultipleSkip(null);
-    setCreate(false);
   };
 
   if (create) {
@@ -83,7 +82,7 @@ const MultipleSkip = props => {
   } else {
     return (
       <Spin spinning={loading}>
-        <Table dataSource={multipleSkips} rowKey={nq => nq.id}>
+        <Table dataSource={multipleSkips} rowKey={(nq) => nq.id}>
           <Column title="Option" dataIndex="option_identifier" />
           <Column title="Value Operator" dataIndex="value_operator" />
           <Column title="Value" dataIndex="value" />

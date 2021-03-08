@@ -1,8 +1,8 @@
-import React, { useState, createContext } from "react";
+import React, { createContext, useState } from "react";
 
 export const InstrumentQuestionContext = createContext();
 
-export const InstrumentQuestionProvider = props => {
+export const InstrumentQuestionProvider = (props) => {
   const [instrumentQuestions, setInstrumentQuestions] = useState([]);
 
   return (

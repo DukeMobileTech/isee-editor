@@ -1,26 +1,24 @@
-import * as Yup from "yup";
-
-import { RightSubmitButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
-import { Col, Select, Typography, Modal } from "antd";
+import { Col, Modal, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useContext } from "react";
-import {
-  createFolderQuestion,
-  updateFolderQuestion
-} from "../../utils/api/question";
-import {
-  questionTypes,
-  questionTypesWithOptions,
-  pdfResponseHeights,
-  questionTypesWithDefaultResponses,
-  modalWidth
-} from "../../utils/Constants";
-
+import ReactQuill from "react-quill";
+import * as Yup from "yup";
 import { InstructionContext } from "../../context/InstructionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import { QuestionSetContext } from "../../context/QuestionSetContext";
-import ReactQuill from "react-quill";
+import {
+  createFolderQuestion,
+  updateFolderQuestion,
+} from "../../utils/api/question";
+import { RightSubmitButton } from "../../utils/Buttons";
+import {
+  modalWidth,
+  pdfResponseHeights,
+  questionTypes,
+  questionTypesWithDefaultResponses,
+  questionTypesWithOptions,
+} from "../../utils/Constants";
+import { AlertErrorMessage, DRow } from "../../utils/Utils";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -31,19 +29,21 @@ const QuestionSchema = Yup.object().shape({
   question_identifier: Yup.string().required("Identifier is required"),
   question_type: Yup.string().required("Type is required"),
   text: Yup.string()
-    .test("isNotEmpty", "Text should not be empty", string => {
+    .test("isNotEmpty", "Text should not be empty", (string) => {
       if (string === undefined) return false;
       const stripedHtml = string.replace(/<[^>]+>/g, "");
       return stripedHtml.length > 0;
     })
     .required("Text is required"),
   option_set_id: Yup.number().when("question_type", {
-    is: val => questionTypesWithOptions.includes(val),
-    then: Yup.number().required("Option Set required for this type of question")
-  })
+    is: (val) => questionTypesWithOptions.includes(val),
+    then: Yup.number().required(
+      "Option Set required for this type of question"
+    ),
+  }),
 });
 
-const QuestionForm = props => {
+const QuestionForm = (props) => {
   const question = props.question;
   // eslint-disable-next-line no-unused-vars
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
@@ -64,7 +64,7 @@ const QuestionForm = props => {
       title={title}
       visible={props.visible}
       footer={null}
-      destroyOnClose={true}
+      destroyOnClose
       onCancel={() => props.setVisible(false)}
       width={modalWidth}
     >
@@ -93,7 +93,7 @@ const QuestionForm = props => {
           instruction_id: (question && question.instruction_id) || "",
           special_option_set_id:
             (question && question.special_option_set_id) || "",
-          default_response: (question && question.default_response) || ""
+          default_response: (question && question.default_response) || "",
         }}
         validationSchema={QuestionSchema}
         onSubmit={(values, { setErrors }) => {
@@ -111,15 +111,15 @@ const QuestionForm = props => {
             pdf_print_options: values.pdf_print_options,
             pop_up_instruction_id: values.pop_up_instruction_id,
             after_text_instruction_id: values.after_text_instruction_id,
-            default_response: values.default_response
+            default_response: values.default_response,
           };
           if (question && question.id) {
             editQuestion.id = question.id;
             updateFolderQuestion(editQuestion)
-              .then(response => {
+              .then((response) => {
                 props.fetchQuestions();
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Question identifier")) {
                     setErrors({ question_identifier: err });
@@ -128,14 +128,14 @@ const QuestionForm = props => {
               });
           } else {
             createFolderQuestion(editQuestion)
-              .then(response => {
+              .then((response) => {
                 if (props.returnValue) {
                   props.fetchQuestions(response.data);
                 } else {
                   props.fetchQuestions();
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 for (const err of error.data.errors) {
                   if (err.includes("Question identifier")) {
                     setErrors({ question_identifier: err });
@@ -156,8 +156,8 @@ const QuestionForm = props => {
                   name="question_set_id"
                   component="select"
                 >
-                  <option></option>
-                  {questionSets.map(set => {
+                  <option />
+                  {questionSets.map((set) => {
                     return (
                       <option
                         key={set.id}
@@ -184,11 +184,11 @@ const QuestionForm = props => {
                   name="folder_id"
                   component="select"
                 >
-                  <option></option>
+                  <option />
                   {values.question_set_id &&
                     questionSets
-                      .find(qs => qs.id === Number(values.question_set_id))
-                      .folders.map(folder => {
+                      .find((qs) => qs.id === Number(values.question_set_id))
+                      .folders.map((folder) => {
                         return (
                           <option
                             key={folder.id}
@@ -231,8 +231,8 @@ const QuestionForm = props => {
                   name="question_type"
                   component="select"
                 >
-                  <option></option>
-                  {questionTypes.map(type => {
+                  <option />
+                  {questionTypes.map((type) => {
                     return (
                       <option key={type} name="question_type" value={type}>
                         {type}
@@ -256,8 +256,8 @@ const QuestionForm = props => {
                     name="pdf_response_height"
                     component="select"
                   >
-                    <option></option>
-                    {pdfResponseHeights.map(height => {
+                    <option />
+                    {pdfResponseHeights.map((height) => {
                       return (
                         <option
                           key={height}
@@ -285,11 +285,11 @@ const QuestionForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       showSearch
                       allowClear
                       optionFilterProp="children"
-                      onChange={value => {
+                      onChange={(value) => {
                         if (value === undefined) {
                           value = null;
                         }
@@ -302,7 +302,7 @@ const QuestionForm = props => {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      {instructions.map(instruction => {
+                      {instructions.map((instruction) => {
                         return (
                           <Option
                             key={instruction.id}
@@ -346,11 +346,11 @@ const QuestionForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       showSearch
                       allowClear
                       optionFilterProp="children"
-                      onChange={value => {
+                      onChange={(value) => {
                         if (value === undefined) {
                           value = null;
                         }
@@ -363,7 +363,7 @@ const QuestionForm = props => {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      {instructions.map(instruction => {
+                      {instructions.map((instruction) => {
                         return (
                           <Option
                             key={instruction.id}
@@ -389,11 +389,11 @@ const QuestionForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       showSearch
                       allowClear
                       optionFilterProp="children"
-                      onChange={value => {
+                      onChange={(value) => {
                         if (value === undefined) {
                           value = null;
                         }
@@ -406,7 +406,7 @@ const QuestionForm = props => {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      {instructions.map(instruction => {
+                      {instructions.map((instruction) => {
                         return (
                           <Option
                             key={instruction.id}
@@ -450,10 +450,10 @@ const QuestionForm = props => {
                     render={({ field }) => (
                       <Select
                         {...field}
-                        style={{ width: '100%' }}
+                        style={{ width: "100%" }}
                         showSearch
                         optionFilterProp="children"
-                        onChange={value =>
+                        onChange={(value) =>
                           setFieldValue("option_set_id", value)
                         }
                         filterOption={(input, option) =>
@@ -463,8 +463,8 @@ const QuestionForm = props => {
                             .indexOf(input.toLowerCase()) >= 0
                         }
                       >
-                        <Option value=""></Option>
-                        {optionSets.map(optionSet => {
+                        <Option value="" />
+                        {optionSets.map((optionSet) => {
                           return (
                             <Option
                               key={optionSet.id}
@@ -509,10 +509,10 @@ const QuestionForm = props => {
                   placeholder="Select special option set for the question"
                   component="select"
                 >
-                  <option></option>
+                  <option />
                   {optionSets
-                    .filter(os => os.special)
-                    .map(optionSet => {
+                    .filter((os) => os.special)
+                    .map((optionSet) => {
                       return (
                         <option
                           key={optionSet.id}

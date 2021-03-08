@@ -1,24 +1,22 @@
-import * as Yup from "yup";
-
-import { RightSubmitButton, LeftCancelButton } from "../../utils/Buttons";
-import { AlertErrorMessage, DRow } from "../../utils/Utils";
 import { Col, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-
 import React, { useContext } from "react";
+import * as Yup from "yup";
 import { InstrumentQuestionContext } from "../../context/InstrumentQuestionContext";
 import {
+  createLoopQuestion,
   updateLoopQuestion,
-  createLoopQuestion
 } from "../../utils/api/loop_question";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import { AlertErrorMessage, DRow } from "../../utils/Utils";
 
 const { Text } = Typography;
 
 const LoopQuestionSchema = Yup.object().shape({
-  looped: Yup.string().required("Question to loop is required")
+  looped: Yup.string().required("Question to loop is required"),
 });
 
-const LoopQuestionForm = props => {
+const LoopQuestionForm = (props) => {
   const loopQuestion = props.loopQuestion;
   const instrumentQuestion = props.instrumentQuestion;
   // eslint-disable-next-line no-unused-vars
@@ -34,7 +32,7 @@ const LoopQuestionForm = props => {
         looped: loopQuestion.looped || "",
         option_indices: loopQuestion.option_indices || "",
         same_display: loopQuestion.same_display || false,
-        replacement_text: loopQuestion.replacement_text || ""
+        replacement_text: loopQuestion.replacement_text || "",
       }}
       validationSchema={LoopQuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -45,7 +43,7 @@ const LoopQuestionForm = props => {
           looped: values.looped,
           option_indices: values.option_indices,
           same_display: values.same_display,
-          replacement_text: values.replacement_text
+          replacement_text: values.replacement_text,
         };
         if (editLoopQuestion.id) {
           updateLoopQuestion(
@@ -53,12 +51,12 @@ const LoopQuestionForm = props => {
             instrumentQuestion.instrument_id,
             editLoopQuestion
           )
-            .then(response => {
+            .then((response) => {
               if (response.status === 204) {
                 props.fetchLoopQuestions();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         } else {
@@ -68,12 +66,12 @@ const LoopQuestionForm = props => {
             instrumentQuestion.id,
             editLoopQuestion
           )
-            .then(response => {
+            .then((response) => {
               if (response.status === 201) {
                 props.fetchLoopQuestions();
               }
             })
-            .catch(error => {
+            .catch((error) => {
               setErrors(error);
             });
         }
@@ -86,14 +84,14 @@ const LoopQuestionForm = props => {
             </Col>
             <Col span={14}>
               <Field className="ant-input" name="looped" component="select">
-                <option></option>
+                <option />
                 {instrumentQuestions
                   .filter(
-                    iq =>
+                    (iq) =>
                       iq.number_in_instrument >
                       instrumentQuestion.number_in_instrument
                   )
-                  .map(iq => {
+                  .map((iq) => {
                     return (
                       <option key={iq.id} name="looped" value={iq.identifier}>
                         {`${iq.number_in_instrument} - ${iq.identifier}`}

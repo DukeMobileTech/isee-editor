@@ -1,26 +1,20 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
-import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
-import { AddButton } from "../../utils/Buttons";
-import ConditionSkipForm from "./ConditionSkipForm";
 import {
+  deleteConditionSkip,
   getConditionSkips,
-  deleteConditionSkip
 } from "../../utils/api/condition_skip";
+import { AddButton } from "../../utils/Buttons";
+import { EditDeleteBtnGroup } from "../utils/EditDeleteBtnGroup";
+import ConditionSkipForm from "./ConditionSkipForm";
 
 const { Column } = Table;
 
-const ConditionSkip = props => {
+const ConditionSkip = (props) => {
   const instrumentQuestion = props.instrumentQuestion;
   const [conditionSkips, setConditionSkips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [conditionSkip, setConditionSkip] = useState(null);
-
-  useEffect(() => {
-    fetchConditionSkips();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const fetchConditionSkips = () => {
     setLoading(true);
@@ -29,22 +23,27 @@ const ConditionSkip = props => {
       props.projectId,
       instrumentQuestion.instrument_id,
       instrumentQuestion.id
-    ).then(results => {
+    ).then((results) => {
       setConditionSkips(results.data);
       setLoading(false);
     });
   };
 
-  const handleConditionSkipEdit = nq => {
+  useEffect(() => {
+    fetchConditionSkips();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleConditionSkipEdit = (nq) => {
     setConditionSkip(nq);
   };
 
-  const handleConditionSkipDelete = nq => {
+  const handleConditionSkipDelete = (nq) => {
     deleteConditionSkip(props.projectId, instrumentQuestion.instrument_id, nq)
-      .then(res => {
+      .then((res) => {
         fetchConditionSkips();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -71,7 +70,7 @@ const ConditionSkip = props => {
   } else {
     return (
       <Spin spinning={loading}>
-        <Table dataSource={conditionSkips} rowKey={nq => nq.id}>
+        <Table dataSource={conditionSkips} rowKey={(nq) => nq.id}>
           <Column
             title="Question Identifiers"
             dataIndex="question_identifiers"

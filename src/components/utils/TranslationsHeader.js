@@ -1,9 +1,8 @@
-import React from "react";
-import { Button, Col, Select, Typography } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-
-import { DRow } from "../../utils/Utils";
+import { Button, Col, Select, Typography } from "antd";
+import React from "react";
 import { languages } from "../../utils/Constants";
+import { DRow } from "../../utils/Utils";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -25,7 +24,7 @@ export const TranslationsHeader = ({ handleClick, handleChange }) => {
           style={{ width: 200 }}
           onChange={handleChange}
         >
-          {languages.map(language => {
+          {languages.map((language) => {
             return (
               <Option key={language.code} name="language" value={language.code}>
                 {language.name}

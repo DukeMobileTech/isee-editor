@@ -1,9 +1,8 @@
+import { Button, Tag, Typography } from "antd";
 import React, { useContext, useState } from "react";
-import { Tag, Typography, Button } from "antd";
-
+import { InstructionContext } from "../../context/InstructionContext";
 import { OptionSetContext } from "../../context/OptionSetContext";
 import OptionSetForm from "../OptionSet/OptionSetForm";
-import { InstructionContext } from "../../context/InstructionContext";
 
 const { Text } = Typography;
 
@@ -11,7 +10,7 @@ const ExpandedQuestion = ({
   question,
   options,
   specialOptions,
-  fetchDisplay
+  fetchDisplay,
 }) => {
   // eslint-disable-next-line no-unused-vars
   const [optionSets, setOptionSets] = useContext(OptionSetContext);
@@ -24,13 +23,13 @@ const ExpandedQuestion = ({
     specialOptions === undefined ? question.special_options : specialOptions;
 
   const handleOptionSetClick = () => {
-    setOptionSet(optionSets.find(os => os.id === question.option_set_id));
+    setOptionSet(optionSets.find((os) => os.id === question.option_set_id));
     setShowOptionSet(true);
   };
 
   const handleSpecialOptionSetClick = () => {
     setOptionSet(
-      optionSets.find(os => os.id === question.special_option_set_id)
+      optionSets.find((os) => os.id === question.special_option_set_id)
     );
     setShowOptionSet(true);
   };
@@ -56,7 +55,7 @@ const ExpandedQuestion = ({
             <Text strong>Instructions: </Text>
             <span
               dangerouslySetInnerHTML={{
-                __html: question.instruction.text
+                __html: question.instruction.text,
               }}
             />
           </p>
@@ -67,9 +66,9 @@ const ExpandedQuestion = ({
             <span
               dangerouslySetInnerHTML={{
                 __html: instructions.find(
-                  instruction =>
+                  (instruction) =>
                     instruction.id === question.pop_up_instruction_id
-                ).text
+                ).text,
               }}
             />
           </p>
@@ -80,9 +79,9 @@ const ExpandedQuestion = ({
             <span
               dangerouslySetInnerHTML={{
                 __html: instructions.find(
-                  instruction =>
+                  (instruction) =>
                     instruction.id === question.after_text_instruction_id
-                ).text
+                ).text,
               }}
             />
           </p>
@@ -101,7 +100,7 @@ const ExpandedQuestion = ({
                 {`${index + 1})`}
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: option.text.replace("<p>", "").replace("</p>", "")
+                    __html: option.text.replace("<p>", "").replace("</p>", ""),
                   }}
                 />
               </Text>
@@ -122,7 +121,7 @@ const ExpandedQuestion = ({
                 {`${index + 1})`}
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: option.text.replace("<p>", "").replace("</p>", "")
+                    __html: option.text.replace("<p>", "").replace("</p>", ""),
                   }}
                 />
               </Tag>

@@ -1,15 +1,14 @@
-import { GreenSubmitButton } from "../../utils/Buttons";
-import { DRow, hasMultipleResponses } from "../../utils/Utils";
-import { Col, Typography, Select } from "antd";
+import { Col, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
 import React, { useState } from "react";
-
 import { updateInstrumentQuestion } from "../../utils/api/instrument_question";
-import { skipOperationTypes, ANY_AND_NO_OTHER } from "../../utils/Constants";
+import { GreenSubmitButton } from "../../utils/Buttons";
+import { ANY_AND_NO_OTHER, skipOperationTypes } from "../../utils/Constants";
+import { DRow, hasMultipleResponses } from "../../utils/Utils";
 
 const { Text } = Typography;
 
-const IQForm = props => {
+const IQForm = (props) => {
   const [iq, setIq] = useState(props.instrumentQuestion);
   const [neutralIds, setNeutralIds] = useState(
     props.instrumentQuestion.next_question_neutral_ids === null ||
@@ -18,19 +17,19 @@ const IQForm = props => {
       : props.instrumentQuestion.next_question_neutral_ids.split(",")
   );
   const [nextInitialState, setNextInitialState] = useState({});
-  const skip_options = [];
-  props.nextQuestions.forEach(nq => {
+  const skipOptions = [];
+  props.nextQuestions.forEach((nq) => {
     const option = props.instrumentQuestion.options.find(
-      op => op.identifier === nq.option_identifier
+      (op) => op.identifier === nq.option_identifier
     );
-    if (option) skip_options.push(option.id);
+    if (option) skipOptions.push(option.id);
   });
 
   return (
     <Formik
       initialValues={{
         next_question_operator: iq.next_question_operator || "",
-        next_question_neutral_ids: neutralIds
+        next_question_neutral_ids: neutralIds,
       }}
       nextInitialState={nextInitialState}
       onSubmit={(values, { resetForm }) => {
@@ -38,14 +37,14 @@ const IQForm = props => {
           id: iq.id,
           instrument_id: iq.instrument_id,
           next_question_operator: values.next_question_operator,
-          next_question_neutral_ids: values.next_question_neutral_ids
+          next_question_neutral_ids: values.next_question_neutral_ids,
         };
         updateInstrumentQuestion(props.projectId, editQuestion).then(
-          response => {
+          (response) => {
             setIq(response);
             setNextInitialState({
               next_question_operator: response.next_question_operator,
-              next_question_neutral_ids: response.next_question_neutral_ids
+              next_question_neutral_ids: response.next_question_neutral_ids,
             });
             resetForm();
           }
@@ -64,8 +63,8 @@ const IQForm = props => {
                   name="next_question_operator"
                   component="select"
                 >
-                  <option></option>
-                  {skipOperationTypes.map(operation => {
+                  <option />
+                  {skipOperationTypes.map((operation) => {
                     return (
                       <option
                         key={operation}
@@ -91,18 +90,18 @@ const IQForm = props => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       mode="multiple"
                       value={neutralIds}
-                      onChange={values => {
+                      onChange={(values) => {
                         const selectedIds = [
                           ...new Set(
                             values
                               .join(",")
                               .replace(/(^[,\s]+)|([,\s]+$)/g, "")
                               .split(",")
-                              .filter(val => !skip_options.includes(val))
-                          )
+                              .filter((val) => !skipOptions.includes(val))
+                          ),
                         ];
                         setNeutralIds(selectedIds);
                         setFieldValue(
@@ -111,7 +110,7 @@ const IQForm = props => {
                         );
                       }}
                     >
-                      <Select.Option value=""></Select.Option>
+                      <Select.Option value="" />
                       {props.instrumentQuestion.options.map((option, idx) => {
                         return (
                           <Select.Option key={option.id} value={`${option.id}`}>

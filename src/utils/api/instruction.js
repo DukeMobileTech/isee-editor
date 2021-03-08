@@ -11,10 +11,10 @@ export const updateInstruction = (id, instruction) => {
   return instance.put(`/instructions/${id}`, { instruction: instruction });
 };
 
-export const createInstruction = instruction => {
+export const createInstruction = (instruction) => {
   return instance.post("/instructions", { instruction: instruction });
 };
 
-export const deleteInstruction = id => {
+export const deleteInstruction = (id) => {
   return instance.delete(`/instructions/${id}`);
 };

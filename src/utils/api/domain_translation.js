@@ -7,7 +7,7 @@ export const getDomainTranslations = (projectId, scoreScheme, language) => {
   return instance.get(
     `/projects/${projectId}/instruments/${scoreScheme.instrument_id}/score_schemes/${scoreScheme.id}/domain_translations`,
     {
-      params: { language: language }
+      params: { language: language },
     }
   );
 };
@@ -20,7 +20,7 @@ export const createDomainTranslation = (
   return instance.post(
     `/projects/${projectId}/instruments/${scoreScheme.instrument_id}/score_schemes/${scoreScheme.id}/domain_translations`,
     {
-      domain_translation: translation
+      domain_translation: translation,
     }
   );
 };
@@ -33,7 +33,7 @@ export const updateDomainTranslation = (
   return instance.put(
     `/projects/${projectId}/instruments/${scoreScheme.instrument_id}/score_schemes/${scoreScheme.id}/domain_translations/${translation.id}`,
     {
-      domain_translation: translation
+      domain_translation: translation,
     }
   );
 };

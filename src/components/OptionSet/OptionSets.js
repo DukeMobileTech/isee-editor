@@ -9,14 +9,14 @@ import { OptionSetContext } from "../../context/OptionSetContext";
 import {
   copyOptionSet,
   deleteOptionSet,
-  getOptionSet
+  getOptionSet,
 } from "../../utils/api/option_set";
 import {
   CopyButton,
   DeleteButton,
   EditButton,
   TranslationAddButtons,
-  TranslationButton
+  TranslationButton,
 } from "../../utils/Buttons";
 import Translations from "../OptionTranslation/Translations";
 import OptionSetForm from "./OptionSetForm";

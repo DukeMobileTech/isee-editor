@@ -1,25 +1,24 @@
+import {
+  DatabaseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  FolderAddOutlined,
+  GlobalOutlined,
+} from "@ant-design/icons";
 import { Button, Divider, Row, Spin, Typography } from "antd";
 import React, { Fragment, useContext, useState } from "react";
-import {
-  DeleteOutlined,
-  GlobalOutlined,
-  DatabaseOutlined,
-  FolderAddOutlined,
-  EditOutlined
-} from "@ant-design/icons";
-
+import { QuestionSetContext } from "../../context/QuestionSetContext";
 import {
   deleteQuestionSet,
-  getQuestionSets
+  getQuestionSets,
 } from "../../utils/api/question_set";
 import { TranslationAddButtons } from "../../utils/Buttons";
+import Translations from "../QuestionTranslation/Translations";
 import FolderForm from "./FolderForm";
 import QuestionSet from "./QuestionSet";
-import { QuestionSetContext } from "../../context/QuestionSetContext";
 import QuestionSetForm from "./QuestionSetForm";
-import Translations from "../QuestionTranslation/Translations";
 
-const QuestionSets = props => {
+const QuestionSets = (props) => {
   const [loading, setLoading] = useState(false);
   const [showQsForm, setShowQsForm] = useState(false);
   const [showFolderForm, setShowFolderForm] = useState(false);
@@ -37,17 +36,17 @@ const QuestionSets = props => {
     setLoading(false);
   };
 
-  const handleDeleteQuestionSet = questionSet => {
+  const handleDeleteQuestionSet = (questionSet) => {
     deleteQuestionSet(questionSet.id)
-      .then(res => {
+      .then((res) => {
         fetchQuestionSets();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleEditQuestionSet = questionSet => {
+  const handleEditQuestionSet = (questionSet) => {
     setQuestionSet(questionSet);
     setShowQsForm(true);
   };
@@ -57,7 +56,7 @@ const QuestionSets = props => {
     setShowQsForm(true);
   };
 
-  const handleNewFolder = questionSet => {
+  const handleNewFolder = (questionSet) => {
     setQuestionSet(questionSet);
     setShowFolderForm(true);
   };
@@ -68,13 +67,13 @@ const QuestionSets = props => {
     setQuestionSet(null);
   };
 
-  const handleTranslations = questionSet => {
+  const handleTranslations = (questionSet) => {
     setQuestionSet(questionSet);
     setFolder(null);
     setShowTranslations(true);
   };
 
-  const handleFolderTranslations = folder => {
+  const handleFolderTranslations = (folder) => {
     setFolder(folder);
     setQuestionSet(null);
     setShowTranslations(true);
@@ -88,7 +87,7 @@ const QuestionSets = props => {
           <Button
             title={`Edit ${qSet.title}`}
             type="link"
-            onClick={event => {
+            onClick={(event) => {
               event.stopPropagation();
               handleEditQuestionSet(qSet);
             }}
@@ -99,7 +98,7 @@ const QuestionSets = props => {
           <Button
             title={`Add folder to ${qSet.title}`}
             type="link"
-            onClick={event => {
+            onClick={(event) => {
               event.stopPropagation();
               handleNewFolder(qSet);
             }}
@@ -110,7 +109,7 @@ const QuestionSets = props => {
           <Button
             title={`Show questions for ${qSet.title}`}
             type="link"
-            onClick={event => {
+            onClick={(event) => {
               event.stopPropagation();
               props.questionSubset(null, qSet);
             }}
@@ -121,7 +120,7 @@ const QuestionSets = props => {
           <Button
             title={`Show question translations for ${qSet.title}`}
             type="link"
-            onClick={event => {
+            onClick={(event) => {
               event.stopPropagation();
               handleTranslations(qSet);
             }}
@@ -133,9 +132,10 @@ const QuestionSets = props => {
             style={{ color: "red" }}
             title={`Delete ${qSet.title}`}
             type="link"
-            onClick={event => {
+            onClick={(event) => {
               event.stopPropagation();
               if (
+                // eslint-disable-next-line no-alert
                 window.confirm(`Are you sure you want to delete ${qSet.title}?`)
               )
                 handleDeleteQuestionSet(qSet);
@@ -181,7 +181,7 @@ const QuestionSets = props => {
           handleTranslationClick={() => setShowTranslations(!showTranslations)}
           handleAddClick={handleNewQuestionSet}
         />
-        {questionSets.map(qs => {
+        {questionSets.map((qs) => {
           return (
             <Fragment key={`${qs.id}`}>
               <QuestionSetActions qSet={qs} />

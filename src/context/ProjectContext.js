@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 
 export const ProjectContext = createContext();
 
-export const ProjectProvider = props => {
+export const ProjectProvider = (props) => {
   const [currentProjectId, setCurrentProjectId] = useState(
     sessionStorage.getItem("projectId")
   );

@@ -1,19 +1,18 @@
+import { DatabaseOutlined, DragOutlined } from "@ant-design/icons";
+import { Button, Col, List, Row } from "antd";
 import React, { useState } from "react";
-import { Row, Button, List, Col } from "antd";
-import { DragOutlined, DatabaseOutlined } from "@ant-design/icons";
-
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { deleteFolder, getFolders } from "../../utils/api/folder";
+import { orderFolders } from "../../utils/api/question_set";
 import {
   DeleteButton,
   EditButton,
-  TranslationButton
+  TranslationButton,
 } from "../../utils/Buttons";
-import { deleteFolder, getFolders } from "../../utils/api/folder";
-import { orderFolders } from "../../utils/api/question_set";
+import { getItemStyle, getListStyle } from "../../utils/Utils";
 import FolderForm from "./FolderForm";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getListStyle, getItemStyle } from "../../utils/Utils";
 
-const QuestionSet = props => {
+const QuestionSet = (props) => {
   const questionSet = props.questionSet;
   const [folders, setFolders] = useState(
     questionSet === null ? [] : questionSet.folders
@@ -27,7 +26,7 @@ const QuestionSet = props => {
     setFolders(results.data);
   };
 
-  const handleEditFolder = folder => {
+  const handleEditFolder = (folder) => {
     setFolder(folder);
     setShowForm(true);
   };
@@ -37,17 +36,17 @@ const QuestionSet = props => {
     setFolder(null);
   };
 
-  const handleDeleteFolder = folder => {
+  const handleDeleteFolder = (folder) => {
     deleteFolder(questionSet.id, folder.id)
-      .then(res => {
+      .then((res) => {
         fetchFolders();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
 
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     let order = [];
     const copy = [...folders];
     copy.splice(
@@ -59,8 +58,8 @@ const QuestionSet = props => {
       order.push(dis.id);
     });
     orderFolders(questionSet.id, {
-      order
-    }).then(res => {
+      order,
+    }).then((res) => {
       fetchFolders();
     });
   };
@@ -115,7 +114,7 @@ const QuestionSet = props => {
                               key={`${folder.id}`}
                             >
                               <EditButton
-                                handleClick={event => {
+                                handleClick={(event) => {
                                   event.stopPropagation();
                                   handleEditFolder(folder);
                                 }}
@@ -135,9 +134,10 @@ const QuestionSet = props => {
                                 }
                               />
                               <DeleteButton
-                                handleClick={event => {
+                                handleClick={(event) => {
                                   event.stopPropagation();
                                   if (
+                                    // eslint-disable-next-line no-alert
                                     window.confirm(
                                       `Are you sure you want to delete ${folder.title}?`
                                     )

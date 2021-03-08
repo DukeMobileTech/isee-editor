@@ -1,6 +1,6 @@
+import { Input } from "antd";
 import React from "react";
 import { isList } from "../../utils/Utils";
-import { Input } from "antd";
 
 export const BoxList = ({ iq }) => {
   if (!isList(iq)) return null;

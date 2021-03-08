@@ -1,4 +1,4 @@
-import { takeEvery, call, put } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import { getProjects } from "../../utils/api/project";
 import { setProjects, setProjectsError } from "../actions/projects";
 import { PROJECTS } from "../constants/projects";

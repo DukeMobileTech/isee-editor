@@ -1,14 +1,13 @@
-import { List, Col, Row } from "antd";
 import { DragOutlined } from "@ant-design/icons";
-
+import { Col, List, Row } from "antd";
 import React, { Fragment } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { orderQuestions } from "../../utils/api/folder";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getListStyle, getItemStyle } from "../../utils/Utils";
 import { LeftCancelButton } from "../../utils/Buttons";
+import { getItemStyle, getListStyle } from "../../utils/Utils";
 
-const QuestionReorder = props => {
-  const onDragEnd = result => {
+const QuestionReorder = (props) => {
+  const onDragEnd = (result) => {
     let order = [];
     const copy = [...props.questions];
     copy.splice(
@@ -20,8 +19,8 @@ const QuestionReorder = props => {
       order.push(dis.id);
     });
     orderQuestions(props.folder.question_set_id, props.folder.id, {
-      order
-    }).then(res => {
+      order,
+    }).then((res) => {
       props.fetchQuestions();
     });
   };
@@ -63,7 +62,7 @@ const QuestionReorder = props => {
                           <Col span={12}>
                             <span
                               dangerouslySetInnerHTML={{
-                                __html: question.text
+                                __html: question.text,
                               }}
                             />
                           </Col>

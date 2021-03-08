@@ -1,12 +1,11 @@
 import { Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-
-import DisplayTranslations from "./DisplayTranslations";
-import { TranslationsHeader } from "../utils/TranslationsHeader";
-import { getColumnSearchProps } from "../utils/ColumnSearch";
 import { getDisplayTranslations } from "../../utils/api/display_translation";
+import { getColumnSearchProps } from "../utils/ColumnSearch";
+import { TranslationsHeader } from "../utils/TranslationsHeader";
+import DisplayTranslations from "./DisplayTranslations";
 
-const DisplayTable = props => {
+const DisplayTable = (props) => {
   const displays = props.displays;
   const instrument = props.instrument;
   const translations = props.translations;
@@ -18,7 +17,7 @@ const DisplayTable = props => {
       dataIndex: "position",
       width: "20%",
       editable: true,
-      ...getColumnSearchProps("position", searchText, setSearchText)
+      ...getColumnSearchProps("position", searchText, setSearchText),
     },
     searchText === ""
       ? {
@@ -30,30 +29,30 @@ const DisplayTable = props => {
           render: (text, display) => (
             <span
               dangerouslySetInnerHTML={{
-                __html: display.title
+                __html: display.title,
               }}
             />
-          )
+          ),
         }
       : {
           title: "Title",
           dataIndex: "title",
           width: "30%",
           editable: true,
-          ...getColumnSearchProps("title", searchText, setSearchText)
+          ...getColumnSearchProps("title", searchText, setSearchText),
         },
     {
       title: "Translations",
       dataIndex: "translations",
       width: "50%",
       sorter: (a, b) => {
-        const qta = translations.filter(t => t.display_id === a.id);
-        const qtb = translations.filter(t => t.display_id === b.id);
+        const qta = translations.filter((t) => t.display_id === a.id);
+        const qtb = translations.filter((t) => t.display_id === b.id);
         return qta.length - qtb.length;
       },
       render: (text, display) => {
         const displayTranslations = translations.filter(
-          trans => trans.display_id === display.id
+          (trans) => trans.display_id === display.id
         );
         return (
           <DisplayTranslations
@@ -63,15 +62,15 @@ const DisplayTable = props => {
             language={props.language}
           />
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Table
       bordered
       dataSource={displays}
-      rowKey={display => display.id}
+      rowKey={(display) => display.id}
       columns={columns}
       size="small"
       pagination={{ defaultPageSize: 25 }}
@@ -79,7 +78,7 @@ const DisplayTable = props => {
   );
 };
 
-export const Translations = props => {
+export const Translations = (props) => {
   const displays = props.displays;
   const instrument = props.instrument;
   const [loading, setLoading] = useState(true);

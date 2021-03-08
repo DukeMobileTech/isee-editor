@@ -1,21 +1,21 @@
-import React from "react";
-import { Button, Input, Row } from "antd";
-import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Row } from "antd";
+import React from "react";
+import Highlighter from "react-highlight-words";
 
 export const getColumnSearchProps = (dataIndex, searchText, setSearchText) => ({
   filterDropdown: ({
     setSelectedKeys,
     selectedKeys,
     confirm,
-    clearFilters
+    clearFilters,
   }) => {
     const handleSearch = (selectedKeys, confirm) => {
       confirm();
       setSearchText(selectedKeys[0]);
     };
 
-    const handleReset = clearFilters => {
+    const handleReset = (clearFilters) => {
       clearFilters();
       setSearchText("");
     };
@@ -25,7 +25,7 @@ export const getColumnSearchProps = (dataIndex, searchText, setSearchText) => ({
         <Input
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e =>
+          onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() => handleSearch(selectedKeys, confirm)}
@@ -51,20 +51,17 @@ export const getColumnSearchProps = (dataIndex, searchText, setSearchText) => ({
       </div>
     );
   },
-  filterIcon: filtered => (
+  filterIcon: (filtered) => (
     <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
   ),
   onFilter: (value, record) =>
-    record[dataIndex]
-      .toString()
-      .toLowerCase()
-      .includes(value.toLowerCase()),
-  render: text => (
+    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  render: (text) => (
     <Highlighter
       highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
       searchWords={[searchText]}
       autoEscape
       textToHighlight={text ? text.toString() : ""}
     />
-  )
+  ),
 });

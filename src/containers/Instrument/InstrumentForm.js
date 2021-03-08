@@ -1,23 +1,23 @@
-import * as Yup from "yup";
-import React from "react";
-import { Field, Form, Formik } from "formik";
 import { Form as AntForm } from "antd";
+import { Field, Form, Formik } from "formik";
+import React from "react";
 import { connect } from "react-redux";
-import { CenteredH4 } from "../../utils/Styles";
-import { AlertErrorMessage } from "../../utils/Utils";
-import { languages } from "../../utils/Constants";
-import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import * as Yup from "yup";
 import {
   createInstrument,
-  updateInstrument
+  updateInstrument,
 } from "../../redux/actions/instruments";
+import { LeftCancelButton, RightSubmitButton } from "../../utils/Buttons";
+import { languages } from "../../utils/Constants";
+import { CenteredH4 } from "../../utils/Styles";
+import { AlertErrorMessage } from "../../utils/Utils";
 
 const FormItem = AntForm.Item;
 
 const InstrumentSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   language: Yup.string().required("Language is required"),
-  project_id: Yup.string().required("Project is required")
+  project_id: Yup.string().required("Project is required"),
 });
 
 const InstrumentForm = ({
@@ -26,7 +26,7 @@ const InstrumentForm = ({
   updateInstrument,
   handleCancel,
   instrument,
-  projectId
+  projectId,
 }) => {
   return (
     <Formik
@@ -35,7 +35,7 @@ const InstrumentForm = ({
         title: (instrument && instrument.title) || "",
         project_id: (instrument && instrument.project_id) || "",
         language: (instrument && instrument.language) || "",
-        published: (instrument && instrument.published) || false
+        published: (instrument && instrument.published) || false,
       }}
       validationSchema={InstrumentSchema}
       onSubmit={(values, { setErrors }) => {
@@ -43,7 +43,7 @@ const InstrumentForm = ({
           title: values.title,
           project_id: values.project_id,
           language: values.language,
-          published: values.published
+          published: values.published,
         };
         if (values.id) {
           updateInstrument(projectId, values.id, instrumentObj);
@@ -74,8 +74,8 @@ const InstrumentForm = ({
               placeholder="Select language"
               component="select"
             >
-              <option></option>
-              {languages.map(language => {
+              <option />
+              {languages.map((language) => {
                 return (
                   <option
                     key={language.code}
@@ -96,8 +96,8 @@ const InstrumentForm = ({
               placeholder="Select project"
               component="select"
             >
-              <option></option>
-              {projects.map(project => {
+              <option />
+              {projects.map((project) => {
                 return (
                   <option key={project.id} name="project_id" value={project.id}>
                     {project.name}
@@ -136,16 +136,16 @@ function mapStateToProps(state, ownProps) {
     updateInstrument,
     handleCancel,
     instrument,
-    projectId
+    projectId,
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     createInstrument: (projectId, instrument) =>
       dispatch(createInstrument(projectId, instrument)),
     updateInstrument: (projectId, id, instrument) =>
-      dispatch(updateInstrument(projectId, id, instrument))
+      dispatch(updateInstrument(projectId, id, instrument)),
   };
 };
 
