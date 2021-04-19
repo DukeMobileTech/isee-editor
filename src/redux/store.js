@@ -16,12 +16,17 @@ const configureStore = () => {
     storage,
   };
   const persistedReducer = persistReducer(persistConfig, rootReducer(history));
+  const devTools =
+    // eslint-disable-next-line no-undef
+    process.env.NODE_ENV === "development" &&
+    window.__REDUX_DEVTOOLS_EXTENSION__
+      ? window.__REDUX_DEVTOOLS_EXTENSION__()
+      : (x) => x;
   const store = createStore(
     persistedReducer,
     compose(
       applyMiddleware(sagaMiddleware, routerMiddleware(history)),
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__()
+      devTools
     )
   );
   sagaMiddleware.run(rootSaga);
