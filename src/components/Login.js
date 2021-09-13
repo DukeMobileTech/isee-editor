@@ -7,6 +7,7 @@ import { CenteredH2, MainContent } from "../utils/Styles";
 import { AlertErrorMessage } from "../utils/Utils";
 import AppFooter from "./AppFooter";
 import { AppHeader } from "./Headers";
+import runtimeEnv from "@mars/heroku-js-runtime-env";
 
 const { Content } = Layout;
 const FormItem = AntForm.Item;
@@ -19,6 +20,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Login = () => {
+  const env = runtimeEnv();
   return (
     <Formik
       initialValues={{
@@ -30,7 +32,7 @@ const Login = () => {
         axios
           .create({
             // eslint-disable-next-line no-undef
-            baseURL: `${process.env.REACT_APP_BASE_URL}/api/v4/`,
+            baseURL: `${env.REACT_APP_BASE_URL}/api/v4/`,
             responseType: "json",
           })
           .post("/user_token", {

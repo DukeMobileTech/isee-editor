@@ -1,8 +1,11 @@
 import axios from "axios";
+import runtimeEnv from "@mars/heroku-js-runtime-env";
+
+const env = runtimeEnv();
 
 export const instance = axios.create({
   // eslint-disable-next-line no-undef
-  baseURL: `${process.env.REACT_APP_BASE_URL}/api/v4/`,
+  baseURL: `${env.REACT_APP_BASE_URL}/api/v4/`,
   responseType: "json",
 });
 

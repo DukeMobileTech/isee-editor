@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { ProjectContext } from "../context/ProjectContext";
 import { CenteredH2 } from "../utils/Styles";
+import runtimeEnv from "@mars/heroku-js-runtime-env";
 
 const Logo = styled.div`
   width: 120px;
@@ -57,6 +58,8 @@ export const AppHeader = (props) => {
     );
   };
 
+  const env = runtimeEnv();
+
   return (
     <Layout.Header>
       <Logo onClick={handleClick}>iSEE</Logo>
@@ -71,7 +74,7 @@ export const AppHeader = (props) => {
           <Menu.Item key="3">
             <a
               // eslint-disable-next-line no-undef
-              href={`${process.env.REACT_APP_BASE_URL}/admin`}
+              href={`${env.REACT_APP_BASE_URL}/admin`}
               target="_blank"
               rel="noopener noreferrer"
             >
