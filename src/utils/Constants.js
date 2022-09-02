@@ -22,6 +22,9 @@ export const questionTypes = [
   "PHONE_NUMBER",
   "ADDRESS",
   "EMAIL_ADDRESS",
+  "SIGNATURE",
+  "AUDIO",
+  "PAIRWISE_COMPARISON",
 ];
 
 export const questionTypesWithOptions = [
@@ -33,6 +36,7 @@ export const questionTypesWithOptions = [
   "LIST_OF_INTEGER_BOXES",
   "LABELED_SLIDER",
   "DROP_DOWN",
+  "PAIRWISE_COMPARISON",
 ];
 
 export const languages = [

@@ -22,50 +22,54 @@ import { TranslationAddButtons, TranslationButton } from "../../utils/Buttons";
 
 export const EditableContext = React.createContext(null);
 
-export const EditableCell = (props) => {
-  const renderCell = () => {
-    const { editing, dataIndex, title, record, children, ...restProps } = props;
+const editView = (dataIndex, title, record) =>
+  dataIndex === "text" ? (
+    <Form.Item
+      name={dataIndex}
+      style={{
+        margin: 0,
+      }}
+      rules={[
+        {
+          required: true,
+          message: `Please Input ${title}!`,
+        },
+      ]}
+    >
+      <ReactQuill value={record[dataIndex]} />
+    </Form.Item>
+  ) : (
+    <Form.Item
+      name={dataIndex}
+      style={{
+        margin: 0,
+      }}
+      rules={[
+        {
+          required: true,
+          message: `Please Input ${title}!`,
+        },
+      ]}
+    >
+      <Input value={record[dataIndex]} />
+    </Form.Item>
+  );
 
-    const editingView = ({ dataIndex, title, record }) =>
-      dataIndex === "text" ? (
-        <Form.Item
-          style={{ margin: 0 }}
-          name={dataIndex}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-          initialValue={record[dataIndex]}
-        >
-          <ReactQuill value={record[dataIndex]} />
-        </Form.Item>
-      ) : (
-        <Form.Item style={{ margin: 0 }}>
-          <Form.Item
-            name={dataIndex}
-            rules={[
-              {
-                required: true,
-                message: `Please Input ${title}!`,
-              },
-            ]}
-            initialValue={record[dataIndex]}
-          >
-            <Input />
-          </Form.Item>
-        </Form.Item>
-      );
-
-    return (
-      <td {...restProps}>
-        {editing ? editingView(dataIndex, title, record) : children}
-      </td>
-    );
-  };
-
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
+export const EditableCell = ({
+  editing,
+  dataIndex,
+  title,
+  inputType,
+  record,
+  index,
+  children,
+  ...restProps
+}) => {
+  return (
+    <td {...restProps}>
+      {editing ? editView(dataIndex, title, record) : children}
+    </td>
+  );
 };
 
 export const CellActions = ({
@@ -109,7 +113,7 @@ export const CellActions = ({
         type="primary"
         title="Edit"
         disabled={editingKey !== ""}
-        onClick={() => edit(record.id)}
+        onClick={() => edit(record)}
         style={{ margin: 2 }}
       >
         <EditOutlined />

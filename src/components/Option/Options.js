@@ -35,7 +35,6 @@ const EditableTable = (props) => {
         if (record.id === newId) {
           createOption(row)
             .then((result) => {
-              console.log("result: ", result);
               newData.splice(index, 1, {
                 ...item,
                 ...result.data,
@@ -70,8 +69,9 @@ const EditableTable = (props) => {
     }
   };
 
-  const edit = (key) => {
-    setEditingKey(key);
+  const edit = (record) => {
+    form.setFieldsValue({ ...record });
+    setEditingKey(record.id);
   };
 
   const handleAdd = () => {
@@ -132,7 +132,7 @@ const EditableTable = (props) => {
     {
       title: "Actions",
       dataIndex: "actions",
-      render: (text, record) => (
+      render: (_, record) => (
         <CellActions
           record={record}
           editingKey={editingKey}
