@@ -17,6 +17,8 @@ const EditableTable = (props) => {
   const [options, setOptions] = useContext(OptionContext);
   const [editingKey, setEditingKey] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [searchTextOne, setSearchTextOne] = useState("");
+  const [searchTextTwo, setSearchTextTwo] = useState("");
   const [errors, setErrors] = useState(null);
 
   const isEditing = (record) => record.id === editingKey;
@@ -111,7 +113,7 @@ const EditableTable = (props) => {
       ? {
           title: "Text",
           dataIndex: "text",
-          width: "55%",
+          width: "25%",
           editable: true,
           ...getColumnSearchProps("text", searchText, setSearchText),
           render: (text, option) => (
@@ -125,10 +127,24 @@ const EditableTable = (props) => {
       : {
           title: "Text",
           dataIndex: "text",
-          width: "55%",
+          width: "25%",
           editable: true,
           ...getColumnSearchProps("text", searchText, setSearchText),
         },
+    {
+      title: "Text One",
+      dataIndex: "text_one",
+      width: "15%",
+      editable: true,
+      ...getColumnSearchProps("text_one", searchTextOne, setSearchTextOne),
+    },
+    {
+      title: "Text Two",
+      dataIndex: "text_two",
+      width: "15%",
+      editable: true,
+      ...getColumnSearchProps("text_two", searchTextTwo, setSearchTextTwo),
+    },
     {
       title: "Actions",
       dataIndex: "actions",

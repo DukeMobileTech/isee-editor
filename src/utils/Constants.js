@@ -25,6 +25,7 @@ export const questionTypes = [
   "SIGNATURE",
   "AUDIO",
   "PAIRWISE_COMPARISON",
+  "CHOICE_TASK",
 ];
 
 export const questionTypesWithOptions = [
@@ -38,6 +39,8 @@ export const questionTypesWithOptions = [
   "DROP_DOWN",
   "PAIRWISE_COMPARISON",
 ];
+
+export const questionTypesWithTasks = ["CHOICE_TASK"];
 
 export const languages = [
   { name: "English", code: "en" },

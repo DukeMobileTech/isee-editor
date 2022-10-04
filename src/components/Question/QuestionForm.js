@@ -1,6 +1,6 @@
 import { Col, Modal, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import * as Yup from "yup";
 import { InstructionContext } from "../../context/InstructionContext";
@@ -10,6 +10,7 @@ import {
   createFolderQuestion,
   updateFolderQuestion,
 } from "../../utils/api/question";
+import { getTasks } from "../../utils/api/task";
 import { RightSubmitButton } from "../../utils/Buttons";
 import {
   modalWidth,
@@ -17,6 +18,7 @@ import {
   questionTypes,
   questionTypesWithDefaultResponses,
   questionTypesWithOptions,
+  questionTypesWithTasks,
 } from "../../utils/Constants";
 import { AlertErrorMessage, DRow } from "../../utils/Utils";
 
@@ -51,6 +53,7 @@ const QuestionForm = (props) => {
   const [instructions, setInstructions] = useContext(InstructionContext);
   // eslint-disable-next-line no-unused-vars
   const [questionSets, setQuestionSets] = useContext(QuestionSetContext);
+  const [tasks, setTasks] = useState([]);
   const showOnPdf =
     question === null || (question && question.pdf_print_options === null)
       ? true
@@ -58,6 +61,15 @@ const QuestionForm = (props) => {
   const title = props.question
     ? props.question.question_identifier
     : "New Question";
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const results = await getTasks();
+      setTasks(results.data);
+    };
+    fetchTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Modal
@@ -90,10 +102,12 @@ const QuestionForm = (props) => {
           text: (question && question.text) || "",
           identifies_survey: (question && question.identifies_survey) || false,
           option_set_id: (question && question.option_set_id) || "",
+          task_id: (question && question.task_id) || "",
           instruction_id: (question && question.instruction_id) || "",
           special_option_set_id:
             (question && question.special_option_set_id) || "",
           default_response: (question && question.default_response) || "",
+          diagrams: (question && question.diagrams) || [],
         }}
         validationSchema={QuestionSchema}
         onSubmit={(values, { setErrors }) => {
@@ -106,12 +120,14 @@ const QuestionForm = (props) => {
             identifies_survey: values.identifies_survey,
             instruction_id: values.instruction_id,
             option_set_id: values.option_set_id,
+            task_id: values.task_id,
             special_option_set_id: values.special_option_set_id,
             pdf_response_height: values.pdf_response_height,
             pdf_print_options: values.pdf_print_options,
             pop_up_instruction_id: values.pop_up_instruction_id,
             after_text_instruction_id: values.after_text_instruction_id,
             default_response: values.default_response,
+            diagrams: values.diagrams,
           };
           if (question && question.id) {
             editQuestion.id = question.id;
@@ -484,6 +500,49 @@ const QuestionForm = (props) => {
                 </Col>
               </DRow>
             )}
+            {questionTypesWithTasks.includes(values.question_type) && (
+              <DRow>
+                <Col span={4}>
+                  <Text strong>Task</Text>
+                </Col>
+                <Col span={14}>
+                  <Field
+                    name="task_id"
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        style={{ width: "100%" }}
+                        showSearch
+                        optionFilterProp="children"
+                        onChange={(value) => setFieldValue("task_id", value)}
+                        filterOption={(input, option) =>
+                          option.props.children &&
+                          option.props.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                        }
+                      >
+                        <Option value="" />
+                        {tasks.map((task) => {
+                          return (
+                            <Option
+                              key={task.id}
+                              name="task_id"
+                              value={task.id}
+                            >
+                              {task.name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    )}
+                  />
+                </Col>
+                <Col span={6}>
+                  <AlertErrorMessage name="task_id" type="error" />
+                </Col>
+              </DRow>
+            )}
             {values.option_set_id && (
               <DRow>
                 <Col span={4}>
@@ -536,6 +595,53 @@ const QuestionForm = (props) => {
                   type="checkbox"
                   checked={values.identifies_survey}
                 />
+              </Col>
+            </DRow>
+            <DRow>
+              <Col span={4}>
+                <Text strong>Diagrams</Text>
+              </Col>
+              <Col span={14}>
+                {values.diagrams &&
+                  values.diagrams.map((diagram, index) => (
+                    <Field
+                      key={diagram.option_id}
+                      name="diagrams"
+                      // name={`diagrams.${index}.option_id`}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          style={{ width: "100%" }}
+                          showSearch
+                          optionFilterProp="children"
+                          onChange={(value) => setFieldValue("diagrams", value)}
+                          filterOption={(input, option) =>
+                            option.props.children &&
+                            option.props.children
+                              .toLowerCase()
+                              .indexOf(input.toLowerCase()) >= 0
+                          }
+                          mode="multiple"
+                        >
+                          <Option value="" />
+                          {optionSets.map((optionSet) => {
+                            return (
+                              <Option
+                                key={optionSet.id}
+                                name="option_set_id"
+                                value={optionSet.id}
+                              >
+                                {optionSet.title.replace(/<[^>]+>/g, "")}
+                              </Option>
+                            );
+                          })}
+                        </Select>
+                      )}
+                    />
+                  ))}
+              </Col>
+              <Col span={6}>
+                <AlertErrorMessage name="option_set_id" type="error" />
               </Col>
             </DRow>
             <RightSubmitButton />

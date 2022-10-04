@@ -15,6 +15,7 @@ import { getInstructions } from "../utils/api/instruction";
 import { getOptions } from "../utils/api/option";
 import { getOptionSets } from "../utils/api/option_set";
 import { getQuestionSets } from "../utils/api/question_set";
+import Diagrams from "./Diagram/Diagrams";
 import Instructions from "./Instruction/Instructions";
 import Options from "./Option/Options";
 import OptionSets from "./OptionSet/OptionSets";
@@ -149,6 +150,17 @@ const Bank = ({ match, history }) => {
         key="validations"
       >
         <Validations />
+      </TabPane>
+      <TabPane
+        tab={
+          <span>
+            <CheckSquareOutlined />
+            Diagrams
+          </span>
+        }
+        key="diagrams"
+      >
+        <Diagrams />
       </TabPane>
     </Tabs>
   );

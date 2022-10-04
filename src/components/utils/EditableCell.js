@@ -46,7 +46,7 @@ const editView = (dataIndex, title, record) =>
       }}
       rules={[
         {
-          required: true,
+          required: title === "identifier",
           message: `Please Input ${title}!`,
         },
       ]}
