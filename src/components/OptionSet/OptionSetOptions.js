@@ -1,7 +1,7 @@
 import { DragOutlined } from "@ant-design/icons";
 import { Col, Select } from "antd";
 import { Field } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { DeleteButton } from "../../utils/Buttons";
 import {
@@ -10,6 +10,7 @@ import {
   getItemStyle,
   getListStyle,
 } from "../../utils/Utils";
+import { getCollages } from "../../utils/api/collage";
 
 const OptionSetOptions = ({
   values,
@@ -18,6 +19,20 @@ const OptionSetOptions = ({
   handleDeleteOption,
   resetForm,
 }) => {
+  const [collages, setCollages] = useState([]);
+
+  useEffect(() => {
+    const fetchCollages = () => {
+      if (collages.length === 0) {
+        getCollages().then((results) => {
+          setCollages(results.data);
+        });
+      }
+    };
+    fetchCollages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onDragEnd = (result) => {
     const copy = [...values.option_in_option_sets];
     copy.splice(
@@ -32,6 +47,7 @@ const OptionSetOptions = ({
       id: values.id,
       title: values.title,
       instruction_id: values.instruction_id,
+      collage_id: values.collage_id,
       special: values.special,
       option_in_option_sets: copy,
     });
@@ -69,11 +85,11 @@ const OptionSetOptions = ({
                           gutter={16}
                           style={{ marginBottom: 8 }}
                         >
-                          <Col span={4}>
+                          <Col span={2}>
                             <DragOutlined />
                             {index + 1}
                           </Col>
-                          <Col span={6}>
+                          <Col span={5}>
                             {oios.option && (
                               <span
                                 dangerouslySetInnerHTML={{
@@ -82,7 +98,7 @@ const OptionSetOptions = ({
                               />
                             )}
                           </Col>
-                          <Col span={5}>
+                          <Col span={4}>
                             <Field
                               name={`option_in_option_sets.${index}.instruction_id`}
                               render={({ field }) => (
@@ -124,7 +140,7 @@ const OptionSetOptions = ({
                               )}
                             />
                           </Col>
-                          <Col span={5}>
+                          <Col span={4}>
                             <Field
                               name={`option_in_option_sets.${index}.exclusion_ids`}
                               render={({ field }) => (
@@ -170,6 +186,45 @@ const OptionSetOptions = ({
                                       );
                                     }
                                   )}
+                                </Select>
+                              )}
+                            />
+                          </Col>
+                          <Col span={4}>
+                            <Field
+                              name={`option_in_option_sets.${index}.collage_id`}
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  style={{ width: "100%" }}
+                                  showSearch
+                                  allowClear
+                                  optionFilterProp="children"
+                                  onChange={(value) =>
+                                    setFieldValue(
+                                      `option_in_option_sets.${index}.collage_id`,
+                                      value
+                                    )
+                                  }
+                                  filterOption={(input, option) =>
+                                    option.props.children &&
+                                    option.props.children
+                                      .toLowerCase()
+                                      .indexOf(input.toLowerCase()) >= 0
+                                  }
+                                >
+                                  <Select.Option value="" />
+                                  {collages.map((collage) => {
+                                    return (
+                                      <Select.Option
+                                        key={collage.id}
+                                        name={`option_in_option_sets.${index}.collage_id`}
+                                        value={collage.id}
+                                      >
+                                        {collage.name.replace(/<[^>]+>/g, "")}
+                                      </Select.Option>
+                                    );
+                                  })}
                                 </Select>
                               )}
                             />

@@ -217,17 +217,20 @@ const OptionSetForm = (props) => {
               </Col>
             </DRow>
             <DRow gutter={16}>
-              <Col span={4}>
+              <Col span={2}>
                 <Text strong>Position</Text>
               </Col>
-              <Col span={6}>
+              <Col span={5}>
                 <Text strong>Text</Text>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
                 <Text strong>Pop-up Instruction</Text>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
                 <Text strong>Excludes</Text>
+              </Col>
+              <Col span={4}>
+                <Text strong>Collage</Text>
               </Col>
               <Col span={2}>
                 <Text strong>Allow Text Entry</Text>

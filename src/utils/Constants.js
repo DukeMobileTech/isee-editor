@@ -4,6 +4,8 @@ export const questionTypes = [
   "SELECT_ONE_WRITE_OTHER",
   "SELECT_MULTIPLE",
   "SELECT_MULTIPLE_WRITE_OTHER",
+  "SELECT_ONE_IMAGE",
+  "SELECT_MULTIPLE_IMAGES",
   "DROP_DOWN",
   "SLIDER",
   "LABELED_SLIDER",
@@ -38,6 +40,8 @@ export const questionTypesWithOptions = [
   "LABELED_SLIDER",
   "DROP_DOWN",
   "PAIRWISE_COMPARISON",
+  "SELECT_ONE_IMAGE",
+  "SELECT_MULTIPLE_IMAGES",
 ];
 
 export const questionTypesWithTasks = ["CHOICE_TASK"];
