@@ -42,9 +42,8 @@ export const questionTypesWithOptions = [
   "PAIRWISE_COMPARISON",
   "SELECT_ONE_IMAGE",
   "SELECT_MULTIPLE_IMAGES",
+  "CHOICE_TASK",
 ];
-
-export const questionTypesWithTasks = ["CHOICE_TASK"];
 
 export const languages = [
   { name: "English", code: "en" },

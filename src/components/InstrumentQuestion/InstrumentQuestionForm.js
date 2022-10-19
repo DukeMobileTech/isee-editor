@@ -29,7 +29,8 @@ const InstrumentQuestionForm = (props) => {
       question.question_type === "SELECT_MULTIPLE" ||
       question.question_type === "SELECT_MULTIPLE_WRITE_OTHER" ||
       question.question_type === "LIST_OF_TEXT_BOXES" ||
-      question.question_type === "LIST_OF_INTEGER_BOXES"
+      question.question_type === "LIST_OF_INTEGER_BOXES" ||
+      question.question_type === "CHOICE_TASK"
     );
   };
 
