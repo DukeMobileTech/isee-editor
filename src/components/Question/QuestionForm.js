@@ -89,6 +89,7 @@ const QuestionForm = (props) => {
             (question && question.after_text_instruction_id) || "",
           text: (question && question.text) || "",
           identifies_survey: (question && question.identifies_survey) || false,
+          record_audio: (question && question.record_audio) || false,
           option_set_id: (question && question.option_set_id) || "",
           task_id: (question && question.task_id) || "",
           instruction_id: (question && question.instruction_id) || "",
@@ -114,6 +115,7 @@ const QuestionForm = (props) => {
             pop_up_instruction_id: values.pop_up_instruction_id,
             after_text_instruction_id: values.after_text_instruction_id,
             default_response: values.default_response,
+            record_audio: values.record_audio,
           };
           if (question && question.id) {
             editQuestion.id = question.id;
@@ -537,6 +539,18 @@ const QuestionForm = (props) => {
                   name="identifies_survey"
                   type="checkbox"
                   checked={values.identifies_survey}
+                />
+              </Col>
+            </DRow>
+            <DRow>
+              <Col span={4}>
+                <Text strong>Record Audio</Text>
+              </Col>
+              <Col span={20}>
+                <Field
+                  name="record_audio"
+                  type="checkbox"
+                  checked={values.record_audio}
                 />
               </Col>
             </DRow>

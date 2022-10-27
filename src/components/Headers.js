@@ -59,7 +59,7 @@ export const AppHeader = (props) => {
 
   return (
     <Layout.Header>
-      <Logo onClick={handleClick}>iSEE</Logo>
+      <Logo onClick={handleClick}>DCE</Logo>
       {currentProjectId && (
         <Menu theme="light" mode="horizontal" style={header}>
           <Menu.Item key="1">

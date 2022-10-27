@@ -40,6 +40,7 @@ const InstrumentQuestionForm = (props) => {
         identifier: iq.identifier || "",
         display_id: iq.display_id || "",
         carry_forward_identifier: iq.carry_forward_identifier || "",
+        show_number: iq.show_number || true,
       }}
       validationSchema={InstrumentQuestionSchema}
       onSubmit={(values, { setErrors }) => {
@@ -49,6 +50,7 @@ const InstrumentQuestionForm = (props) => {
           identifier: values.identifier,
           display_id: values.display_id,
           carry_forward_identifier: values.carry_forward_identifier,
+          show_number: values.show_number,
         };
         updateInstrumentQuestion(props.projectId, editQuestion)
           .then((response) => {
@@ -136,6 +138,18 @@ const InstrumentQuestionForm = (props) => {
             </Col>
             <Col span={6}>
               <AlertErrorMessage name="carry_forward_identifier" type="error" />
+            </Col>
+          </DRow>
+          <DRow>
+            <Col span={6}>
+              <Text strong>Show Question Number</Text>
+            </Col>
+            <Col span={18}>
+              <Field
+                name="show_number"
+                type="checkbox"
+                checked={values.show_number}
+              />
             </Col>
           </DRow>
           <RightSubmitButton />
