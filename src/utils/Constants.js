@@ -52,6 +52,8 @@ export const languages = [
   { name: "Khmer", code: "km" },
   { name: "Spanish", code: "es" },
   { name: "Swahili", code: "sw" },
+  { name: "Swahili (Tanzania)", code: "sw-TZ" },
+  { name: "Swahili (Kenya)", code: "sw-KE" },
   { name: "Telugu", code: "te" },
   { name: "Chinese", code: "zh" },
 ];
