@@ -5,7 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
     "antd": "^4.13.0",
-    "axios": "^0.21.4",
+    "axios": "^1.6.0",
     "connected-react-router": "^6.9.1",
     "formik": "^2.2.6",
     "js-file-download": "^0.4.12",
